@@ -16,7 +16,7 @@ cloudpickle
 flask>=1.0,<1.1
 itsdangerous<2.1.0
 Jinja2>=2.11,<2.12
-/data/dataiku/dss_data/config/projects/SNOWPARKLOANDEFAULTS/lib/python/snowflake_ml_python-1.0.0-py3-none-any.whl
+snowflake-ml-python==1.0.1
 urllib3
 dash
 dash-bootstrap-components
