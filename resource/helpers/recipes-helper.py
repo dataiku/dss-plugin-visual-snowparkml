@@ -24,7 +24,7 @@ def do(payload, config, plugin_config, inputs):
         #col_label = config.get('col_label', None)
         #response['col_label'] = col_label
         
-    response['pluginId'] = 'dss-plugin-dev-snowpark-ml'
+    response['pluginId'] = 'visual-snowparkml'
     
     return response
 
@@ -32,4 +32,4 @@ def get_input_name_from_role(inputs, role):
     return [inp for inp in inputs if inp["role"] == role][0]["fullName"]
 
 def add_plugin_id(response):
-    response['pluginId'] = 'dss-plugin-dev-snowpark-ml'
+    response['pluginId'] = 'visual-snowparkml'
