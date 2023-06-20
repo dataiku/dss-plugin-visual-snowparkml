@@ -7,7 +7,8 @@
         "author": "Pat Masi-Phelps (Dataiku)",
         "icon": "icon-snowflake",
         "tags": ["Machine Learning", "Snowflake"], 
-        "url": "",
+        "supportLevel": "UNSUPPORTED",
+        "url": "https://www.dataiku.com/community/plugins/info/visual-snowparkml.html",
         "licenseInfo": "Apache Software License"
     }
 }
