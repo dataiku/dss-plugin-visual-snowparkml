@@ -222,7 +222,7 @@ print("n_iter: " + str(n_iter))
 
 ### SECTION 3 - Set up MLflow Experiment Tracking
 # MLFLOW Variables
-MLFLOW_CODE_ENV_NAME = "py_38_snowpark_new"
+MLFLOW_CODE_ENV_NAME = "py_38_snowpark"
 MLFLOW_EXPERIMENT_NAME = model_name + "_exp"
 SAVED_MODEL_NAME = model_name
 MODEL_NAME = model_name
