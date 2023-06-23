@@ -407,7 +407,7 @@ if logistic_regression:
 
 if xgb_classification:
     algorithms.append({'algorithm': 'xgb_classification',
-                       'sklearn_obj': LGBMClassifier(),
+                       'sklearn_obj': XGBClassifier(),
                        'gs_params': {'clf__n_estimators': randint(xgb_classification_n_estimators_min,xgb_classification_n_estimators_max),
                                      'clf__max_depth': randint(xgb_classification_max_depth_min,xgb_classification_max_depth_max),
                                      'clf__min_child_weight': randint(xgb_classification_min_child_weight_min,xgb_classification_min_child_weight_max),
