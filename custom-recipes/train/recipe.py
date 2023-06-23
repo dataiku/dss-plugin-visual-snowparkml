@@ -243,8 +243,6 @@ dku_snowpark = DkuSnowpark()
 snowflake_connection_name = input_dataset.get_config()['params']['connection']
 session = dku_snowpark.create_session(snowflake_connection_name)
 
-session.add_packages("lightgbm==2.3.1")
-
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
 input_snowpark_df = dku_snowpark.get_dataframe(input_dataset)
 if prediction_type == "two-class classification":
