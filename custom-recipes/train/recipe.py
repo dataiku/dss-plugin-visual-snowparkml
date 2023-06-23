@@ -160,6 +160,25 @@ print("xgb_classification_learning_rate_min: " + str(xgb_classification_learning
 xgb_classification_learning_rate_max = recipe_config.get('xgb_classification_learning_rate_max', None)
 print("xgb_classification_learning_rate_max: " + str(xgb_classification_learning_rate_max))
 
+lgbm_classification = recipe_config.get('lgbm_classification', None)
+print("lgbm_classification: " + str(lgbm_classification))
+lgbm_classification_n_estimators_min = recipe_config.get('lgbm_classification_n_estimators_min', None)
+print("lgbm_classification_n_estimators_min: " + str(lgbm_classification_n_estimators_min))
+lgbm_classification_n_estimators_max = recipe_config.get('lgbm_classification_n_estimators_max', None)
+print("lgbm_classification_n_estimators_max: " + str(lgbm_classification_n_estimators_max))
+lgbm_classification_max_depth_min = recipe_config.get('lgbm_classification_max_depth_min', None)
+print("lgbm_classification_max_depth_min: " + str(lgbm_classification_max_depth_min))
+lgbm_classification_max_depth_max = recipe_config.get('lgbm_classification_max_depth_max', None)
+print("lgbm_classification_max_depth_max: " + str(lgbm_classification_max_depth_max))
+lgbm_classification_min_child_weight_min = recipe_config.get('lgbm_classification_min_child_weight_min', None)
+print("lgbm_classification_min_child_weight_min: " + str(lgbm_classification_min_child_weight_min))
+lgbm_classification_min_child_weight_max = recipe_config.get('lgbm_classification_min_child_weight_max', None)
+print("lgbm_classification_min_child_weight_max: " + str(lgbm_classification_min_child_weight_max))
+lgbm_classification_learning_rate_min = recipe_config.get('lgbm_classification_learning_rate_min', None)
+print("lgbm_classification_learning_rate_min: " + str(lgbm_classification_learning_rate_min))
+lgbm_classification_learning_rate_max = recipe_config.get('lgbm_classification_learning_rate_max', None)
+print("lgbm_classification_learning_rate_max: " + str(lgbm_classification_learning_rate_max))
+
 lasso_regression = recipe_config.get('lasso_regression', None)
 print("lasso_regression: " + str(lasso_regression))
 lasso_regression_alpha_min = recipe_config.get('lasso_regression_alpha_min', None)
@@ -200,6 +219,25 @@ xgb_regression_learning_rate_min = recipe_config.get('xgb_regression_learning_ra
 print("xgb_regression_learning_rate_min: " + str(xgb_regression_learning_rate_min))
 xgb_regression_learning_rate_max = recipe_config.get('xgb_regression_learning_rate_max', None)
 print("xgb_regression_learning_rate_max: " + str(xgb_regression_learning_rate_max))
+
+lgbm_regression = recipe_config.get('lgbm_regression', None)
+print("lgbm_regression: " + str(lgbm_regression))
+lgbm_regression_n_estimators_min = recipe_config.get('lgbm_regression_n_estimators_min', None)
+print("lgbm_regression_n_estimators_min: " + str(lgbm_regression_n_estimators_min))
+lgbm_regression_n_estimators_max = recipe_config.get('lgbm_regression_n_estimators_max', None)
+print("lgbm_regression_n_estimators_max: " + str(lgbm_regression_n_estimators_max))
+lgbm_regression_max_depth_min = recipe_config.get('lgbm_regression_max_depth_min', None)
+print("lgbm_regression_max_depth_min: " + str(lgbm_regression_max_depth_min))
+lgbm_regression_max_depth_max = recipe_config.get('lgbm_regression_max_depth_max', None)
+print("lgbm_regression_max_depth_max: " + str(lgbm_regression_max_depth_max))
+lgbm_regression_min_child_weight_min = recipe_config.get('lgbm_regression_min_child_weight_min', None)
+print("lgbm_regression_min_child_weight_min: " + str(lgbm_regression_min_child_weight_min))
+lgbm_regression_min_child_weight_max = recipe_config.get('lgbm_regression_min_child_weight_max', None)
+print("lgbm_regression_min_child_weight_max: " + str(lgbm_regression_min_child_weight_max))
+lgbm_regression_learning_rate_min = recipe_config.get('lgbm_regression_learning_rate_min', None)
+print("lgbm_regression_learning_rate_min: " + str(lgbm_regression_learning_rate_min))
+lgbm_regression_learning_rate_max = recipe_config.get('lgbm_regression_learning_rate_max', None)
+print("lgbm_regression_learning_rate_max: " + str(lgbm_regression_learning_rate_max))
 
 
 glm_regression = recipe_config.get('glm_regression', None)
@@ -405,11 +443,19 @@ if logistic_regression:
 
 if xgb_classification:
     algorithms.append({'algorithm': 'xgb_classification',
-                       'sklearn_obj': LGBMClassifier(),
+                       'sklearn_obj': XGBClassifier(),
                        'gs_params': {'clf__n_estimators': randint(xgb_classification_n_estimators_min,xgb_classification_n_estimators_max),
                                      'clf__max_depth': randint(xgb_classification_max_depth_min,xgb_classification_max_depth_max),
                                      'clf__min_child_weight': randint(xgb_classification_min_child_weight_min,xgb_classification_min_child_weight_max),
                                      'clf__learning_rate': loguniform(xgb_classification_learning_rate_min,xgb_classification_learning_rate_max)}})
+
+if lgbm_classification:
+    algorithms.append({'algorithm': 'lgbm_classification',
+                       'sklearn_obj': LGBMClassifier(),
+                       'gs_params': {'clf__n_estimators': randint(lgbm_classification_n_estimators_min,lgbm_classification_n_estimators_max),
+                                     'clf__max_depth': randint(lgbm_classification_max_depth_min,lgbm_classification_max_depth_max),
+                                     'clf__min_child_weight': randint(lgbm_classification_min_child_weight_min,lgbm_classification_min_child_weight_max),
+                                     'clf__learning_rate': loguniform(lgbm_classification_learning_rate_min,lgbm_classification_learning_rate_max)}})
     
 if lasso_regression:
     algorithms.append({'algorithm': 'lasso_regression',
@@ -430,6 +476,13 @@ if xgb_regression:
                                      'clf__max_depth': randint(xgb_regression_max_depth_min,xgb_regression_max_depth_max),
                                      'clf__min_child_weight': randint(xgb_regression_min_child_weight_min,xgb_regression_min_child_weight_max),
                                      'clf__learning_rate': loguniform(xgb_regression_learning_rate_min,xgb_regression_learning_rate_max)}})
+if lgbm_regression:
+    algorithms.append({'algorithm': 'lgbm_regression',
+                       'sklearn_obj': LGBMRegressor(),
+                       'gs_params': {'clf__n_estimators': randint(lgbm_regression_n_estimators_min,lgbm_regression_n_estimators_max),
+                                     'clf__max_depth': randint(lgbm_regression_max_depth_min,lgbm_regression_max_depth_max),
+                                     'clf__min_child_weight': randint(lgbm_regression_min_child_weight_min,lgbm_regression_min_child_weight_max),
+                                     'clf__learning_rate': loguniform(lgbm_regression_learning_rate_min,lgbm_regression_learning_rate_max)}})
     
 if glm_regression:
     if glm_distribution == "poisson":
