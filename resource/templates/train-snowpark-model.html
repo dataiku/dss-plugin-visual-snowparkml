@@ -261,7 +261,61 @@ Random Forests generally provide good results, at the expense of 'explainability
             </div>  
             <div style="clear:both;">&nbsp;</div>
           </div>
-          
+          <div class="form-group">
+            <div class="algo-group">
+            <label for="lgbm-classification" class="algo-label">LightGBM Classification
+            <input type="checkbox" id="lgbm-classification" ng-model="config.lgbm_classification"/>
+            </label>
+            </div>
+            <div class="algo-details" ng-show="config.lgbm_classification">
+              <div class="algo-hparam-parent-first">
+              <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
+              <div class="algo-hparam">
+              <label for="lgbm-classification-n-estimators-min">(min)</label>
+              <input class="hparam-input" type="number" id="lgbm-classification-n-estimators-min" ng-model="config.lgbm_classification_n_estimators_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="lgbm-classification-n-estimators-max">(max)</label>
+              <input class="hparam-input" type="number" id="lgbm-classification-n-estimators-max" ng-model="config.lgbm_classification_n_estimators_max"/>
+              </div>
+              
+              </div>
+              <div class="algo-hparam-parent-second">
+              <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
+              <div class="algo-hparam">
+              <label for="lgbm-classification-max-depth-min">(min)</label>
+              <input class="hparam-input" type="number" id="lgbm-classification-max-depth-min" ng-model="config.lgbm_classification_max_depth_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="lgbm-classification-max-depth-max">(max)</label>
+              <input class="hparam-input" type="number" id="lgbm-classification-max-depth-max" ng-model="config.lgbm_classification_max_depth_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-third">
+              <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
+              <div class="algo-hparam">
+              <label for="lgbm-classification-min-child-weight-min">(min)</label>
+              <input class="hparam-input" type="number" id="lgbm-classification-min-child-weight-min" ng-model="config.lgbm_classification_min_child_weight_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="lgbm-classification-min-child-weight-max">(max)</label>
+              <input class="hparam-input" type="number" id="lgbm-classification-min-child-weight-max" ng-model="config.lgbm_classification_min_child_weight_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-fourth">
+              <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
+              <div class="algo-hparam">
+              <label for="lgbm-classification-learning-rate-min">(min)</label>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-classification-learning-rate-min" ng-model="config.lgbm_classification_learning_rate_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="lgbm-classification-learning-rate-max">(max)</label>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-classification-learning-rate-max" ng-model="config.lgbm_classification_learning_rate_max"/>
+              </div>
+              </div>
+            </div>  
+            <div style="clear:both;">&nbsp;</div>
+          </div>
         </div>
         <div ng-show="config.prediction_type === 'regression'">
           <div class="form-group">
@@ -381,6 +435,61 @@ Random Forests generally provide good results, at the expense of 'explainability
               <div class="algo-hparam">
               <label for="xgb-regression-learning-rate-max">(max)</label>
               <input class="hparam-input" type="number" step="0.001" id="xgb-regression-learning-rate-max" ng-model="config.xgb_regression_learning_rate_max"/>
+              </div>
+              </div>
+            </div>  
+            <div style="clear:both;">&nbsp;</div>
+          </div>
+          <div class="form-group">
+            <div class="algo-group">
+            <label for="lgbm-regression" class="algo-label">LightGBM Regression
+            <input type="checkbox" id="lgbm-regression" ng-model="config.lgbm_regression"/>
+            </label>
+            </div>
+            <div class="algo-details" ng-show="config.lgbm_regression">
+              <div class="algo-hparam-parent-first">
+              <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
+              <div class="algo-hparam">
+              <label for="lgbm-regression-n-estimators-min">(min)</label>
+              <input class="hparam-input" type="number" id="lgbm-regression-n-estimators-min" ng-model="config.lgbm_regression_n_estimators_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="lgbm-regression-n-estimators-max">(max)</label>
+              <input class="hparam-input" type="number" id="lgbm-regression-n-estimators-max" ng-model="config.lgbm_regression_n_estimators_max"/>
+              </div>
+              
+              </div>
+              <div class="algo-hparam-parent-second">
+              <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
+              <div class="algo-hparam">
+              <label for="lgbm-regression-max-depth-min">(min)</label>
+              <input class="hparam-input" type="number" id="lgbm-regression-max-depth-min" ng-model="config.lgbm_regression_max_depth_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="lgbm-regression-max-depth-max">(max)</label>
+              <input class="hparam-input" type="number" id="lgbm-regression-max-depth-max" ng-model="config.lgbm_regression_max_depth_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-third">
+              <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
+              <div class="algo-hparam">
+              <label for="lgbm-regression-min-child-weight-min">(min)</label>
+              <input class="hparam-input" type="number" id="lgbm-regression-min-child-weight-min" ng-model="config.lgbm_regression_min_child_weight_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="lgbm-regression-min-child-weight-max">(max)</label>
+              <input class="hparam-input" type="number" id="lgbm-regression-min-child-weight-max" ng-model="config.lgbm_regression_min_child_weight_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-fourth">
+              <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
+              <div class="algo-hparam">
+              <label for="lgbm-regression-learning-rate-min">(min)</label>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-regression-learning-rate-min" ng-model="config.lgbm_regression_learning_rate_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="lgbm-regression-learning-rate-max">(max)</label>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-regression-learning-rate-max" ng-model="config.lgbm_regression_learning_rate_max"/>
               </div>
               </div>
             </div>  
