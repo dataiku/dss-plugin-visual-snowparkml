@@ -42,6 +42,8 @@ from snowflake.ml.modeling.model_selection import RandomizedSearchCV, GridSearch
 from snowflake.ml.modeling.compose import ColumnTransformer
 from snowflake.ml.modeling.ensemble import RandomForestClassifier, RandomForestRegressor
 from snowflake.ml.modeling.xgboost import XGBClassifier, XGBRegressor
+from snowflake.ml.modeling.lightgbm import LGBMClassifier, LGBMRegressor
+
 from snowflake.ml.modeling.linear_model import LogisticRegression, Lasso, PoissonRegressor, GammaRegressor, TweedieRegressor
 from snowflake.ml.modeling.preprocessing import StandardScaler, OneHotEncoder, MinMaxScaler, OrdinalEncoder
 from snowflake.ml.modeling.impute import SimpleImputer
@@ -403,7 +405,7 @@ if logistic_regression:
 
 if xgb_classification:
     algorithms.append({'algorithm': 'xgb_classification',
-                       'sklearn_obj': XGBClassifier(),
+                       'sklearn_obj': LGBMClassifier(),
                        'gs_params': {'clf__n_estimators': randint(xgb_classification_n_estimators_min,xgb_classification_n_estimators_max),
                                      'clf__max_depth': randint(xgb_classification_max_depth_min,xgb_classification_max_depth_max),
                                      'clf__min_child_weight': randint(xgb_classification_min_child_weight_min,xgb_classification_min_child_weight_max),
