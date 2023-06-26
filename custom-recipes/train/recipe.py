@@ -106,8 +106,6 @@ elif model_metric == 'MSE':
 elif model_metric == 'D2 (GLM Only)':
     scoring_metric = 'neg_mean_poisson_deviance'
 
-train_ratio = recipe_config.get('train_ratio', None)
-print("train_ratio: " + str(train_ratio))
 inputDatasetColumns = recipe_config.get('inputDatasetColumns', None)
 print("inputDatasetColumns: " + str(inputDatasetColumns))
 selectedInputColumns = recipe_config.get('selectedInputColumns', None)
