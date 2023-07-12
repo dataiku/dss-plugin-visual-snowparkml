@@ -27,8 +27,6 @@ import re
 import snowflake.connector
 from snowflake.connector.pandas_tools import write_pandas
 import snowflake.snowpark
-
-from snowflake.snowpark import Session
 from snowflake.snowpark.version import VERSION
 from snowflake.snowpark.session import Session
 import snowflake.snowpark.types as T
