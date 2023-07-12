@@ -339,10 +339,6 @@ if prediction_type == "two-class classification":
 test_ratio = 1 - train_ratio
 train_snowpark_df, test_snowpark_df = input_snowpark_df.random_split(weights = [train_ratio, test_ratio], seed = random_seed)
 
-input_column_names = input_snowpark_df.columns
-
-input_column_names.remove(col_label)
-
 ### SECTION 6 - Write Train/Test Datasets to Output Tables
 dku_snowpark.write_with_schema(output_train_dataset, train_snowpark_df)
 dku_snowpark.write_with_schema(output_test_dataset, test_snowpark_df)
