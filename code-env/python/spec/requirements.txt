@@ -18,5 +18,3 @@ itsdangerous<2.1.0
 Jinja2>=2.11,<2.12
 snowflake-ml-python==1.0.2
 urllib3
-dash
-dash-bootstrap-components
