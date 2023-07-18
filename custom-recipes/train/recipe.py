@@ -83,6 +83,8 @@ random_seed = recipe_config.get('random_seed', None)
 print("random_seed: " + str(random_seed))
 model_metric = recipe_config.get('model_metric', None)
 print("model_metric: " + str(model_metric))
+warehouse = recipe_config.get('warehouse', None)
+print("warehouse: " + str(warehouse))
 
 # Map metric name from dropdown to sklearn-compatible name
 if model_metric == 'ROC AUC':
@@ -275,6 +277,13 @@ mlflow_experiment = mlflow.get_experiment_by_name(MLFLOW_EXPERIMENT_NAME)
 dku_snowpark = DkuSnowpark()
 
 snowflake_connection_name = input_dataset.get_config()['params']['connection']
+
+session = dku_snowpark.get_session(snowflake_connection_name)
+
+if warehouse:
+    warehouse = f'"{warehouse}"'
+    session.use_warehouse(warehouse)
+
 session = dku_snowpark.create_session(snowflake_connection_name)
 
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
