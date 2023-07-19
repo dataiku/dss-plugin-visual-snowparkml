@@ -284,8 +284,6 @@ if warehouse:
     warehouse = f'"{warehouse}"'
     session.use_warehouse(warehouse)
 
-#session = dku_snowpark.create_session(snowflake_connection_name)
-
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
 input_snowpark_df = dku_snowpark.get_dataframe(input_dataset)
 if prediction_type == "two-class classification":
