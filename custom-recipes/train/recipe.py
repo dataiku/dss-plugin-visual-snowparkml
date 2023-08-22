@@ -445,7 +445,7 @@ if xgb_classification:
                        'sklearn_obj': XGBClassifier(),
                        'gs_params': {'clf__n_estimators': randint(xgb_classification_n_estimators_min,xgb_classification_n_estimators_max),
                                      'clf__max_depth': randint(xgb_classification_max_depth_min,xgb_classification_max_depth_max),
-                                     'clf__min_child_weight': randint(xgb_classification_min_child_weight_min,xgb_classification_min_child_weight_max),
+                                     'clf__min_child_weight': uniform(xgb_classification_min_child_weight_min,xgb_classification_min_child_weight_max),
                                      'clf__learning_rate': loguniform(xgb_classification_learning_rate_min,xgb_classification_learning_rate_max)}})
 
 if lgbm_classification:
@@ -453,7 +453,7 @@ if lgbm_classification:
                        'sklearn_obj': LGBMClassifier(),
                        'gs_params': {'clf__n_estimators': randint(lgbm_classification_n_estimators_min,lgbm_classification_n_estimators_max),
                                      'clf__max_depth': randint(lgbm_classification_max_depth_min,lgbm_classification_max_depth_max),
-                                     'clf__min_child_weight': randint(lgbm_classification_min_child_weight_min,lgbm_classification_min_child_weight_max),
+                                     'clf__min_child_weight': uniform(lgbm_classification_min_child_weight_min,lgbm_classification_min_child_weight_max),
                                      'clf__learning_rate': loguniform(lgbm_classification_learning_rate_min,lgbm_classification_learning_rate_max)}})
     
 if lasso_regression:
@@ -473,14 +473,14 @@ if xgb_regression:
                        'sklearn_obj': XGBRegressor(),
                        'gs_params': {'clf__n_estimators': randint(xgb_regression_n_estimators_min,xgb_regression_n_estimators_max),
                                      'clf__max_depth': randint(xgb_regression_max_depth_min,xgb_regression_max_depth_max),
-                                     'clf__min_child_weight': randint(xgb_regression_min_child_weight_min,xgb_regression_min_child_weight_max),
+                                     'clf__min_child_weight': uniform(xgb_regression_min_child_weight_min,xgb_regression_min_child_weight_max),
                                      'clf__learning_rate': loguniform(xgb_regression_learning_rate_min,xgb_regression_learning_rate_max)}})
 if lgbm_regression:
     algorithms.append({'algorithm': 'lgbm_regression',
                        'sklearn_obj': LGBMRegressor(),
                        'gs_params': {'clf__n_estimators': randint(lgbm_regression_n_estimators_min,lgbm_regression_n_estimators_max),
                                      'clf__max_depth': randint(lgbm_regression_max_depth_min,lgbm_regression_max_depth_max),
-                                     'clf__min_child_weight': randint(lgbm_regression_min_child_weight_min,lgbm_regression_min_child_weight_max),
+                                     'clf__min_child_weight': uniform(lgbm_regression_min_child_weight_min,lgbm_regression_min_child_weight_max),
                                      'clf__learning_rate': loguniform(lgbm_regression_learning_rate_min,lgbm_regression_learning_rate_max)}})
     
 if glm_regression:
