@@ -38,7 +38,7 @@ from snowflake.ml.modeling.metrics.correlation import correlation
 from snowflake.ml.modeling.pipeline import Pipeline
 from snowflake.ml.modeling.model_selection import RandomizedSearchCV, GridSearchCV
 from snowflake.ml.modeling.compose import ColumnTransformer
-from snowflake.ml.modeling.ensemble import RandomForestClassifier, RandomForestRegressor
+from snowflake.ml.modeling.ensemble import RandomForestClassifier, RandomForestRegressor, GradientBoostingRegressor, GradientBoostingClassifier
 from snowflake.ml.modeling.xgboost import XGBClassifier, XGBRegressor
 from snowflake.ml.modeling.lightgbm import LGBMClassifier, LGBMRegressor
 
@@ -177,6 +177,25 @@ print("lgbm_classification_learning_rate_min: " + str(lgbm_classification_learni
 lgbm_classification_learning_rate_max = recipe_config.get('lgbm_classification_learning_rate_max', None)
 print("lgbm_classification_learning_rate_max: " + str(lgbm_classification_learning_rate_max))
 
+gb_classification = recipe_config.get('gb_classification', None)
+print("gb_classification: " + str(gb_classification))
+gb_classification_n_estimators_min = recipe_config.get('gb_classification_n_estimators_min', None)
+print("gb_classification_n_estimators_min: " + str(gb_classification_n_estimators_min))
+gb_classification_n_estimators_max = recipe_config.get('gb_classification_n_estimators_max', None)
+print("gb_classification_n_estimators_max: " + str(gb_classification_n_estimators_max))
+gb_classification_max_depth_min = recipe_config.get('gb_classification_max_depth_min', None)
+print("gb_classification_max_depth_min: " + str(gb_classification_max_depth_min))
+gb_classification_max_depth_max = recipe_config.get('gb_classification_max_depth_max', None)
+print("gb_classification_max_depth_max: " + str(gb_classification_max_depth_max))
+gb_classification_min_samples_leaf_min = recipe_config.get('gb_classification_min_samples_leaf_min', None)
+print("gb_classification_min_samples_leaf_min: " + str(gb_classification_min_samples_leaf_min))
+gb_classification_min_samples_leaf_max = recipe_config.get('gb_classification_min_samples_leaf_max', None)
+print("gb_classification_min_samples_leaf_max: " + str(gb_classification_min_samples_leaf_max))
+gb_classification_learning_rate_min = recipe_config.get('gb_classification_learning_rate_min', None)
+print("gb_classification_learning_rate_min: " + str(gb_classification_learning_rate_min))
+gb_classification_learning_rate_max = recipe_config.get('gb_classification_learning_rate_max', None)
+print("gb_classification_learning_rate_max: " + str(gb_classification_learning_rate_max))
+
 lasso_regression = recipe_config.get('lasso_regression', None)
 print("lasso_regression: " + str(lasso_regression))
 lasso_regression_alpha_min = recipe_config.get('lasso_regression_alpha_min', None)
@@ -237,6 +256,24 @@ print("lgbm_regression_learning_rate_min: " + str(lgbm_regression_learning_rate_
 lgbm_regression_learning_rate_max = recipe_config.get('lgbm_regression_learning_rate_max', None)
 print("lgbm_regression_learning_rate_max: " + str(lgbm_regression_learning_rate_max))
 
+gb_regression = recipe_config.get('gb_regression', None)
+print("gb_regression: " + str(gb_regression))
+gb_regression_n_estimators_min = recipe_config.get('gb_regression_n_estimators_min', None)
+print("gb_regression_n_estimators_min: " + str(gb_regression_n_estimators_min))
+gb_regression_n_estimators_max = recipe_config.get('gb_regression_n_estimators_max', None)
+print("gb_regression_n_estimators_max: " + str(gb_regression_n_estimators_max))
+gb_regression_max_depth_min = recipe_config.get('gb_regression_max_depth_min', None)
+print("gb_regression_max_depth_min: " + str(gb_regression_max_depth_min))
+gb_regression_max_depth_max = recipe_config.get('gb_regression_max_depth_max', None)
+print("gb_regression_max_depth_max: " + str(gb_regression_max_depth_max))
+gb_regression_min_samples_leaf_min = recipe_config.get('gb_regression_min_samples_leaf_min', None)
+print("gb_regression_min_samples_leaf_min: " + str(gb_regression_min_samples_leaf_min))
+gb_regression_min_samples_leaf_max = recipe_config.get('gb_regression_min_samples_leaf_max', None)
+print("gb_regression_min_samples_leaf_max: " + str(gb_regression_min_samples_leaf_max))
+gb_regression_learning_rate_min = recipe_config.get('gb_regression_learning_rate_min', None)
+print("gb_regression_learning_rate_min: " + str(gb_regression_learning_rate_min))
+gb_regression_learning_rate_max = recipe_config.get('gb_regression_learning_rate_max', None)
+print("gb_regression_learning_rate_max: " + str(gb_regression_learning_rate_max))
 
 glm_regression = recipe_config.get('glm_regression', None)
 print("glm_regression: " + str(glm_regression))
@@ -291,58 +328,85 @@ if prediction_type == "two-class classification":
 else:
     col_label_values = None
 
-col_label_dtype_mappings = {
-    'binary': T.BinaryType(),
-    'boolean': T.BooleanType(),
-    'decimal': T.DecimalType(),
-    'double': T.DoubleType(),
-    'double precision': T.DoubleType(),
-    'number': T.DecimalType(),
-    'numeric': T.DecimalType(),
-    'float': T.FloatType(),
-    'float4': T.FloatType(),
-    'float8': T.FloatType(),
-    'real': T.FloatType(),
-    'integer': T.IntegerType(),
-    'bigint': T.LongType(),
-    'int': T.IntegerType(),
-    'tinyint': T.IntegerType(),
-    'byteint': T.IntegerType(),
-    'smallint': T.ShortType(),
-    'varchar': T.StringType(),
-    'char': T.StringType(),
-    'character': T.StringType(),
-    'string': T.StringType(),
-    'text': T.StringType()
-}    
-    
-for col_dtype in input_snowpark_df.dtypes:
-    if col_dtype[0] == col_label:
-        col_label_dtype = col_label_dtype_mappings[col_dtype[1]]
-        print("This is the col_label dtype: " + col_dtype[1])
+def convert_snowpark_df_col_dtype(snowpark_df, col):
 
-if prediction_type == "two-class classification":
-    y_collect = input_snowpark_df.select(col_label).groupBy(col_label).count().collect()
-    unique_y = [x[col_label] for x in y_collect]
+    col_label_dtype_mappings = {
+        'binary': T.BinaryType(),
+        'boolean': T.BooleanType(),
+        'decimal': T.DecimalType(),
+        'double': T.DoubleType(),
+        'double precision': T.DoubleType(),
+        'number': T.DecimalType(),
+        'numeric': T.DecimalType(),
+        'float': T.FloatType(),
+        'float4': T.FloatType(),
+        'float8': T.FloatType(),
+        'real': T.FloatType(),
+        'integer': T.IntegerType(),
+        'bigint': T.LongType(),
+        'int': T.IntegerType(),
+        'tinyint': T.IntegerType(),
+        'byteint': T.IntegerType(),
+        'smallint': T.ShortType(),
+        'varchar': T.StringType(),
+        'char': T.StringType(),
+        'character': T.StringType(),
+        'string': T.StringType(),
+        'text': T.StringType()
+    }
+
+    for col_dtype in snowpark_df.dtypes:
+        if col_dtype[0] == col:
+            new_col_dtype = col_label_dtype_mappings[col_dtype[1]]
+
+    return new_col_dtype
+
+def add_sample_weights_col_to_snowpark_df(snowpark_df, col):
+    y_collect = snowpark_df.select(col).groupBy(col).count().collect()
+    unique_y = [x[col] for x in y_collect]
     total_y = sum([x["COUNT"] for x in y_collect])
     unique_y_count = len(y_collect)
     bin_count = [x["COUNT"] for x in y_collect]
 
-    class_weights_spark = {i: ii for i, ii in zip(unique_y, total_y / (unique_y_count * np.array(bin_count)))}
-    print(class_weights_spark)
+    class_weights = {i: ii for i, ii in zip(unique_y, total_y / (unique_y_count * np.array(bin_count)))}
 
     res = []
-    for key, val in class_weights_spark.items():
+    for key, val in class_weights.items():
         res.append([key,val])
-    
-    
-    schema = T.StructType([T.StructField(col_label, col_label_dtype), T.StructField("SAMPLE_WEIGHTS", T.DoubleType())])
-    df2 = session.create_dataframe(res,schema)
 
-    input_snowpark_df = input_snowpark_df.join(df2, [col_label], 'left')
+    col_label_dtype = convert_snowpark_df_col_dtype(snowpark_df, col)
 
-test_ratio = 1 - train_ratio
-train_snowpark_df, test_snowpark_df = input_snowpark_df.random_split(weights = [train_ratio, test_ratio], seed = random_seed)
+    schema = T.StructType([T.StructField(col, col_label_dtype), T.StructField("SAMPLE_WEIGHTS", T.DoubleType())])
+    df_to_join = session.create_dataframe(res,schema)
+
+    snowpark_df = snowpark_df.join(df_to_join, [col], 'left')
+
+    return snowpark_df
+
+if use_class_weights:
+    input_snowpark_df = add_sample_weights_col_to_snowpark_df(input_snowpark_df, col_label)
+
+if time_ordering_enabled:
+    time_ordering_variable_unix = time_ordering_variable + '_UNIX'
+    input_snowpark_df = input_snowpark_df.withColumn(time_ordering_variable_unix, F.unix_timestamp(input_snowpark_df[time_ordering_variable]))
+    
+    split_percentile_value = input_snowpark_df.approx_quantile(time_ordering_variable_unix, [train_ratio])[0]
+    
+    train_snowpark_df = input_snowpark_df.filter(col(time_ordering_variable_unix) < split_percentile_value)
+    test_snowpark_df = input_snowpark_df.filter(col(time_ordering_variable_unix) >= split_percentile_value)
+    
+    train_snowpark_df = train_snowpark_df.drop(time_ordering_variable_unix)
+    test_snowpark_df = test_snowpark_df.drop(time_ordering_variable_unix)
+
+    print("train set nrecords: " + str(train_snowpark_df.count()))
+    print("test set nrecords: " + str(test_snowpark_df.count()))
+    
+    #cv = TimeSeriesSplit(n_splits=3)
+    cv = 3
+else:
+    test_ratio = 1 - train_ratio
+    train_snowpark_df, test_snowpark_df = input_snowpark_df.random_split(weights = [train_ratio, test_ratio], seed = random_seed)
+    cv = 3
 
 ### SECTION 6 - Write Train/Test Datasets to Output Tables
 dku_snowpark.write_with_schema(output_train_dataset, train_snowpark_df)
@@ -455,7 +519,15 @@ if lgbm_classification:
                                      'clf__max_depth': randint(lgbm_classification_max_depth_min,lgbm_classification_max_depth_max),
                                      'clf__min_child_weight': uniform(lgbm_classification_min_child_weight_min,lgbm_classification_min_child_weight_max),
                                      'clf__learning_rate': loguniform(lgbm_classification_learning_rate_min,lgbm_classification_learning_rate_max)}})
-    
+
+if gb_classification:
+    algorithms.append({'algorithm': 'gb_classification',
+                       'sklearn_obj': GradientBoostingClassifier(),
+                       'gs_params': {'clf__n_estimators': randint(gb_classification_n_estimators_min, gb_classification_n_estimators_max),
+                                     'clf__max_depth': randint(gb_classification_max_depth_min,gb_classification_max_depth_max),
+                                     'clf__min_samples_leaf': randint(gb_classification_min_samples_leaf_min,gb_classification_min_samples_leaf_max),
+                                     'clf__learning_rate': loguniform(gb_classification_learning_rate_min,gb_classification_learning_rate_max)}})    
+
 if lasso_regression:
     algorithms.append({'algorithm': 'lasso_regression',
                        'sklearn_obj': Lasso(),
@@ -482,6 +554,14 @@ if lgbm_regression:
                                      'clf__max_depth': randint(lgbm_regression_max_depth_min,lgbm_regression_max_depth_max),
                                      'clf__min_child_weight': uniform(lgbm_regression_min_child_weight_min,lgbm_regression_min_child_weight_max),
                                      'clf__learning_rate': loguniform(lgbm_regression_learning_rate_min,lgbm_regression_learning_rate_max)}})
+
+if gb_regression:
+    algorithms.append({'algorithm': 'gb_regression',
+                       'sklearn_obj': GradientBoostingRegressor(),
+                       'gs_params': {'clf__n_estimators': randint(gb_regression_n_estimators_min, gb_regression_n_estimators_max),
+                                     'clf__max_depth': randint(gb_regression_max_depth_min,gb_regression_max_depth_max),
+                                     'clf__min_samples_leaf': randint(gb_regression_min_samples_leaf_min,gb_regression_min_samples_leaf_max),
+                                     'clf__learning_rate': loguniform(gb_regression_learning_rate_min,gb_regression_learning_rate_max)}})    
     
 if glm_regression:
     if glm_distribution == "poisson":
