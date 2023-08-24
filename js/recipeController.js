@@ -60,10 +60,12 @@ app.controller('retrainRecipeController', function ($scope, utils) {
         $scope.updateMetrics();
         utils.retrieveInfoBackend($scope, "get-info-retrain", updateScopeData);
         utils.initVariable($scope, 'col_label', '');
+        utils.initVariable($scope, 'time_ordering_variable', '');
     };
 
     init();
     console.log($scope.config.col_label);
+    console.log($scope.config.time_ordering_variable);
 });
 
 
