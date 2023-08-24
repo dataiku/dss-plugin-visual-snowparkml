@@ -54,6 +54,19 @@
                 <span class="help-inline">Using a fixed random seed allows for reproducible result</span>
             </div>
         </div>
+        <label for="time-ordering" class="algo-label">Enable time ordering
+            <input type="checkbox" id="time-ordering" ng-model="config.time_ordering"/>
+        </label>
+        <div class="control-group" ng-show="config.time_ordering">
+            <label class="control-label">Time ordering column</label>
+            <div class="controls">
+                <select dku-bs-select
+                        name="time_ordering_variable"
+                        ng-model="config.time_ordering_variable"
+                        ng-options="t as t.name for t in config.inputDatasetColumns track by t.id">
+                </select>
+            </div>
+        </div> 
         <hr>
         <h2 class="settings-section-title">Metrics</h2>        
         <div class="control-group">

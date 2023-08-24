@@ -77,6 +77,12 @@ col_label = recipe_config.get('col_label', None)['name']
 print("col_label: " + str(col_label))
 prediction_type = recipe_config.get('prediction_type', None)
 print("prediction_type: " + str(prediction_type))
+
+time_ordering = recipe_config.get('time_ordering', False)
+print("time_ordering: " + str(time_ordering))
+time_ordering_variable = recipe_config.get('time_ordering_variable', None)
+print("time_ordering_variable: " + str(time_ordering_variable))
+
 train_ratio = recipe_config.get('train_ratio', None)
 print("train_ratio: " + str(train_ratio))
 random_seed = recipe_config.get('random_seed', None)
