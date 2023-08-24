@@ -335,6 +335,66 @@ Random Forests generally provide good results, at the expense of 'explainability
             </div>  
             <div style="clear:both;">&nbsp;</div>
           </div>
+          <div class="form-group">
+            <div class="algo-group" title="Gradient boosting is a technique which produces a prediction model in the form of an ensemble of 'weak' prediction models (small decision trees).
+
+The concept is to train a set of decision trees (weak learners) to create a final strong learner. This is an iterative method. After each tree is trained, the data is reweighted: samples that were misclassified gain weight while the correctly classified ones lose weight. 
+
+This allows future weak learners to focus on the 'difficult' examples that the previous weak learners missed.
+Due to the iterative nature of boosting, it is not very parallelizable and is less scalable than other algorithms.">
+            <label for="gb-classification" class="algo-label">Gradient Tree Boosting Classification
+            <input type="checkbox" id="gb-classification" ng-model="config.gb_classification"/>
+            </label>
+            </div>
+            <div class="algo-details" ng-show="config.gb_classification">
+              <div class="algo-hparam-parent-first">
+              <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
+              <div class="algo-hparam-first">
+              <label for="gb-classification-n-estimators-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-classification-n-estimators-min" ng-model="config.gb_classification_n_estimators_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-classification-n-estimators-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-classification-n-estimators-max" ng-model="config.gb_classification_n_estimators_max"/>
+              </div>
+              </div>
+              
+              <div class="algo-hparam-parent-second">
+              <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
+              <div class="algo-hparam">
+              <label for="gb-classification-max-depth-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-classification-max-depth-min" ng-model="config.gb_classification_max_depth_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-classification-max-depth-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-classification-max-depth-max" ng-model="config.gb_classification_max_depth_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-third">
+              <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
+              <div class="algo-hparam">
+              <label for="gb-classification-min-samples-leaf-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-classification-min-samples-leaf-min" ng-model="config.gb_classification_min_samples_leaf_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-classification-min-samples-leaf-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-classification-min-samples-leaf-max" ng-model="config.gb_classification_min_samples_leaf_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-fourth">
+              <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
+              <div class="algo-hparam">
+              <label for="gb-classification-learning-rate-min">(min)</label>
+              <input class="hparam-input" type="number" step="0.001" id="gb-classification-learning-rate-min" ng-model="config.gb_classification_learning_rate_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-classification-learning-rate-max">(max)</label>
+              <input class="hparam-input" type="number" step="0.001" id="gb-classification-learning-rate-max" ng-model="config.gb_classification_learning_rate_max"/>
+              </div>
+              </div>
+            </div>
+            <div style="clear:both;">&nbsp;</div>
+          </div>         
         </div>
         <div ng-show="config.prediction_type === 'regression'">
           <div class="form-group">
@@ -512,6 +572,66 @@ Random Forests generally provide good results, at the expense of 'explainability
               </div>
               </div>
             </div>  
+            <div style="clear:both;">&nbsp;</div>
+          </div>
+          <div class="form-group">
+            <div class="algo-group" title="Gradient boosting is a technique which produces a prediction model in the form of an ensemble of 'weak' prediction models (small decision trees).
+
+The concept is to train a set of decision trees (weak learners) to create a final strong learner. This is an iterative method. After each tree is trained, the data is reweighted: samples that were misclassified gain weight while the correctly classified ones lose weight. 
+
+This allows future weak learners to focus on the 'difficult' examples that the previous weak learners missed.
+Due to the iterative nature of boosting, it is not very parallelizable and is less scalable than other algorithms.">
+            <label for="gb-regression" class="algo-label">Gradient Tree Boosting Regression
+            <input type="checkbox" id="gb-regression" ng-model="config.gb_regression"/>
+            </label>
+            </div>
+            <div class="algo-details" ng-show="config.gb_regression">
+              <div class="algo-hparam-parent-first">
+              <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
+              <div class="algo-hparam-first">
+              <label for="gb-regression-n-estimators-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-regression-n-estimators-min" ng-model="config.gb_regression_n_estimators_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-regression-n-estimators-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-regression-n-estimators-max" ng-model="config.gb_regression_n_estimators_max"/>
+              </div>
+              </div>
+              
+              <div class="algo-hparam-parent-second">
+              <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
+              <div class="algo-hparam">
+              <label for="gb-regression-max-depth-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-regression-max-depth-min" ng-model="config.gb_regression_max_depth_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-regression-max-depth-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-regression-max-depth-max" ng-model="config.gb_regression_max_depth_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-third">
+              <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
+              <div class="algo-hparam">
+              <label for="gb-regression-min-samples-leaf-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-regression-min-samples-leaf-min" ng-model="config.gb_regression_min_samples_leaf_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-regression-min-samples-leaf-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-regression-min-samples-leaf-max" ng-model="config.gb_regression_min_samples_leaf_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-fourth">
+              <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
+              <div class="algo-hparam">
+              <label for="gb-regression-learning-rate-min">(min)</label>
+              <input class="hparam-input" type="number" step="0.001" id="gb-regression-learning-rate-min" ng-model="config.gb_regression_learning_rate_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-regression-learning-rate-max">(max)</label>
+              <input class="hparam-input" type="number" step="0.001" id="gb-regression-learning-rate-max" ng-model="config.gb_regression_learning_rate_max"/>
+              </div>
+              </div>
+            </div>
             <div style="clear:both;">&nbsp;</div>
           </div>
           <div class="form-group">
