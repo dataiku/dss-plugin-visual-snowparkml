@@ -259,11 +259,11 @@ Random Forests generally provide good results, at the expense of 'explainability
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="xgb-classification-min-child-weight-min">(min)</label>
-              <input class="hparam-input" type="number" id="xgb-classification-min-child-weight-min" ng-model="config.xgb_classification_min_child_weight_min"/>
+              <input class="hparam-input" type="number" step="0.001" id="xgb-classification-min-child-weight-min" ng-model="config.xgb_classification_min_child_weight_min"/>
               </div>
               <div class="algo-hparam">
               <label for="xgb-classification-min-child-weight-max">(max)</label>
-              <input class="hparam-input" type="number" id="xgb-classification-min-child-weight-max" ng-model="config.xgb_classification_min_child_weight_max"/>
+              <input class="hparam-input" type="number" step="0.001" id="xgb-classification-min-child-weight-max" ng-model="config.xgb_classification_min_child_weight_max"/>
               </div>
               </div>
               <div class="algo-hparam-parent-fourth">
@@ -314,11 +314,11 @@ Random Forests generally provide good results, at the expense of 'explainability
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="lgbm-classification-min-child-weight-min">(min)</label>
-              <input class="hparam-input" type="number" id="lgbm-classification-min-child-weight-min" ng-model="config.lgbm_classification_min_child_weight_min"/>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-classification-min-child-weight-min" ng-model="config.lgbm_classification_min_child_weight_min"/>
               </div>
               <div class="algo-hparam">
               <label for="lgbm-classification-min-child-weight-max">(max)</label>
-              <input class="hparam-input" type="number" id="lgbm-classification-min-child-weight-max" ng-model="config.lgbm_classification_min_child_weight_max"/>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-classification-min-child-weight-max" ng-model="config.lgbm_classification_min_child_weight_max"/>
               </div>
               </div>
               <div class="algo-hparam-parent-fourth">
@@ -498,11 +498,11 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="xgb-regression-min-child-weight-min">(min)</label>
-              <input class="hparam-input" type="number" id="xgb-regression-min-child-weight-min" ng-model="config.xgb_regression_min_child_weight_min"/>
+              <input class="hparam-input" type="number" step="0.001" id="xgb-regression-min-child-weight-min" ng-model="config.xgb_regression_min_child_weight_min"/>
               </div>
               <div class="algo-hparam">
               <label for="xgb-regression-min-child-weight-max">(max)</label>
-              <input class="hparam-input" type="number" id="xgb-regression-min-child-weight-max" ng-model="config.xgb_regression_min_child_weight_max"/>
+              <input class="hparam-input" type="number" step="0.001" id="xgb-regression-min-child-weight-max" ng-model="config.xgb_regression_min_child_weight_max"/>
               </div>
               </div>
               <div class="algo-hparam-parent-fourth">
@@ -553,11 +553,11 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="lgbm-regression-min-child-weight-min">(min)</label>
-              <input class="hparam-input" type="number" id="lgbm-regression-min-child-weight-min" ng-model="config.lgbm_regression_min_child_weight_min"/>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-regression-min-child-weight-min" ng-model="config.lgbm_regression_min_child_weight_min"/>
               </div>
               <div class="algo-hparam">
               <label for="lgbm-regression-min-child-weight-max">(max)</label>
-              <input class="hparam-input" type="number" id="lgbm-regression-min-child-weight-max" ng-model="config.lgbm_regression_min_child_weight_max"/>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-regression-min-child-weight-max" ng-model="config.lgbm_regression_min_child_weight_max"/>
               </div>
               </div>
               <div class="algo-hparam-parent-fourth">
