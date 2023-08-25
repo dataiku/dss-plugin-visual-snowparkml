@@ -150,9 +150,12 @@
         <div ng-show="config.prediction_type === 'two-class classification'">
           <div class="form-group">
             <div class="algo-group">
-            <label for="logistic-regression" class="algo-label">Logistic Regression
-            <input type="checkbox" id="logistic-regression" ng-model="config.logistic_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">Logistic Regression</label>
+                <div class="controls">
+                    <input name="logistic-regression" type="checkbox" ng-model="config.logistic_regression"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.logistic_regression">
               <div class="algo-hparam-parent-first">
@@ -235,9 +238,12 @@ Random Forests generally provide good results, at the expense of 'explainability
           
           <div class="form-group">
             <div class="algo-group">
-            <label for="xgb-classification" class="algo-label">XGBoost Classification
-            <input type="checkbox" id="xgb-classification" ng-model="config.xgb_classification"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">XGBoost Classification</label>
+                <div class="controls">
+                    <input name="xgb-classification" type="checkbox" ng-model="config.xgb_classification"/>
+                </div>
+            </div>    
             </div>
             <div class="algo-details" ng-show="config.xgb_classification">
               <div class="algo-hparam-parent-first">
@@ -290,9 +296,12 @@ Random Forests generally provide good results, at the expense of 'explainability
           </div>
           <div class="form-group">
             <div class="algo-group">
-            <label for="lgbm-classification" class="algo-label">LightGBM Classification
-            <input type="checkbox" id="lgbm-classification" ng-model="config.lgbm_classification"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">LightGBM Classification</label>
+                <div class="controls">
+                    <input name="lgbm-classification" type="checkbox" ng-model="config.lgbm_classification"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.lgbm_classification">
               <div class="algo-hparam-parent-first">
@@ -350,9 +359,12 @@ The concept is to train a set of decision trees (weak learners) to create a fina
 
 This allows future weak learners to focus on the 'difficult' examples that the previous weak learners missed.
 Due to the iterative nature of boosting, it is not very parallelizable and is less scalable than other algorithms.">
-            <label for="gb-classification" class="algo-label">Gradient Tree Boosting Classification
-            <input type="checkbox" id="gb-classification" ng-model="config.gb_classification"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">Gradient Tree Boosting Classification</label>
+                <div class="controls">
+                    <input name="gb-classification" type="checkbox" ng-model="config.gb_classification"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.gb_classification">
               <div class="algo-hparam-parent-first">
@@ -407,11 +419,13 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
         <div ng-show="config.prediction_type === 'regression'">
           <div class="form-group">
             <div class="algo-group">
-            <label for="lasso-regression" class="algo-label">Lasso Regression
-            <input type="checkbox" id="lasso-regression" ng-model="config.lasso_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">Lasso Regression</label>
+                <div class="controls">
+                    <input name="lasso-regression" type="checkbox" ng-model="config.lasso_regression"/>
+                </div>
             </div>
-              
+            </div>
             <div class="algo-details" ng-show="config.lasso_regression">
               <div class="algo-hparam-parent-first">
               <h5 title = "Regularization parameter alpha. A high value of alpha will shrink coefficients in order to prevent overfitting. A low value of alpha will lead to a better model on the train set, at the risk of overfitting (high variance)."> Alpha </h5>
@@ -430,9 +444,12 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
           </div>
           <div class="form-group">
             <div class="algo-group">
-            <label for="random-forest-regression" class="algo-label">Random Forest Regression
-            <input type="checkbox" id="random-forest-regression" ng-model="config.random_forest_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">Random Forest Regression</label>
+                <div class="controls">
+                    <input name="random-forest-regression" type="checkbox" ng-model="config.random_forest_regression"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.random_forest_regression">
               <div class="algo-hparam-parent-first">
@@ -474,9 +491,12 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
           </div>
           <div class="form-group">
             <div class="algo-group">
-            <label for="xgb-regression" class="algo-label">XGBoost Regression
-            <input type="checkbox" id="xgb-regression" ng-model="config.xgb_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">XGBoost Regression</label>
+                <div class="controls">
+                    <input name="xgb-regression" type="checkbox" ng-model="config.xgb_regression"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.xgb_regression">
               <div class="algo-hparam-parent-first">
@@ -529,9 +549,12 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
           </div>
           <div class="form-group">
             <div class="algo-group">
-            <label for="lgbm-regression" class="algo-label">LightGBM Regression
-            <input type="checkbox" id="lgbm-regression" ng-model="config.lgbm_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">LightGBM Regression</label>
+                <div class="controls">
+                    <input name="lgbm-regression" type="checkbox" ng-model="config.lgbm_regression"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.lgbm_regression">
               <div class="algo-hparam-parent-first">
@@ -589,9 +612,12 @@ The concept is to train a set of decision trees (weak learners) to create a fina
 
 This allows future weak learners to focus on the 'difficult' examples that the previous weak learners missed.
 Due to the iterative nature of boosting, it is not very parallelizable and is less scalable than other algorithms.">
-            <label for="gb-regression" class="algo-label">Gradient Tree Boosting Regression
-            <input type="checkbox" id="gb-regression" ng-model="config.gb_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">Gradient Tree Boosting Regression</label>
+                <div class="controls">
+                    <input name="gb-regression" type="checkbox" ng-model="config.gb_regression"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.gb_regression">
               <div class="algo-hparam-parent-first">
@@ -644,9 +670,12 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
           </div>
           <div class="form-group">
             <div class="algo-group">
-            <label for="glm-regression" class="algo-label">Generalized Linear Model (GLM) Regression
-            <input type="checkbox" id="glm-regression" ng-model="config.glm_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">Generalized Linear Model (GLM) Regression</label>
+                <div class="controls">
+                    <input name="glm-regression" type="checkbox" ng-model="config.glm_regression"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.glm_regression">
               <div class="algo-hparam-parent-first">
