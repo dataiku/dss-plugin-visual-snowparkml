@@ -182,9 +182,17 @@ When 'growing' (ie, training) the forest:
     - for each decision point in the tree, a random subset of the input features is considered.
                                            
 Random Forests generally provide good results, at the expense of 'explainability' of the model.">
-            <label for="random-forest-classification" class="algo-label">Random Forest Classification
+            <div class="control-group">
+                <label class="control-label">Random Forest Classification</label>
+                <div class="controls">
+                    <input name="random-forest-classification" type="checkbox" ng-model="config.random_forest_classification"/>
+                </div>
+            </div>
+            
+            <!--<label for="random-forest-classification" class="algo-label">Random Forest Classification
             <input type="checkbox" id="random-forest-classification" ng-model="config.random_forest_classification"/>
             </label>
+            -->    
             </div>
             <div class="algo-details" ng-show="config.random_forest_classification">
               <div class="algo-hparam-parent-first">
