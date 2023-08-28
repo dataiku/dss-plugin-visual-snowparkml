@@ -81,8 +81,10 @@ print("prediction_type: " + str(prediction_type))
 
 time_ordering = recipe_config.get('time_ordering', False)
 print("time_ordering: " + str(time_ordering))
-time_ordering_variable = recipe_config.get('time_ordering_variable', None)['name']
-print("time_ordering_variable: " + str(time_ordering_variable))
+time_ordering_variable = recipe_config.get('time_ordering_variable', None)
+if time_ordering_variable:
+    time_ordering_variable = time_ordering_variable['name']
+    print("time_ordering_variable: " + str(time_ordering_variable))
 
 train_ratio = recipe_config.get('train_ratio', None)
 print("train_ratio: " + str(train_ratio))
