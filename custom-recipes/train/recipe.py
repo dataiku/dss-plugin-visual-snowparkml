@@ -333,33 +333,18 @@ if warehouse:
 
 connection_schema = session.get_current_schema()
 
-if not connection_schema:
-    
+if not connection_schema:    
     input_dataset_info = input_dataset.get_location_info()
     input_dataset_schema = input_dataset_info['info']['schema']
     print("test1")
     print(input_dataset_schema)
-    dku_variables = dataiku.get_custom_variables()
+    session.use_schema(schema_full_name)
 
-    if '${' in input_dataset_schema:
-        schema_var_match = re.search(r"\$\{(.+)\}", input_dataset_schema)
-        schema_var_name = schema_var_match.group(1)
-
-        for dku_variable, value in dku_variables.items():
-            if dku_variable == schema_var_name:
-                print("PROJ VAR")
-                print(dku_variable)
-                print("SCHEMA_Var")
-                print(schema_var_name)
-                schema_full_name = re.sub(r"\$\{(.+)\}", value, input_dataset_schema)               
-                session.use_schema(schema_full_name)
-                print("SCHEMA "+ schema_full_name)
 print("HIHIH")
 print(session.get_current_schema())    
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
-input_snowpark_df = dku_snowpark.get_dataframe(input_dataset, session = session)
-print("HIHI")
-input_snowpark_df.show(3)
+input_snowpark_df = dku_snowpark.get_dataframe(input_dataset)
+
 if prediction_type == "two-class classification":
     col_label_values = list(input_snowpark_df.select(col_label).distinct().to_pandas()[col_label])
 else:
