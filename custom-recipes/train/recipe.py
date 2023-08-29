@@ -335,11 +335,8 @@ connection_schema = session.get_current_schema()
 
 if not connection_schema:
     
-    print("INPUT DS NAME " + input_dataset_name)
-    input_ds = project.get_dataset(input_dataset_name)
-    
-    input_dataset_info = input_ds.get_info()
-    input_dataset_schema = input_dataset_info.info['dataset']['params']['schema']
+    input_dataset_info = input_dataset.get_location_info()
+    input_dataset_schema = input_dataset_info['info']['schema']
     dku_variables = dataiku.get_custom_variables()
 
     if '${' in input_dataset_schema:
