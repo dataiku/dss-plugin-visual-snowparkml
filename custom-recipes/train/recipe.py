@@ -336,12 +336,8 @@ connection_schema = session.get_current_schema()
 if not connection_schema:    
     input_dataset_info = input_dataset.get_location_info()
     input_dataset_schema = input_dataset_info['info']['schema']
-    print("test1")
-    print(input_dataset_schema)
     session.use_schema(input_dataset_schema)
 
-print("HIHIH")
-print(session.get_current_schema())    
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
 input_snowpark_df = dku_snowpark.get_dataframe(input_dataset)
 
