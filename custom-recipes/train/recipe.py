@@ -335,6 +335,7 @@ connection_schema = session.get_current_schema()
 
 if not connection_schema:
     
+    print("INPUT DS NAME " + input_dataset_name)
     input_ds = project.get_dataset(input_dataset_name)
     
     input_dataset_info = input_ds.get_info()
