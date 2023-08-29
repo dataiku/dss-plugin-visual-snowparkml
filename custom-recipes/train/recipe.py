@@ -348,7 +348,7 @@ if not connection_schema:
                 schema_full_name = re.sub(r"\$\{(.+)\}", value, input_dataset_schema)               
                 session.use_schema(schema_full_name)
                 print("SCHEMA "+ schema_full_name)
-    
+print(session.get_current_schema())    
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
 input_snowpark_df = dku_snowpark.get_dataframe(input_dataset, session = session)
 print("HIHI")
