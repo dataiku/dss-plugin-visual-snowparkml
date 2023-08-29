@@ -338,7 +338,7 @@ if not connection_schema:
     input_dataset_schema = input_dataset_info['info']['schema']
     print("test1")
     print(input_dataset_schema)
-    session.use_schema(schema_full_name)
+    session.use_schema(input_dataset_schema)
 
 print("HIHIH")
 print(session.get_current_schema())    
