@@ -337,6 +337,8 @@ if not connection_schema:
     
     input_dataset_info = input_dataset.get_location_info()
     input_dataset_schema = input_dataset_info['info']['schema']
+    print("test1")
+    print(input_dataset_schema)
     dku_variables = dataiku.get_custom_variables()
 
     if '${' in input_dataset_schema:
@@ -345,6 +347,10 @@ if not connection_schema:
 
         for dku_variable, value in dku_variables.items():
             if dku_variable == schema_var_name:
+                print("PROJ VAR")
+                print(dku_variable)
+                print("SCHEMA_Var")
+                print(schema_var_name)
                 schema_full_name = re.sub(r"\$\{(.+)\}", value, input_dataset_schema)               
                 session.use_schema(schema_full_name)
                 print("SCHEMA "+ schema_full_name)
