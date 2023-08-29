@@ -539,6 +539,7 @@ if random_forest_classification:
                        'gs_params': {'clf__n_estimators': randint(random_forest_classification_n_estimators_min,random_forest_classification_n_estimators_max),
                                      'clf__max_depth': randint(random_forest_classification_max_depth_min,random_forest_classification_max_depth_max),
                                      'clf__min_samples_leaf': randint(random_forest_classification_min_samples_leaf_min,random_forest_classification_min_samples_leaf_max)}})
+
 if logistic_regression:
     algorithms.append({'algorithm': 'logistic_regression',
                        'sklearn_obj': LogisticRegression(),
@@ -567,6 +568,12 @@ if gb_classification:
                                      'clf__max_depth': randint(gb_classification_max_depth_min,gb_classification_max_depth_max),
                                      'clf__min_samples_leaf': randint(gb_classification_min_samples_leaf_min,gb_classification_min_samples_leaf_max),
                                      'clf__learning_rate': loguniform(gb_classification_learning_rate_min,gb_classification_learning_rate_max)}})    
+
+if decision_tree_classification:
+    algorithms.append({'algorithm': 'decision_tree_classification',
+                       'sklearn_obj': DecisionTreeClassifier(),
+                       'gs_params': {'clf__max_depth': randint(decision_tree_classification_max_depth_min,decision_tree_classification_max_depth_max),
+                                     'clf__min_samples_leaf': randint(decision_tree_classification_min_samples_leaf_min,decision_tree_classification_min_samples_leaf_max)}})
 
 if lasso_regression:
     algorithms.append({'algorithm': 'lasso_regression',
@@ -602,6 +609,12 @@ if gb_regression:
                                      'clf__max_depth': randint(gb_regression_max_depth_min,gb_regression_max_depth_max),
                                      'clf__min_samples_leaf': randint(gb_regression_min_samples_leaf_min,gb_regression_min_samples_leaf_max),
                                      'clf__learning_rate': loguniform(gb_regression_learning_rate_min,gb_regression_learning_rate_max)}})    
+
+if decision_tree_regression:
+    algorithms.append({'algorithm': 'decision_tree_regression',
+                       'sklearn_obj': DecisionTreeRegressor(),
+                       'gs_params': {'clf__max_depth': randint(decision_tree_regression_max_depth_min,decision_tree_regression_max_depth_max),
+                                     'clf__min_samples_leaf': randint(decision_tree_regression_min_samples_leaf_min,decision_tree_regression_min_samples_leaf_max)}})
     
 if glm_regression:
     if glm_distribution == "poisson":
