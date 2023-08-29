@@ -533,104 +533,106 @@ preprocessor = ColumnTransformer(transformers=col_transformer_list)
 ### SECTION 9 - Initialize algorithms selected and hyperparameter spaces for the RandomSearch
 algorithms = []
 
-if random_forest_classification:
-    algorithms.append({'algorithm': 'random_forest_classification',
-                       'sklearn_obj': RandomForestClassifier(),
-                       'gs_params': {'clf__n_estimators': randint(random_forest_classification_n_estimators_min,random_forest_classification_n_estimators_max),
-                                     'clf__max_depth': randint(random_forest_classification_max_depth_min,random_forest_classification_max_depth_max),
-                                     'clf__min_samples_leaf': randint(random_forest_classification_min_samples_leaf_min,random_forest_classification_min_samples_leaf_max)}})
+if prediction_type == "two-class classification":
+    if random_forest_classification:
+        algorithms.append({'algorithm': 'random_forest_classification',
+                           'sklearn_obj': RandomForestClassifier(),
+                           'gs_params': {'clf__n_estimators': randint(random_forest_classification_n_estimators_min,random_forest_classification_n_estimators_max),
+                                         'clf__max_depth': randint(random_forest_classification_max_depth_min,random_forest_classification_max_depth_max),
+                                         'clf__min_samples_leaf': randint(random_forest_classification_min_samples_leaf_min,random_forest_classification_min_samples_leaf_max)}})
 
-if logistic_regression:
-    algorithms.append({'algorithm': 'logistic_regression',
-                       'sklearn_obj': LogisticRegression(),
-                       'gs_params': {'clf__C': loguniform(logistic_regression_c_min, logistic_regression_c_max)}})
+    if logistic_regression:
+        algorithms.append({'algorithm': 'logistic_regression',
+                           'sklearn_obj': LogisticRegression(),
+                           'gs_params': {'clf__C': loguniform(logistic_regression_c_min, logistic_regression_c_max)}})
 
-if xgb_classification:
-    algorithms.append({'algorithm': 'xgb_classification',
-                       'sklearn_obj': XGBClassifier(),
-                       'gs_params': {'clf__n_estimators': randint(xgb_classification_n_estimators_min,xgb_classification_n_estimators_max),
-                                     'clf__max_depth': randint(xgb_classification_max_depth_min,xgb_classification_max_depth_max),
-                                     'clf__min_child_weight': uniform(xgb_classification_min_child_weight_min,xgb_classification_min_child_weight_max),
-                                     'clf__learning_rate': loguniform(xgb_classification_learning_rate_min,xgb_classification_learning_rate_max)}})
+    if xgb_classification:
+        algorithms.append({'algorithm': 'xgb_classification',
+                           'sklearn_obj': XGBClassifier(),
+                           'gs_params': {'clf__n_estimators': randint(xgb_classification_n_estimators_min,xgb_classification_n_estimators_max),
+                                         'clf__max_depth': randint(xgb_classification_max_depth_min,xgb_classification_max_depth_max),
+                                         'clf__min_child_weight': uniform(xgb_classification_min_child_weight_min,xgb_classification_min_child_weight_max),
+                                         'clf__learning_rate': loguniform(xgb_classification_learning_rate_min,xgb_classification_learning_rate_max)}})
 
-if lgbm_classification:
-    algorithms.append({'algorithm': 'lgbm_classification',
-                       'sklearn_obj': LGBMClassifier(),
-                       'gs_params': {'clf__n_estimators': randint(lgbm_classification_n_estimators_min,lgbm_classification_n_estimators_max),
-                                     'clf__max_depth': randint(lgbm_classification_max_depth_min,lgbm_classification_max_depth_max),
-                                     'clf__min_child_weight': uniform(lgbm_classification_min_child_weight_min,lgbm_classification_min_child_weight_max),
-                                     'clf__learning_rate': loguniform(lgbm_classification_learning_rate_min,lgbm_classification_learning_rate_max)}})
+    if lgbm_classification:
+        algorithms.append({'algorithm': 'lgbm_classification',
+                           'sklearn_obj': LGBMClassifier(),
+                           'gs_params': {'clf__n_estimators': randint(lgbm_classification_n_estimators_min,lgbm_classification_n_estimators_max),
+                                         'clf__max_depth': randint(lgbm_classification_max_depth_min,lgbm_classification_max_depth_max),
+                                         'clf__min_child_weight': uniform(lgbm_classification_min_child_weight_min,lgbm_classification_min_child_weight_max),
+                                         'clf__learning_rate': loguniform(lgbm_classification_learning_rate_min,lgbm_classification_learning_rate_max)}})
 
-if gb_classification:
-    algorithms.append({'algorithm': 'gb_classification',
-                       'sklearn_obj': GradientBoostingClassifier(),
-                       'gs_params': {'clf__n_estimators': randint(gb_classification_n_estimators_min, gb_classification_n_estimators_max),
-                                     'clf__max_depth': randint(gb_classification_max_depth_min,gb_classification_max_depth_max),
-                                     'clf__min_samples_leaf': randint(gb_classification_min_samples_leaf_min,gb_classification_min_samples_leaf_max),
-                                     'clf__learning_rate': loguniform(gb_classification_learning_rate_min,gb_classification_learning_rate_max)}})    
+    if gb_classification:
+        algorithms.append({'algorithm': 'gb_classification',
+                           'sklearn_obj': GradientBoostingClassifier(),
+                           'gs_params': {'clf__n_estimators': randint(gb_classification_n_estimators_min, gb_classification_n_estimators_max),
+                                         'clf__max_depth': randint(gb_classification_max_depth_min,gb_classification_max_depth_max),
+                                         'clf__min_samples_leaf': randint(gb_classification_min_samples_leaf_min,gb_classification_min_samples_leaf_max),
+                                         'clf__learning_rate': loguniform(gb_classification_learning_rate_min,gb_classification_learning_rate_max)}})    
 
-if decision_tree_classification:
-    algorithms.append({'algorithm': 'decision_tree_classification',
-                       'sklearn_obj': DecisionTreeClassifier(),
-                       'gs_params': {'clf__max_depth': randint(decision_tree_classification_max_depth_min,decision_tree_classification_max_depth_max),
-                                     'clf__min_samples_leaf': randint(decision_tree_classification_min_samples_leaf_min,decision_tree_classification_min_samples_leaf_max)}})
+    if decision_tree_classification:
+        algorithms.append({'algorithm': 'decision_tree_classification',
+                           'sklearn_obj': DecisionTreeClassifier(),
+                           'gs_params': {'clf__max_depth': randint(decision_tree_classification_max_depth_min,decision_tree_classification_max_depth_max),
+                                         'clf__min_samples_leaf': randint(decision_tree_classification_min_samples_leaf_min,decision_tree_classification_min_samples_leaf_max)}})
 
-if lasso_regression:
-    algorithms.append({'algorithm': 'lasso_regression',
-                       'sklearn_obj': Lasso(),
-                       'gs_params': {'clf__alpha': loguniform(lasso_regression_alpha_min, lasso_regression_alpha_max)}})
-    
-if random_forest_regression:
-    algorithms.append({'algorithm': 'random_forest_regression',
-                       'sklearn_obj': RandomForestRegressor(),
-                       'gs_params': {'clf__n_estimators': randint(random_forest_regression_n_estimators_min,random_forest_regression_n_estimators_max),
-                                     'clf__max_depth': randint(random_forest_regression_max_depth_min,random_forest_regression_max_depth_max),
-                                     'clf__min_samples_leaf': randint(3,5)}})
+else:
+    if lasso_regression:
+        algorithms.append({'algorithm': 'lasso_regression',
+                           'sklearn_obj': Lasso(),
+                           'gs_params': {'clf__alpha': loguniform(lasso_regression_alpha_min, lasso_regression_alpha_max)}})
 
-if xgb_regression:
-    algorithms.append({'algorithm': 'xgb_regression',
-                       'sklearn_obj': XGBRegressor(),
-                       'gs_params': {'clf__n_estimators': randint(xgb_regression_n_estimators_min,xgb_regression_n_estimators_max),
-                                     'clf__max_depth': randint(xgb_regression_max_depth_min,xgb_regression_max_depth_max),
-                                     'clf__min_child_weight': uniform(xgb_regression_min_child_weight_min,xgb_regression_min_child_weight_max),
-                                     'clf__learning_rate': loguniform(xgb_regression_learning_rate_min,xgb_regression_learning_rate_max)}})
-if lgbm_regression:
-    algorithms.append({'algorithm': 'lgbm_regression',
-                       'sklearn_obj': LGBMRegressor(),
-                       'gs_params': {'clf__n_estimators': randint(lgbm_regression_n_estimators_min,lgbm_regression_n_estimators_max),
-                                     'clf__max_depth': randint(lgbm_regression_max_depth_min,lgbm_regression_max_depth_max),
-                                     'clf__min_child_weight': uniform(lgbm_regression_min_child_weight_min,lgbm_regression_min_child_weight_max),
-                                     'clf__learning_rate': loguniform(lgbm_regression_learning_rate_min,lgbm_regression_learning_rate_max)}})
+    if random_forest_regression:
+        algorithms.append({'algorithm': 'random_forest_regression',
+                           'sklearn_obj': RandomForestRegressor(),
+                           'gs_params': {'clf__n_estimators': randint(random_forest_regression_n_estimators_min,random_forest_regression_n_estimators_max),
+                                         'clf__max_depth': randint(random_forest_regression_max_depth_min,random_forest_regression_max_depth_max),
+                                         'clf__min_samples_leaf': randint(3,5)}})
 
-if gb_regression:
-    algorithms.append({'algorithm': 'gb_regression',
-                       'sklearn_obj': GradientBoostingRegressor(),
-                       'gs_params': {'clf__n_estimators': randint(gb_regression_n_estimators_min, gb_regression_n_estimators_max),
-                                     'clf__max_depth': randint(gb_regression_max_depth_min,gb_regression_max_depth_max),
-                                     'clf__min_samples_leaf': randint(gb_regression_min_samples_leaf_min,gb_regression_min_samples_leaf_max),
-                                     'clf__learning_rate': loguniform(gb_regression_learning_rate_min,gb_regression_learning_rate_max)}})    
+    if xgb_regression:
+        algorithms.append({'algorithm': 'xgb_regression',
+                           'sklearn_obj': XGBRegressor(),
+                           'gs_params': {'clf__n_estimators': randint(xgb_regression_n_estimators_min,xgb_regression_n_estimators_max),
+                                         'clf__max_depth': randint(xgb_regression_max_depth_min,xgb_regression_max_depth_max),
+                                         'clf__min_child_weight': uniform(xgb_regression_min_child_weight_min,xgb_regression_min_child_weight_max),
+                                         'clf__learning_rate': loguniform(xgb_regression_learning_rate_min,xgb_regression_learning_rate_max)}})
+    if lgbm_regression:
+        algorithms.append({'algorithm': 'lgbm_regression',
+                           'sklearn_obj': LGBMRegressor(),
+                           'gs_params': {'clf__n_estimators': randint(lgbm_regression_n_estimators_min,lgbm_regression_n_estimators_max),
+                                         'clf__max_depth': randint(lgbm_regression_max_depth_min,lgbm_regression_max_depth_max),
+                                         'clf__min_child_weight': uniform(lgbm_regression_min_child_weight_min,lgbm_regression_min_child_weight_max),
+                                         'clf__learning_rate': loguniform(lgbm_regression_learning_rate_min,lgbm_regression_learning_rate_max)}})
 
-if decision_tree_regression:
-    algorithms.append({'algorithm': 'decision_tree_regression',
-                       'sklearn_obj': DecisionTreeRegressor(),
-                       'gs_params': {'clf__max_depth': randint(decision_tree_regression_max_depth_min,decision_tree_regression_max_depth_max),
-                                     'clf__min_samples_leaf': randint(decision_tree_regression_min_samples_leaf_min,decision_tree_regression_min_samples_leaf_max)}})
-    
-if glm_regression:
-    if glm_distribution == "poisson":
-        algorithms.append({'algorithm': 'glm_regression_poisson',
-                       'sklearn_obj': PoissonRegressor(sample_weight_col = sample_weight_column),
-                       'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
-    elif glm_distribution == "gamma":
-        algorithms.append({'algorithm': 'glm_regression_gamma',
-                       'sklearn_obj': GammaRegressor(sample_weight_col = sample_weight_column),
-                       'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
-    elif glm_distribution == "tweedie":
-        algorithms.append({'algorithm': 'glm_regression_tweedie',
-                       'sklearn_obj': TweedieRegressor(power = glm_regression_variance_power,
-                                                       link = glm_link_function,
-                                                       sample_weight_col = sample_weight_column),
-                       'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
+    if gb_regression:
+        algorithms.append({'algorithm': 'gb_regression',
+                           'sklearn_obj': GradientBoostingRegressor(),
+                           'gs_params': {'clf__n_estimators': randint(gb_regression_n_estimators_min, gb_regression_n_estimators_max),
+                                         'clf__max_depth': randint(gb_regression_max_depth_min,gb_regression_max_depth_max),
+                                         'clf__min_samples_leaf': randint(gb_regression_min_samples_leaf_min,gb_regression_min_samples_leaf_max),
+                                         'clf__learning_rate': loguniform(gb_regression_learning_rate_min,gb_regression_learning_rate_max)}})    
+
+    if decision_tree_regression:
+        algorithms.append({'algorithm': 'decision_tree_regression',
+                           'sklearn_obj': DecisionTreeRegressor(),
+                           'gs_params': {'clf__max_depth': randint(decision_tree_regression_max_depth_min,decision_tree_regression_max_depth_max),
+                                         'clf__min_samples_leaf': randint(decision_tree_regression_min_samples_leaf_min,decision_tree_regression_min_samples_leaf_max)}})
+
+    if glm_regression:
+        if glm_distribution == "poisson":
+            algorithms.append({'algorithm': 'glm_regression_poisson',
+                           'sklearn_obj': PoissonRegressor(sample_weight_col = sample_weight_column),
+                           'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
+        elif glm_distribution == "gamma":
+            algorithms.append({'algorithm': 'glm_regression_gamma',
+                           'sklearn_obj': GammaRegressor(sample_weight_col = sample_weight_column),
+                           'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
+        elif glm_distribution == "tweedie":
+            algorithms.append({'algorithm': 'glm_regression_tweedie',
+                           'sklearn_obj': TweedieRegressor(power = glm_regression_variance_power,
+                                                           link = glm_link_function,
+                                                           sample_weight_col = sample_weight_column),
+                           'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
         
 ### SECTION 10 - Train all models, do RandomSearch and hyperparameter tuning
 def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_iter):
