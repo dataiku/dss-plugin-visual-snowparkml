@@ -409,7 +409,44 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
               </div>
             </div>
             <div style="clear:both;">&nbsp;</div>
-          </div>         
+          </div>
+          <div class="form-group">
+            <div class="algo-group" title="Decision Tree is a simple non-parametric algorithm. It creates a model that predicts the value of the target by learning simple decision rules inferred from the data features.
+
+These rules form a tree, with the leaves of the tree carrying the predicted class. Evaluation simply goes down the tree and evaluates the rule at each split.">
+            <div class="control-group">
+                <label class="control-label">Decision Tree Classification</label>
+                <div class="controls">
+                    <input name="decision-tree-classification" type="checkbox" ng-model="config.decision_tree_classification"/>
+                </div>
+            </div>   
+            </div>
+            <div class="algo-details" ng-show="config.decision_tree_classification">              
+              <div class="algo-hparam-parent-first">
+              <h5 title = "Maximum depth of the tree. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
+              <div class="algo-hparam">
+              <label for="decision-tree-classification-max-depth-min">(min)</label>
+              <input class="hparam-input" type="number" id="decision-tree-classification-max-depth-min" ng-model="config.decision_tree_classification_max_depth_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="decision-tree-classification-max-depth-max">(max)</label>
+              <input class="hparam-input" type="number" id="decision-tree-classification-max-depth-max" ng-model="config.decision_tree_classification_max_depth_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-second">
+              <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
+              <div class="algo-hparam">
+              <label for="decision-tree-classification-min-samples-leaf-min">(min)</label>
+              <input class="hparam-input" type="number" id="decision-tree-classification-min-samples-leaf-min" ng-model="config.decision_tree_classification_min_samples_leaf_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="decision-tree-classification-min-samples-leaf-max">(max)</label>
+              <input class="hparam-input" type="number" id="decision-tree-classification-min-samples-leaf-max" ng-model="config.decision_tree_classification_min_samples_leaf_max"/>
+              </div>
+              </div>
+            </div>
+            <div style="clear:both;">&nbsp;</div>
+          </div>
         </div>
         <div ng-show="config.prediction_type === 'regression'">
           <div class="form-group">
@@ -466,7 +503,7 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
               <input class="hparam-input" type="number" id="random-forest-regression-max-depth-min" ng-model="config.random_forest_regression_max_depth_min"/>
               </div>
               <div class="algo-hparam">
-              <label for="random-forest-classification-max-depth-max">(max)</label>
+              <label for="random-forest-regression-max-depth-max">(max)</label>
               <input class="hparam-input" type="number" id="random-forest-regression-max-depth-max" ng-model="config.random_forest_regression_max_depth_max"/>
               </div>
               </div>
@@ -658,6 +695,43 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
               <div class="algo-hparam">
               <label for="gb-regression-learning-rate-max">(max)</label>
               <input class="hparam-input" type="number" step="0.001" id="gb-regression-learning-rate-max" ng-model="config.gb_regression_learning_rate_max"/>
+              </div>
+              </div>
+            </div>
+            <div style="clear:both;">&nbsp;</div>
+          </div>
+          <div class="form-group">
+            <div class="algo-group" title="Decision Tree is a simple non-parametric algorithm. It creates a model that predicts the value of the target by learning simple decision rules inferred from the data features.
+
+These rules form a tree, with the leaves of the tree carrying the predicted value. Evaluation simply goes down the tree and evaluates the rule at each split.">
+            <div class="control-group">
+                <label class="control-label">Decision Tree Regression</label>
+                <div class="controls">
+                    <input name="decision-tree-regression" type="checkbox" ng-model="config.decision_tree_regression"/>
+                </div>
+            </div>   
+            </div>
+            <div class="algo-details" ng-show="config.decision_tree_regression">              
+              <div class="algo-hparam-parent-first">
+              <h5 title = "Maximum depth of the tree. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
+              <div class="algo-hparam">
+              <label for="decision-tree-regression-max-depth-min">(min)</label>
+              <input class="hparam-input" type="number" id="decision-tree-regression-max-depth-min" ng-model="config.decision_tree_regression_max_depth_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="decision-tree-regression-max-depth-max">(max)</label>
+              <input class="hparam-input" type="number" id="decision-tree-regression-max-depth-max" ng-model="config.decision_tree_regression_max_depth_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-second">
+              <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
+              <div class="algo-hparam">
+              <label for="decision-tree-regression-min-samples-leaf-min">(min)</label>
+              <input class="hparam-input" type="number" id="decision-tree-regression-min-samples-leaf-min" ng-model="config.decision_tree_regression_min_samples_leaf_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="decision-tree-regression-min-samples-leaf-max">(max)</label>
+              <input class="hparam-input" type="number" id="decision-tree-regression-min-samples-leaf-max" ng-model="config.decision_tree_regression_min_samples_leaf_max"/>
               </div>
               </div>
             </div>

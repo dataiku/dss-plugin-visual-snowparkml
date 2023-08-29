@@ -41,7 +41,7 @@ from snowflake.ml.modeling.compose import ColumnTransformer
 from snowflake.ml.modeling.ensemble import RandomForestClassifier, RandomForestRegressor, GradientBoostingRegressor, GradientBoostingClassifier
 from snowflake.ml.modeling.xgboost import XGBClassifier, XGBRegressor
 from snowflake.ml.modeling.lightgbm import LGBMClassifier, LGBMRegressor
-
+from snowflake.ml.modeling.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from snowflake.ml.modeling.linear_model import LogisticRegression, Lasso, PoissonRegressor, GammaRegressor, TweedieRegressor
 from snowflake.ml.modeling.preprocessing import StandardScaler, OneHotEncoder, MinMaxScaler, OrdinalEncoder
 from snowflake.ml.modeling.impute import SimpleImputer
