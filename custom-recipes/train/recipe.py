@@ -351,6 +351,8 @@ if not connection_schema:
     
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
 input_snowpark_df = dku_snowpark.get_dataframe(input_dataset, session = session)
+print("HIHI")
+input_snowpark_df.show(3)
 if prediction_type == "two-class classification":
     col_label_values = list(input_snowpark_df.select(col_label).distinct().to_pandas()[col_label])
 else:
