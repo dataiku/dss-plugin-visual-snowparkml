@@ -59,8 +59,8 @@ app.controller('retrainRecipeController', function ($scope, utils) {
         $scope.finishedLoading = false;   
         $scope.updateMetrics();
         utils.retrieveInfoBackend($scope, "get-info-retrain", updateScopeData);
-        /*utils.initVariable($scope, 'col_label', '');
-        utils.initVariable($scope, 'time_ordering_variable', '');*/
+        utils.initVariable($scope, 'col_label', '');
+        utils.initVariable($scope, 'time_ordering_variable', '');
     };
 
     init();
