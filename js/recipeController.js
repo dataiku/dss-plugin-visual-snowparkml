@@ -70,15 +70,7 @@ app.controller('retrainRecipeController', function ($scope, utils) {
 
 
 app.service("utils", function () {
-    this.retrieveInfoBackend = function ($scope, method, updateScopeData) {
-      $scope.callPythonDo({method}).then(function (data) {
-        updateScopeData(data);
-        $scope.finishedLoading = true;
-      }, function (data) {
-        $scope.finishedLoading = true;
-      });
-    };
-    
+
     this.initVariable = function ($scope, varName, initValue) {
         const isConfigDefined = angular.isDefined($scope.config);
         if (isConfigDefined) {
@@ -92,6 +84,17 @@ app.service("utils", function () {
         }
         $scope.config[varName] = initValue;
     };
+    
+    this.retrieveInfoBackend = function ($scope, method, updateScopeData) {
+      $scope.callPythonDo({method}).then(function (data) {
+        updateScopeData(data);
+        $scope.finishedLoading = true;
+      }, function (data) {
+        $scope.finishedLoading = true;
+      });
+    };
+    
+
     /*
     this.initVariable = function ($scope, varName, initValue) {
         const isVarDefined = $scope.config[varName] !== undefined;
