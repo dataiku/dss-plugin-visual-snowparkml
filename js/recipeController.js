@@ -59,8 +59,8 @@ app.controller('retrainRecipeController', function ($scope, utils) {
         $scope.finishedLoading = false;   
         $scope.updateMetrics();
         utils.retrieveInfoBackend($scope, "get-info-retrain", updateScopeData);
-        utils.initVariable($scope, 'col_label', '');
-        utils.initVariable($scope, 'time_ordering_variable', '');
+        /*utils.initVariable($scope, 'col_label', '');
+        utils.initVariable($scope, 'time_ordering_variable', '');*/
     };
 
     init();
@@ -70,7 +70,16 @@ app.controller('retrainRecipeController', function ($scope, utils) {
 
 
 app.service("utils", function () {
-
+    
+    this.retrieveInfoBackend = function ($scope, method, updateScopeData) {
+      $scope.callPythonDo({method}).then(function (data) {
+        updateScopeData(data);
+        $scope.finishedLoading = true;
+      }, function (data) {
+        $scope.finishedLoading = true;
+      });
+    };
+    
     this.initVariable = function ($scope, varName, initValue) {
         const isConfigDefined = angular.isDefined($scope.config);
         if (isConfigDefined) {
@@ -85,16 +94,6 @@ app.service("utils", function () {
         $scope.config[varName] = initValue;
     };
     
-    this.retrieveInfoBackend = function ($scope, method, updateScopeData) {
-      $scope.callPythonDo({method}).then(function (data) {
-        updateScopeData(data);
-        $scope.finishedLoading = true;
-      }, function (data) {
-        $scope.finishedLoading = true;
-      });
-    };
-    
-
     /*
     this.initVariable = function ($scope, varName, initValue) {
         const isVarDefined = $scope.config[varName] !== undefined;
