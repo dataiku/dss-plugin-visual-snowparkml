@@ -641,7 +641,8 @@ def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_it
                         ('preprocessor', prepr),
                         ('clf', algo['sklearn_obj'])
                     ])
-    
+    print("Feature Names")
+    print(feat_names)
     if prediction_type == "two-class classification":
         rs_clf = RandomizedSearchCV(estimator = pipe,
                          param_distributions=algo['gs_params'],
