@@ -1,5 +1,24 @@
 ### SECTION 1 - Package Imports
 # Dataiku Imports
+import os
+pkey = os.environ["DKU_CURRENT_PROJECT_KEY"]
+import shutil
+shutil.copytree("/opt/dataiku/python/dataikuapi", "/home/dataiku/lib/project/project-python-libs/%s/python/dataikuapi" % pkey)
+
+with open("/home/dataiku/lib/project/project-python-libs/%s/python/dataikuapi/dss_plugin_mlflow/artifact_repository.py" % pkey, "r") as f:
+    data = f.read()
+    lines = data.splitlines()
+    lines = lines[0:35] + [" " * 12 + "self.client._session.verify=False"] + lines[35:]
+    fixed_data = "\n".join(lines)
+with open("/home/dataiku/lib/project/project-python-libs/%s/python/dataikuapi/dss_plugin_mlflow/artifact_repository.py" % pkey, "w") as f:
+    f.write(fixed_data)
+
+import sys
+sys.path = ["/home/dataiku/lib/project/project-python-libs/%s/python" %pkey] + sys.path
+
+del sys.modules["dataikuapi"]
+del sys.modules["dataikuapi.dss_plugin_mlflow"]
+
 import dataiku
 from dataiku.customrecipe import get_input_names_for_role
 from dataiku.customrecipe import get_output_names_for_role
@@ -50,10 +69,6 @@ import snowflake.snowpark.functions as F
 from dataiku import customrecipe
 import sys
 import os
-
-os.environ.pop('MLFLOW_TRACKING_SERVER_CERT_PATH', None)
-os.environ.pop('MLFLOW_TRACKING_CLIENT_CERT_PATH', None)
-os.environ["MLFLOW_TRACKING_INSECURE_TLS"] = "true"
 
 MLFLOW_CODE_ENV_NAME = re.search(r'.*\/code-envs\/python\/([^/]+).*', sys.executable).group(1)
 
@@ -339,7 +354,6 @@ SAVED_MODEL_NAME = model_name
 MODEL_NAME = model_name
 
 client = dataiku.api_client()
-client._session.verify = False
 project = client.get_default_project()
 
 mlflow_extension = project.get_mlflow_extension()
