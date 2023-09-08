@@ -339,6 +339,7 @@ SAVED_MODEL_NAME = model_name
 MODEL_NAME = model_name
 
 client = dataiku.api_client()
+client._session.verify = False
 project = client.get_default_project()
 
 mlflow_extension = project.get_mlflow_extension()
