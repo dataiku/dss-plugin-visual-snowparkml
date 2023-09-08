@@ -1,21 +1,18 @@
 ### SECTION 1 - Package Imports
 # Dataiku Imports
-import os
-pkey = os.environ["DKU_CURRENT_PROJECT_KEY"]
-import shutil
-shutil.copytree("/opt/dataiku/python/dataikuapi", "/home/dataiku/lib/project/project-python-libs/%s/python/dataikuapi" % pkey)
+import dataikuapi, os, os.path, shutil, sys
+os.mkdir("tmp-hack")
+shutil.copytree(os.path.dirname(dataikuapi.__file__), "tmp-hack/dataikuapi")
 
-with open("/home/dataiku/lib/project/project-python-libs/%s/python/dataikuapi/dss_plugin_mlflow/artifact_repository.py" % pkey, "r") as f:
+with open("tmp-hack/dataikuapi/dss_plugin_mlflow/artifact_repository.py", "r") as f:
     data = f.read()
     lines = data.splitlines()
     lines = lines[0:35] + [" " * 12 + "self.client._session.verify=False"] + lines[35:]
     fixed_data = "\n".join(lines)
-with open("/home/dataiku/lib/project/project-python-libs/%s/python/dataikuapi/dss_plugin_mlflow/artifact_repository.py" % pkey, "w") as f:
+with open("tmp-hack/dataikuapi/dss_plugin_mlflow/artifact_repository.py", "w") as f:
     f.write(fixed_data)
 
-import sys
-sys.path = ["/home/dataiku/lib/project/project-python-libs/%s/python" %pkey] + sys.path
-
+sys.path = ["tmp-hack"] + sys.path
 del sys.modules["dataikuapi"]
 del sys.modules["dataikuapi.dss_plugin_mlflow"]
 
