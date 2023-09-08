@@ -49,7 +49,11 @@ import snowflake.snowpark.functions as F
 
 from dataiku import customrecipe
 import sys
+import os
 
+os.environ.pop('MLFLOW_TRACKING_SERVER_CERT_PATH', None)
+os.environ.pop('MLFLOW_TRACKING_CLIENT_CERT_PATH', None)
+os.environ["MLFLOW_TRACKING_INSECURE_TLS"] = "true"
 
 MLFLOW_CODE_ENV_NAME = re.search(r'.*\/code-envs\/python\/([^/]+).*', sys.executable).group(1)
 
