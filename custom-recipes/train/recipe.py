@@ -701,7 +701,7 @@ def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_it
 
 trained_models = []
 for alg in algorithms:
-    trained_model = train_model(alg, preprocessor, scoring_metric, col_label_sf, included_feature_names, train_snowpark_df, n_iter)
+    trained_model = train_model(alg, preprocessor, scoring_metric, col_label_sf, included_feature_names_sf, train_snowpark_df, n_iter)
     trained_models.append(trained_model)
 
 ### SECTION 11 - Log all trained model hyperparameters and performance metrics to MLflow
