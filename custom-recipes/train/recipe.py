@@ -1,5 +1,6 @@
 ### SECTION 1 - Package Imports
 # Dataiku Imports
+"""
 import dataikuapi, os, os.path, shutil, sys
 os.mkdir("tmp-hack")
 shutil.copytree(os.path.dirname(dataikuapi.__file__), "tmp-hack/dataikuapi")
@@ -15,6 +16,7 @@ with open("tmp-hack/dataikuapi/dss_plugin_mlflow/artifact_repository.py", "w") a
 sys.path = ["tmp-hack"] + sys.path
 del sys.modules["dataikuapi"]
 del sys.modules["dataikuapi.dss_plugin_mlflow"]
+"""
 
 import dataiku
 from dataiku.customrecipe import get_input_names_for_role
