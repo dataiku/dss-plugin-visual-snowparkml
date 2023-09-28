@@ -520,6 +520,8 @@ for feature_column in inputDatasetColumns:
                 
             included_features_handling_list.append(feature_column)
 
+print("included_features_handling_list")
+print(included_features_handling_list)
 included_feature_names = [feature['name'] for feature in included_features_handling_list]
 included_feature_names_sf = [sf_col_name(feature_name) for feature_name in included_feature_names]
 
