@@ -452,8 +452,8 @@ if prediction_type == "two-class classification":
     input_snowpark_df = add_sample_weights_col_to_snowpark_df(input_snowpark_df, col_label)
 
 if time_ordering:
-    time_ordering_variable_unix = time_ordering_variable + '_UNIX'
-    input_snowpark_df = input_snowpark_df.withColumn(time_ordering_variable_unix, F.unix_timestamp(input_snowpark_df[time_ordering_variable]))
+    time_ordering_variable_unix = time_ordering_variable_sf + '_UNIX'
+    input_snowpark_df = input_snowpark_df.withColumn(time_ordering_variable_unix, F.unix_timestamp(input_snowpark_df[time_ordering_variable_sf]))
     
     split_percentile_value = input_snowpark_df.approx_quantile(time_ordering_variable_unix, [train_ratio])[0]
     
