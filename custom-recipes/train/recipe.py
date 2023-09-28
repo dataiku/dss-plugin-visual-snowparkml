@@ -90,11 +90,16 @@ model_experiment_tracking_folder = dataiku.Folder(model_experiment_tracking_fold
 model_experiment_tracking_folder_id = model_experiment_tracking_folder.get_id()
     
 # Get recipe user-inputted parameters and print to the logs
+
+def sf_col_name(col_name):
+    return '"{}"'.format(col_name)
+
 recipe_config = get_recipe_config()
 model_name = recipe_config.get('model_name', None)
 print("model_name: " + str(model_name))
 col_label = recipe_config.get('col_label', None)['name']
 print("col_label: " + str(col_label))
+col_label_sf = sf_col_name(col_label)
 prediction_type = recipe_config.get('prediction_type', None)
 print("prediction_type: " + str(prediction_type))
 
@@ -104,6 +109,7 @@ time_ordering_variable = recipe_config.get('time_ordering_variable', None)
 if time_ordering_variable:
     time_ordering_variable = time_ordering_variable['name']
     print("time_ordering_variable: " + str(time_ordering_variable))
+    time_ordering_variable_sf = sf_col_name(time_ordering_variable)
 
 train_ratio = recipe_config.get('train_ratio', None)
 print("train_ratio: " + str(train_ratio))
@@ -382,7 +388,7 @@ if not connection_schema:
 input_snowpark_df = dku_snowpark.get_dataframe(input_dataset)
 
 if prediction_type == "two-class classification":
-    col_label_values = list(input_snowpark_df.select(col_label).distinct().to_pandas()[col_label])
+    col_label_values = list(input_snowpark_df.select(sf_col_name(col_label)).distinct().to_pandas()[col_label])
 else:
     col_label_values = None
 
@@ -420,7 +426,8 @@ def convert_snowpark_df_col_dtype(snowpark_df, col):
     return new_col_dtype
 
 def add_sample_weights_col_to_snowpark_df(snowpark_df, col):
-    y_collect = snowpark_df.select(col).groupBy(col).count().collect()
+    sf_col = sf_col_name(col)
+    y_collect = snowpark_df.select(sf_col).groupBy(sf_col).count().collect()
     unique_y = [x[col] for x in y_collect]
     total_y = sum([x["COUNT"] for x in y_collect])
     unique_y_count = len(y_collect)
@@ -432,12 +439,12 @@ def add_sample_weights_col_to_snowpark_df(snowpark_df, col):
     for key, val in class_weights.items():
         res.append([key,val])
 
-    col_label_dtype = convert_snowpark_df_col_dtype(snowpark_df, col)
+    col_label_dtype = convert_snowpark_df_col_dtype(snowpark_df, sf_col)
 
-    schema = T.StructType([T.StructField(col, col_label_dtype), T.StructField("SAMPLE_WEIGHTS", T.DoubleType())])
+    schema = T.StructType([T.StructField(sf_col, col_label_dtype), T.StructField("SAMPLE_WEIGHTS", T.DoubleType())])
     df_to_join = session.create_dataframe(res,schema)
 
-    snowpark_df = snowpark_df.join(df_to_join, [col], 'left')
+    snowpark_df = snowpark_df.join(df_to_join, [sf_col], 'left')
 
     return snowpark_df
 
@@ -514,7 +521,8 @@ for feature_column in inputDatasetColumns:
             included_features_handling_list.append(feature_column)
 
 included_feature_names = [feature['name'] for feature in included_features_handling_list]
-            
+included_feature_names_sf = [sf_col_name(feature_name) for feature_name in included_feature_names]
+
 col_transformer_list = []
 
 for feature in included_features_handling_list:
@@ -693,7 +701,7 @@ def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_it
 
 trained_models = []
 for alg in algorithms:
-    trained_model = train_model(alg, preprocessor, scoring_metric, col_label, included_feature_names, train_snowpark_df, n_iter)
+    trained_model = train_model(alg, preprocessor, scoring_metric, col_label_sf, included_feature_names, train_snowpark_df, n_iter)
     trained_models.append(trained_model)
 
 ### SECTION 11 - Log all trained model hyperparameters and performance metrics to MLflow
