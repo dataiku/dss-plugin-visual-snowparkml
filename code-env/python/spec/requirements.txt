@@ -1,5 +1,5 @@
 scikit-learn==1.2.1
-mlflow==1.30.0
+mlflow==2.5.0
 mlflow[extras]
 statsmodels==0.12.2
 protobuf==3.16.0
@@ -7,8 +7,8 @@ xgboost==1.7.3
 lightgbm==3.3.5
 matplotlib
 scipy
-snowflake-snowpark-python==1.4.0
-snowflake-snowpark-python[pandas]==1.4.0
+snowflake-snowpark-python
+snowflake-snowpark-python[pandas]
 snowflake-connector-python[pandas]
 numpy==1.23.5
 MarkupSafe<2.1.0
@@ -16,5 +16,5 @@ cloudpickle
 flask>=1.0,<1.1
 itsdangerous<2.1.0
 Jinja2>=2.11,<2.12
-snowflake-ml-python==1.0.2
+snowflake-ml-python==1.0.8
 urllib3
