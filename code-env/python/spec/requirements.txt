@@ -7,7 +7,7 @@ xgboost==1.7.3
 lightgbm==3.3.5
 matplotlib
 scipy
-snowflake-snowpark-python
+snowflake-snowpark-python==1.8.0
 snowflake-snowpark-python[pandas]
 snowflake-connector-python[pandas]
 numpy==1.23.5
