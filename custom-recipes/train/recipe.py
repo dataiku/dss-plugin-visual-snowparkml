@@ -491,7 +491,9 @@ for feature_column in inputDatasetColumns:
     col_name = feature_column['name']
     col_name_sf = sf_col_name(col_name)
     feature_column['name'] = col_name_sf
-    
+    print("hitwo")
+    print(col_name_sf)
+    print(feature_column['name'])
     if col_name in selectedInputColumns:
         if selectedInputColumns[col_name]:
             feature_column['include'] = True
