@@ -529,6 +529,7 @@ col_transformer_list = []
 
 for feature in included_features_handling_list:
     feature_name = feature["name"]
+    feature_name_sf = col_name_sf(feature_name)
     transformer_name = feature_name + "_tform"
     feature_transformers = []
 
@@ -554,7 +555,7 @@ for feature in included_features_handling_list:
         feature_transformers.append(('enc', OrdinalEncoder(handle_unknown='use_encoded_value',
                                                            unknown_value=-1,
                                                            encoded_missing_value=-1)))
-    col_transformer_list.append((transformer_name, Pipeline(feature_transformers), [feature_name]))
+    col_transformer_list.append((transformer_name, Pipeline(feature_transformers), [feature_name_sf]))
 
 preprocessor = ColumnTransformer(transformers=col_transformer_list)
 
