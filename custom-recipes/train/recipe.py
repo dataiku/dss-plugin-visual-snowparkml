@@ -558,7 +558,9 @@ for feature in included_features_handling_list:
     col_transformer_list.append((transformer_name, Pipeline(feature_transformers), [feature_name]))
     print("hi")
     print((transformer_name, Pipeline(feature_transformers), [feature_name]))
+    
 preprocessor = ColumnTransformer(transformers=col_transformer_list)
+print("hi2")
 print(preprocessor)
 ### SECTION 9 - Initialize algorithms selected and hyperparameter spaces for the RandomSearch
 algorithms = []
