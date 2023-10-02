@@ -489,6 +489,7 @@ included_features_handling_list = []
 
 for feature_column in inputDatasetColumns:
     col_name = feature_column['name']
+    
     if col_name in selectedInputColumns:
         if selectedInputColumns[col_name]:
             feature_column['include'] = True
@@ -530,6 +531,9 @@ col_transformer_list = []
 for feature in included_features_handling_list:
     feature_name = feature["name"]
     feature_name_sf = sf_col_name(feature_name)
+    print("hione")
+    print(feature_name_sf)
+    
     transformer_name = feature_name + "_tform"
     feature_transformers = []
 
