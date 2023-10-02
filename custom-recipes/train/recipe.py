@@ -539,7 +539,7 @@ for feature in included_features_handling_list:
     print("hione")
     print(feature_name)
     print([feature_name])
-    transformer_name = feature_name + "_tform"
+    transformer_name = feature_name[1:-1] + '_tform'
     feature_transformers = []
 
     if feature["missingness_impute"] == "Average":
