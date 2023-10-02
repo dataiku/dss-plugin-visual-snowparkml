@@ -533,7 +533,7 @@ for feature in included_features_handling_list:
     feature_name_sf = sf_col_name(feature_name)
     print("hione")
     print(feature_name_sf)
-    
+    print([feature_name_sf])
     transformer_name = feature_name + "_tform"
     feature_transformers = []
 
