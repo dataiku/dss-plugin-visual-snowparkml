@@ -531,6 +531,7 @@ col_transformer_list = []
 for feature in included_features_handling_list:
     feature_name = feature["name"]
     feature_name_sf = sf_col_name(feature_name)
+    feature_name_sf_list = [feature_name_sf]
     print("hione")
     print(feature_name_sf)
     print([feature_name_sf])
@@ -561,7 +562,7 @@ for feature in included_features_handling_list:
                                                            encoded_missing_value=-1)))
     col_transformer_list.append((transformer_name, Pipeline(feature_transformers), [feature_name]))
     print("hi")
-    print((transformer_name, Pipeline(feature_transformers), [feature_name]))
+    print((transformer_name, Pipeline(feature_transformers), feature_name_sf_list))
     
 preprocessor = ColumnTransformer(transformers=col_transformer_list)
 print("hi2")
