@@ -489,6 +489,8 @@ included_features_handling_list = []
 
 for feature_column in inputDatasetColumns:
     col_name = feature_column['name']
+    col_name_sf = sf_col_name(col_name)
+    feature_column['name'] = col_name_sf
     
     if col_name in selectedInputColumns:
         if selectedInputColumns[col_name]:
@@ -524,17 +526,17 @@ for feature_column in inputDatasetColumns:
 print("included_features_handling_list")
 print(included_features_handling_list)
 included_feature_names = [feature['name'] for feature in included_features_handling_list]
-included_feature_names_sf = [sf_col_name(feature_name) for feature_name in included_feature_names]
+#included_feature_names_sf = [sf_col_name(feature_name) for feature_name in included_feature_names]
 
 col_transformer_list = []
 
 for feature in included_features_handling_list:
     feature_name = feature["name"]
-    feature_name_sf = sf_col_name(feature_name)
-    feature_name_sf_list = [feature_name_sf]
+    #feature_name_sf = sf_col_name(feature_name)
+    #feature_name_sf_list = [feature_name_sf]
     print("hione")
-    print(feature_name_sf)
-    print([feature_name_sf])
+    print(feature_name)
+    print([feature_name])
     transformer_name = feature_name + "_tform"
     feature_transformers = []
 
@@ -562,7 +564,7 @@ for feature in included_features_handling_list:
                                                            encoded_missing_value=-1)))
     col_transformer_list.append((transformer_name, Pipeline(feature_transformers), [feature_name]))
     print("hi")
-    print((transformer_name, Pipeline(feature_transformers), feature_name_sf_list))
+    print((transformer_name, Pipeline(feature_transformers), [feature_name]))
     
 preprocessor = ColumnTransformer(transformers=col_transformer_list)
 print("hi2")
@@ -715,7 +717,7 @@ def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_it
 
 trained_models = []
 for alg in algorithms:
-    trained_model = train_model(alg, preprocessor, scoring_metric, col_label_sf, included_feature_names_sf, train_snowpark_df, n_iter)
+    trained_model = train_model(alg, preprocessor, scoring_metric, col_label_sf, included_feature_names, train_snowpark_df, n_iter)
     trained_models.append(trained_model)
 
 ### SECTION 11 - Log all trained model hyperparameters and performance metrics to MLflow
