@@ -556,9 +556,10 @@ for feature in included_features_handling_list:
                                                            unknown_value=-1,
                                                            encoded_missing_value=-1)))
     col_transformer_list.append((transformer_name, Pipeline(feature_transformers), [feature_name]))
-
+    print("hi")
+    print((transformer_name, Pipeline(feature_transformers), [feature_name]))
 preprocessor = ColumnTransformer(transformers=col_transformer_list)
-
+print(preprocessor)
 ### SECTION 9 - Initialize algorithms selected and hyperparameter spaces for the RandomSearch
 algorithms = []
 
