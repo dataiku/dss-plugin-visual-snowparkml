@@ -529,7 +529,7 @@ col_transformer_list = []
 
 for feature in included_features_handling_list:
     feature_name = feature["name"]
-    feature_name_sf = col_name_sf(feature_name)
+    feature_name_sf = sf_col_name(feature_name)
     transformer_name = feature_name + "_tform"
     feature_transformers = []
 
