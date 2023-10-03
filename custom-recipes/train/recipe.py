@@ -532,7 +532,7 @@ included_feature_names = [feature['name'] for feature in included_features_handl
 
 col_transformer_list = []
 
-for feature in feature_columns:
+for feature in inputDatasetColumns:
     feature_name = feature["name"]    
     transformer_name = feature_name[1:-1] + '_tform'
 
