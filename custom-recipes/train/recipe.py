@@ -532,43 +532,39 @@ included_feature_names = [feature['name'] for feature in included_features_handl
 
 col_transformer_list = []
 
-for feature in included_features_handling_list:
-    feature_name = feature["name"]
-    #feature_name_sf = sf_col_name(feature_name)
-    #feature_name_sf_list = [feature_name_sf]
-    print("hione")
-    print(feature_name)
-    print([feature_name])
+for feature in feature_columns:
+    feature_name = feature["name"]    
     transformer_name = feature_name[1:-1] + '_tform'
+
     feature_transformers = []
 
     if feature["missingness_impute"] == "Average":
-        feature_transformers.append(('imputer', SimpleImputer(strategy='mean')))
+        feature_transformers.append(('imputer', SimpleImputer(strategy = 'mean')))
     if feature["missingness_impute"] == "Median":
-        feature_transformers.append(('imputer', SimpleImputer(strategy='median')))
+        feature_transformers.append(('imputer', SimpleImputer(strategy = 'median')))
     if feature["missingness_impute"] == "Constant":
         if "constant_impute" in feature:
-            feature_transformers.append(('imputer', SimpleImputer(strategy='constant', fill_value = feature["constant_impute"])))
+            feature_transformers.append(('imputer', SimpleImputer(strategy = 'constant', fill_value = feature["constant_impute"])))
         else:
-            feature_transformers.append(('imputer', SimpleImputer(strategy='constant')))
+            feature_transformers.append(('imputer', SimpleImputer(strategy = 'constant')))
     if feature["missingness_impute"] == "Most frequent value":
-        feature_transformers.append(('imputer', SimpleImputer(strategy='most_frequent')))
+        feature_transformers.append(('imputer', SimpleImputer(strategy = 'most_frequent')))
     if feature["encoding_rescaling"] == "Standard rescaling":
         feature_transformers.append(('enc', StandardScaler()))
     if feature["encoding_rescaling"] == "Min-max rescaling":
         feature_transformers.append(('enc', MinMaxScaler()))
     if feature["encoding_rescaling"] == "Dummy encoding":
-        feature_transformers.append(('enc', OneHotEncoder(handle_unknown='infrequent_if_exist',
-                                                          max_categories=feature["max_categories"])))
+        feature_transformers.append(('enc', OneHotEncoder(handle_unknown = 'infrequent_if_exist',
+                                                          max_categories = 10)))
     if feature["encoding_rescaling"] == "Ordinal encoding":
-        feature_transformers.append(('enc', OrdinalEncoder(handle_unknown='use_encoded_value',
-                                                           unknown_value=-1,
-                                                           encoded_missing_value=-1)))
+        feature_transformers.append(('enc', OrdinalEncoder(handle_unknown = 'use_encoded_value',
+                                                           unknown_value = -1,
+                                                           encoded_missing_value = -1)))
     col_transformer_list.append((transformer_name, Pipeline(feature_transformers), [feature_name]))
-    print("hi")
-    print((transformer_name, Pipeline(feature_transformers), [feature_name]))
-    
-preprocessor = ColumnTransformer(transformers=col_transformer_list)
+
+print(col_transformer_list)
+preprocessor = ColumnTransformer(transformers = col_transformer_list)
+
 print("hi2")
 print(preprocessor)
 ### SECTION 9 - Initialize algorithms selected and hyperparameter spaces for the RandomSearch
