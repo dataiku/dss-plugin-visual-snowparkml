@@ -693,8 +693,8 @@ def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_it
                          verbose=1,
                          input_cols=feat_names,
                          label_cols=col_lab,
-                         output_cols="PREDICTION",
-                         sample_weight_col="SAMPLE_WEIGHTS"
+                         output_cols="PREDICTION"#,
+                         #sample_weight_col="SAMPLE_WEIGHTS"
                          )
     else:
         rs_clf = RandomizedSearchCV(estimator = pipe,
