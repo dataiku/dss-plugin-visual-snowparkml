@@ -531,7 +531,8 @@ included_feature_names = [feature['name'] for feature in included_features_handl
 #included_feature_names_sf = [sf_col_name(feature_name) for feature_name in included_feature_names]
 
 col_transformer_list = []
-
+print("hi3")
+print(inputDatasetColumns)
 for feature in inputDatasetColumns:
     feature_name = feature["name"]    
     transformer_name = feature_name[1:-1] + '_tform'
