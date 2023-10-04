@@ -792,51 +792,51 @@ for model in trained_models:
         test_predictions_df[proba_col_names] = grid_pipe_sklearn.predict_proba(test_predictions_df)
         
         if sample_weight_column:
-            pred_cols_to_keep = [col_label, "PREDICTION", sample_weight_column] + proba_col_names
+            pred_cols_to_keep = [col_label_sf, "PREDICTION", sample_weight_column] + proba_col_names
             test_predictions_df = test_predictions_df[pred_cols_to_keep]
         else:
-            pred_cols_to_keep = [col_label, "PREDICTION"] + proba_col_names
+            pred_cols_to_keep = [col_label_sf, "PREDICTION"] + proba_col_names
             test_predictions_df = test_predictions_df[pred_cols_to_keep]
 
-        test_f1 = f1_score(test_predictions_df[col_label], test_predictions_df['PREDICTION'], pos_label=col_label_values[0])
+        test_f1 = f1_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'], pos_label=col_label_values[0])
         print("F1 Score: " + str(test_f1))
         mlflow.log_metric("test_f1_score", test_f1)
-        test_roc_auc = roc_auc_score(test_predictions_df[col_label], test_predictions_df[test_predictions_df.columns[-1]])
+        test_roc_auc = roc_auc_score(test_predictions_df[col_label_sf], test_predictions_df[test_predictions_df.columns[-1]])
         print("ROC AUC Score: " + str(test_roc_auc))
         mlflow.log_metric("test_roc_auc", test_roc_auc)
-        test_accuracy = accuracy_score(test_predictions_df[col_label], test_predictions_df['PREDICTION']) 
+        test_accuracy = accuracy_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION']) 
         print("Accuracy Score: " + str(test_accuracy))
         mlflow.log_metric("test_accuracy", test_accuracy)
-        test_recall = recall_score(test_predictions_df[col_label], test_predictions_df['PREDICTION'], pos_label=col_label_values[0])
+        test_recall = recall_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'], pos_label=col_label_values[0])
         print("Recall Score: " + str(test_recall))
         mlflow.log_metric("test_recall", test_recall)
-        test_precision = precision_score(test_predictions_df[col_label], test_predictions_df['PREDICTION'], pos_label=col_label_values[0])
+        test_precision = precision_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'], pos_label=col_label_values[0])
         print("Precision Score: " + str(test_precision))
         mlflow.log_metric("test_precision", test_precision)
     
     else:
         if sample_weight_column:
-            test_predictions_df = test_predictions_df[[col_label, "PREDICTION", sample_weight_column]]
+            test_predictions_df = test_predictions_df[[col_label_sf, "PREDICTION", sample_weight_column]]
         else:
-            test_predictions_df = test_predictions_df[[col_label, "PREDICTION"]]
+            test_predictions_df = test_predictions_df[[col_label_sf, "PREDICTION"]]
         if scoring_metric == 'neg_mean_poisson_deviance':
             if sample_weight_column:
-                test_d2 = d2_absolute_error_score(test_predictions_df[col_label], test_predictions_df['PREDICTION'], sample_weight = test_predictions_df[sample_weight_column])
+                test_d2 = d2_absolute_error_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'], sample_weight = test_predictions_df[sample_weight_column])
             else:
-                test_d2 = d2_absolute_error_score(test_predictions_df[col_label], test_predictions_df['PREDICTION'])                
+                test_d2 = d2_absolute_error_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'])                
             print("D2 Score: " + str(test_d2))
             mlflow.log_metric("test_d2_score", test_d2)
         else:
-            test_r2 = r2_score(test_predictions_df[col_label], test_predictions_df['PREDICTION'])
+            test_r2 = r2_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'])
             print("R2 Score: " + str(test_r2))
             mlflow.log_metric("test_r2_score", test_r2)
-            test_mae = mean_absolute_error(test_predictions_df[col_label], test_predictions_df['PREDICTION'])
+            test_mae = mean_absolute_error(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'])
             print("Mean Absolute Error: " + str(test_mae))
             mlflow.log_metric("test_mae_score", test_mae)
-            test_mse = mean_squared_error(test_predictions_df[col_label], test_predictions_df['PREDICTION'])
+            test_mse = mean_squared_error(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'])
             print("Mean Squared Error: " + str(test_mse))
             mlflow.log_metric("test_mse_score", test_mse)
-            test_rmse = mean_squared_error(test_predictions_df[col_label], test_predictions_df['PREDICTION'], squared=False)
+            test_rmse = mean_squared_error(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'], squared=False)
             print("Root Mean Squared Error: " + str(test_rmse))
             mlflow.log_metric("test_rmse_score", test_rmse)
         
