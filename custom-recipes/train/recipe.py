@@ -778,6 +778,9 @@ for model in trained_models:
     mlflow.log_param("algorithm", model_algo)
     
     test_predictions_df = test_snowpark_df.to_pandas()
+    for test_df_col_name in test_predictions_df.columns:
+        test_predictions_df = test_predictions_df.rename(columns={test_df_col_name: sf_col_name(test_df_col_name)})
+
     test_predictions_df["PREDICTION"] = grid_pipe_sklearn.predict(test_predictions_df)
     
     if prediction_type == "two-class classification":
