@@ -141,6 +141,8 @@ elif model_metric == 'D2 (GLM Only)':
     scoring_metric = 'neg_mean_poisson_deviance'
 
 inputDatasetColumns = recipe_config.get('inputDatasetColumns', None)
+print("patpat")
+print(inputDatasetColumns)
 print("inputDatasetColumns: " + str(inputDatasetColumns))
 selectedInputColumns = recipe_config.get('selectedInputColumns', None)
 print("selectedInputColumns: " + str(selectedInputColumns))
