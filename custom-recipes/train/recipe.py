@@ -141,16 +141,23 @@ elif model_metric == 'D2 (GLM Only)':
     scoring_metric = 'neg_mean_poisson_deviance'
 
 inputDatasetColumns = recipe_config.get('inputDatasetColumns', None)
-print("patpat")
-print(type(inputDatasetColumns))
+
 print("inputDatasetColumns: " + str(inputDatasetColumns))
 selectedInputColumns = recipe_config.get('selectedInputColumns', None)
+print("patpat")
+print(type(selectedInputColumns))
 print("selectedInputColumns: " + str(selectedInputColumns))
 selectedOption1 = recipe_config.get('selectedOption1', None)
+print("patpat")
+print(type(selectedOption1))
 print("selectedOption1: " + str(selectedOption1))
 selectedOption2 = recipe_config.get('selectedOption2', None)
+print("patpat")
+print(type(selectedOption2))
 print("selectedOption2: " + str(selectedOption2))
 selectedConstantImpute = recipe_config.get('selectedConstantImpute', None)
+print("patpat")
+print(type(selectedConstantImpute))
 print("selectedConstantImpute: " + str(selectedConstantImpute))
 
 logistic_regression = recipe_config.get('logistic_regression', None)
