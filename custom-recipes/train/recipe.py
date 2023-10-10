@@ -691,16 +691,19 @@ class SnowparkMLWrapper(mlflow.pyfunc.PythonModel):
         print(type(self.model))
         
     def predict(self, context, input_df):
-        input_df.columns = [f'"{col}"' for col in input_df.columns]
-        return self.model.predict(input_df)
+        input_df_copy = input_df.copy()
+        input_df_copy.columns = [f'"{col}"' for col in input_df_copy.columns]
+        return self.model.predict(input_df_copy)
     
     def predict_proba(self, context, input_df):
-        input_df.columns = [f'"{col}"' for col in input_df.columns]
-        return self.model.predict_proba(input_df)
+        input_df_copy = input_df.copy()
+        input_df_copy.columns = [f'"{col}"' for col in input_df_copy.columns]
+        return self.model.predict_proba(input_df_copy)
     
     def predict_log_proba(self, context, input_df):
-        input_df.columns = [f'"{col}"' for col in input_df.columns]
-        return self.model.predict_log_proba(input_df)
+        input_df_copy = input_df.copy()
+        input_df_copy.columns = [f'"{col}"' for col in input_df_copy.columns]
+        return self.model.predict_log_proba(input_df_copy)
 
 def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_iter):
     print(f"Training model... " + algo['algorithm'])
