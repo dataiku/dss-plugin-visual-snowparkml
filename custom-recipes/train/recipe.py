@@ -40,6 +40,7 @@ from sklearn.metrics import accuracy_score, recall_score, f1_score, roc_auc_scor
 from sklearn.metrics import classification_report
 import os
 import re
+from cloudpickle import dump, load
 
 # Snowpark Imports
 import snowflake.connector
@@ -682,6 +683,25 @@ else:
                            'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
         
 ### SECTION 10 - Train all models, do RandomSearch and hyperparameter tuning
+
+class SnowparkMLWrapper(mlflow.pyfunc.PythonModel):
+    def load_context(self, context):
+        from cloudpickle import load
+        self.model = load(open(context.artifacts["grid_pipe_sklearn"], 'rb'))
+        print(type(self.model))
+        
+    def predict(self, context, input_df):
+        input_df.columns = [f'"{col}"' for col in input_df.columns]
+        return self.model.predict(input_df)
+    
+    def predict_proba(self, context, input_df):
+        input_df.columns = [f'"{col}"' for col in input_df.columns]
+        return self.model.predict_proba(input_df)
+    
+    def predict_log_proba(self, context, input_df):
+        input_df.columns = [f'"{col}"' for col in input_df.columns]
+        return self.model.predict_log_proba(input_df)
+
 def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_iter):
     print(f"Training model... " + algo['algorithm'])
     pipe = Pipeline(steps=[
@@ -843,10 +863,16 @@ for model in trained_models:
     
     best_score = grid_pipe_sklearn.best_score_
     
-    logged_model = mlflow.sklearn.log_model(grid_pipe_sklearn, 
-                                            "model", 
-                                            registered_model_name=MODEL_NAME)
+    artifacts = {
+        "grid_pipe_sklearn": "grid_pipe_sklearn.plk"
+    }
 
+    dump(grid_pipe_sklearn, open(artifacts.get("grid_pipe_sklearn"), 'wb'))
+    
+    logged_model = mlflow.pyfunc.log_model(artifact_path = "model", 
+                                           python_model = SnowparkMLWrapper(),
+                                           artifacts = artifacts)
+    
     mlflow.end_run()
     best_run_id = run.info.run_id
     final_models.append({'algorithm': model_algo,
