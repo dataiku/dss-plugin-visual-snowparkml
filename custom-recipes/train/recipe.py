@@ -693,7 +693,7 @@ class SnowparkMLWrapper(mlflow.pyfunc.PythonModel):
     def predict(self, context, input_df):
         input_df_copy = input_df.copy()
         input_df_copy.columns = [f'"{col}"' for col in input_df_copy.columns]
-        return self.model.predict(input_df_copy)
+        return self.model.predict_proba(input_df_copy)
     
     def predict_proba(self, context, input_df):
         input_df_copy = input_df.copy()
