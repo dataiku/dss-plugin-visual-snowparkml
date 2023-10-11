@@ -9,6 +9,7 @@ from dataiku import pandasutils as pdu
 from dataiku.snowpark import DkuSnowpark
 from dataikuapi.dss.ml import DSSPredictionMLTaskSettings
 from dataiku.core.flow import FLOW
+from dataiku import customrecipe
 
 # Other ML Imports
 import pandas as pd, numpy as np
@@ -24,6 +25,7 @@ from sklearn.metrics import classification_report
 import os
 import re
 from cloudpickle import dump, load
+import sys
 
 # Snowpark Imports
 import snowflake.connector
@@ -48,10 +50,6 @@ from snowflake.ml.modeling.linear_model import LogisticRegression, Lasso, Poisso
 from snowflake.ml.modeling.preprocessing import StandardScaler, OneHotEncoder, MinMaxScaler, OrdinalEncoder
 from snowflake.ml.modeling.impute import SimpleImputer
 import snowflake.snowpark.functions as F
-
-from dataiku import customrecipe
-import sys
-import os
 
 MLFLOW_CODE_ENV_NAME = re.search(r'.*\/code-envs\/python\/([^/]+).*', sys.executable).group(1)
 
@@ -484,9 +482,7 @@ for feature_column in inputDatasetColumns:
     col_name = feature_column['name']
     col_name_sf = sf_col_name(col_name)
     feature_column['name'] = col_name_sf
-    print("hitwo")
-    print(col_name_sf)
-    print(feature_column['name'])
+
     if col_name in selectedInputColumns:
         if selectedInputColumns[col_name]:
             feature_column['include'] = True
@@ -502,9 +498,6 @@ for feature_column in inputDatasetColumns:
                 if selectedOption2[col_name] == 'Constant':
                     if col_name in selectedConstantImpute:
                         feature_column["constant_impute"] = selectedConstantImpute[col_name]
-                        print("blob")
-                        print(col_name)
-                        print(feature_column["constant_impute"])
                         
             elif feature_column['type'] in numeric_dtypes_list:
                 feature_column["missingness_impute"] = 'Median'
@@ -518,14 +511,10 @@ for feature_column in inputDatasetColumns:
                 
             included_features_handling_list.append(feature_column)
 
-print("included_features_handling_list")
-print(included_features_handling_list)
 included_feature_names = [feature['name'] for feature in included_features_handling_list]
-#included_feature_names_sf = [sf_col_name(feature_name) for feature_name in included_feature_names]
 
 col_transformer_list = []
-print("hi3")
-print(included_features_handling_list)
+
 for feature in included_features_handling_list:
     feature_name = feature["name"]    
     transformer_name = feature_name[1:-1] + '_tform'
@@ -556,11 +545,8 @@ for feature in included_features_handling_list:
                                                            encoded_missing_value = -1)))
     col_transformer_list.append((transformer_name, Pipeline(feature_transformers), [feature_name]))
 
-print(col_transformer_list)
 preprocessor = ColumnTransformer(transformers = col_transformer_list)
 
-print("hi2")
-print(preprocessor)
 ### SECTION 9 - Initialize algorithms selected and hyperparameter spaces for the RandomSearch
 algorithms = []
 
@@ -695,9 +681,6 @@ def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_it
                         ('preprocessor', prepr),
                         ('clf', algo['sklearn_obj'])
                     ])
-    print("input_cols: " + str(feat_names))
-    print("label_col: " + str(col_lab))
-    print("snowpark df cols: " + str(train_sp_df.columns))
     
     if prediction_type == "two-class classification":
         rs_clf = RandomizedSearchCV(estimator = pipe,
