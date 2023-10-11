@@ -1,22 +1,5 @@
 ### SECTION 1 - Package Imports
 # Dataiku Imports
-"""
-import dataikuapi, os, os.path, shutil, sys
-os.mkdir("tmp-hack")
-shutil.copytree(os.path.dirname(dataikuapi.__file__), "tmp-hack/dataikuapi")
-
-with open("tmp-hack/dataikuapi/dss_plugin_mlflow/artifact_repository.py", "r") as f:
-    data = f.read()
-    lines = data.splitlines()
-    lines = lines[0:35] + [" " * 12 + "self.client._session.verify=False"] + lines[35:]
-    fixed_data = "\n".join(lines)
-with open("tmp-hack/dataikuapi/dss_plugin_mlflow/artifact_repository.py", "w") as f:
-    f.write(fixed_data)
-
-sys.path = ["tmp-hack"] + sys.path
-del sys.modules["dataikuapi"]
-del sys.modules["dataikuapi.dss_plugin_mlflow"]
-"""
 
 import dataiku
 from dataiku.customrecipe import get_input_names_for_role
@@ -694,17 +677,6 @@ class SnowparkMLClassifierWrapper(mlflow.pyfunc.PythonModel):
         input_df_copy = input_df.copy()
         input_df_copy.columns = [f'"{col}"' for col in input_df_copy.columns]
         return self.model.predict_proba(input_df_copy)
-    """
-    def predict_proba(self, context, input_df):
-        input_df_copy = input_df.copy()
-        input_df_copy.columns = [f'"{col}"' for col in input_df_copy.columns]
-        return self.model.predict_proba(input_df_copy)
-    
-    def predict_log_proba(self, context, input_df):
-        input_df_copy = input_df.copy()
-        input_df_copy.columns = [f'"{col}"' for col in input_df_copy.columns]
-        return self.model.predict_log_proba(input_df_copy)
-    """
 
 class SnowparkMLRegressorWrapper(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
