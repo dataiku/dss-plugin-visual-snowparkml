@@ -657,7 +657,6 @@ class SnowparkMLClassifierWrapper(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
         from cloudpickle import load
         self.model = load(open(context.artifacts["grid_pipe_sklearn"], 'rb'))
-        print(type(self.model))
         
     def predict(self, context, input_df):
         input_df_copy = input_df.copy()
@@ -668,7 +667,6 @@ class SnowparkMLRegressorWrapper(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
         from cloudpickle import load
         self.model = load(open(context.artifacts["grid_pipe_sklearn"], 'rb'))
-        print(type(self.model))
         
     def predict(self, context, input_df):
         input_df_copy = input_df.copy()
@@ -925,7 +923,7 @@ current_recipe_name = FLOW["currentActivityId"][:-3].replace('_NP', '')
 recipe = project.get_recipe(current_recipe_name)
 recipe_settings = recipe.get_settings()
 saved_model_names = get_output_names_for_role('saved_model_name')
-print(saved_model_names)
+
 if len(saved_model_names)>0:
     prev_saved_model_name = saved_model_names[0].split('.')[1]
     if prev_saved_model_name != sm_id:
