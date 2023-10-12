@@ -26,6 +26,7 @@ import os
 import re
 from cloudpickle import dump, load
 import sys
+import pprint
 
 # Snowpark Imports
 import snowflake.connector
@@ -79,7 +80,7 @@ def sf_col_name(col_name):
 recipe_config = get_recipe_config()
 print("-----------------------------")
 print("Recipe Input Config")
-print(recipe_config)
+pprint.pprint(recipe_config)
 print("-----------------------------")
 model_name = recipe_config.get('model_name', None)
 print("model_name: " + str(model_name))
