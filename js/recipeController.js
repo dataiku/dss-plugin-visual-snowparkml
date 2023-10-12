@@ -94,24 +94,6 @@ app.service("utils", function () {
         $scope.config[varName] = initValue;
     };
     
-    /*
-    this.initVariable = function ($scope, varName, initValue) {
-        const isVarDefined = $scope.config[varName] !== undefined;
-        $scope.config[varName] = isVarDefined ? $scope.config[varName] : initValue;
-    };
-    */
-    /*
-    this.initVariable = function ($scope, varName, initValue) {
-        const isConfigDefined = angular.isDefined($scope.config);
-        if (isConfigDefined) {
-            const isVarDefined = angular.isDefined($scope.config[varName]);
-            $scope.config[varName] = isVarDefined ? $scope.config[varName] : initValue;
-        } else {
-            $scope.config = { [varName]: initValue };
-        }
-    };
-    */
-    
     this.getStylesheetUrl = function (pluginId) {
         return `/plugins/${pluginId}/resource/stylesheets/dl-image-toolbox.css`;
     };
