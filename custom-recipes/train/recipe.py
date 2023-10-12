@@ -77,6 +77,10 @@ def sf_col_name(col_name):
     return '"{}"'.format(col_name)
 
 recipe_config = get_recipe_config()
+print("-----------------------------")
+print("Recipe Input Config")
+print(recipe_config)
+print("-----------------------------")
 model_name = recipe_config.get('model_name', None)
 print("model_name: " + str(model_name))
 col_label = recipe_config.get('col_label', None)['name']
