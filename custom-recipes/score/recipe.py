@@ -62,10 +62,13 @@ input_dataset_name = input_dataset_names[0]
 input_dataset = dataiku.Dataset(input_dataset_name) 
 
 output_score_dataset_names = get_output_names_for_role('output_score_dataset_name')
-output_score_dataset = dataiku.Dataset(output_score_dataset_names[0])
+output_score_dataset_name = output_score_dataset_names[0]
+output_score_dataset = dataiku.Dataset(output_score_dataset_name)
 
 saved_model_names = get_input_names_for_role('saved_model_name')
 saved_model_name = saved_model_names[0]
+print("hi")
+print(saved_model_name)
 saved_model = dataiku.Model(saved_model_name) 
 
 # Get recipe user-inputted parameters and print to the logs
