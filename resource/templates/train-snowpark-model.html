@@ -818,7 +818,14 @@ These rules form a tree, with the leaves of the tree carrying the predicted valu
         <div class="control-group">
             <label class="control-label">Deploy to Snowflake ML Model Registry</label>
             <div class="controls">
-                <input name="enable_time_ordering" type="checkbox" ng-model="config.time_ordering"/>
+                <input name="deploy_to_snowflake_model_registry" type="checkbox" ng-model="config.deploy_to_snowflake_model_registry"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Snowflake Warehouse</label>
+            <div class="controls">
+                <input type="text" ng-model="config.warehouse" />
+                <span class="help-inline">If empty, use Snowflake connection default warehouse</span>
             </div>
         </div>
     </form>
