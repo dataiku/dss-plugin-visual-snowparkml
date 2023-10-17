@@ -50,7 +50,9 @@ from snowflake.ml.modeling.tree import DecisionTreeClassifier, DecisionTreeRegre
 from snowflake.ml.modeling.linear_model import LogisticRegression, Lasso, PoissonRegressor, GammaRegressor, TweedieRegressor
 from snowflake.ml.modeling.preprocessing import StandardScaler, OneHotEncoder, MinMaxScaler, OrdinalEncoder
 from snowflake.ml.modeling.impute import SimpleImputer
+#from snowflake.ml.modeling.metrics import accuracy_score, recall_score, f1_score, roc_auc_score, precision_score, r2_score, mean_absolute_error, mean_squared_error, d2_absolute_error_score, d2_pinball_score
 import snowflake.snowpark.functions as F
+from snowflake.ml.registry import model_registry
 
 MLFLOW_CODE_ENV_NAME = re.search(r'.*\/code-envs\/python\/([^/]+).*', sys.executable).group(1)
 
@@ -82,6 +84,7 @@ print("-----------------------------")
 print("Recipe Input Config")
 pprint.pprint(recipe_config)
 print("-----------------------------")
+
 model_name = recipe_config.get('model_name', None)
 col_label = recipe_config.get('col_label', None)['name']
 col_label_sf = sf_col_name(col_label)
@@ -658,6 +661,8 @@ for model in trained_models:
 
     test_predictions_df["PREDICTION"] = grid_pipe_sklearn.predict(test_predictions_df)
     
+    test_metrics = {}
+    
     if prediction_type == "two-class classification":
         model_classes = grid_pipe_sklearn.classes_
         proba_col_names = []
@@ -684,6 +689,12 @@ for model in trained_models:
         test_precision = precision_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'], pos_label=col_label_values[0])
         mlflow.log_metric("test_precision", test_precision)
         
+        test_metrics["test_f1"] = test_f1
+        test_metrics["test_roc_auc"] = test_roc_auc
+        test_metrics["test_accuracy"] = test_accuracy
+        test_metrics["test_recall"] = test_recall
+        test_metrics["test_precision"] = test_precision
+        
         print("F1 Score: " + str(test_f1))
         print("ROC AUC Score: " + str(test_roc_auc))
         print("Accuracy Score: " + str(test_accuracy))
@@ -703,6 +714,8 @@ for model in trained_models:
             
             mlflow.log_metric("test_d2_score", test_d2)
             
+            test_metrics["test_d2_score"] = test_d2
+            
             print("D2 Score: " + str(test_d2))
         else:
             test_r2 = r2_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'])
@@ -713,6 +726,11 @@ for model in trained_models:
             mlflow.log_metric("test_mse_score", test_mse)
             test_rmse = mean_squared_error(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'], squared=False)
             mlflow.log_metric("test_rmse_score", test_rmse)
+            
+            test_metrics["test_r2"] = test_r2
+            test_metrics["test_mae"] = test_mae
+            test_metrics["test_mse"] = test_mse
+            test_metrics["test_rmse"] = test_rmse
             
             print("R2 Score: " + str(test_r2))
             print("Mean Absolute Error: " + str(test_mae))
@@ -741,8 +759,11 @@ for model in trained_models:
     best_run_id = run.info.run_id
     final_models.append({'algorithm': model_algo,
                          'sklearn_obj': grid_pipe_sklearn,
+                         'snowml_obj': rs_clf,
                          'mlflow_best_run_id': best_run_id,
-                         'best_score': best_score})
+                         'run_name': run_name,
+                         'best_score': best_score,
+                         'test_metrics': test_metrics})
     
 ### SECTION 12 - Pull the best model, import it into a SavedModel green diamond (it will create a new one if doesn't exist), and evaluate on the hold out Test dataset
 if scoring_metric in ['roc_auc','accuracy','f1','precision','recall','r2']:
@@ -756,10 +777,10 @@ if prediction_type == "two-class classification":
     model_classes = best_model['sklearn_obj'].classes_
     if 'int' in str(type(model_classes[0])):
         model_classes = [int(model_class) for model_class in model_classes]
-    mlflow_extension.set_run_inference_info(run_id=best_model_run_id, 
-                                                prediction_type='BINARY_CLASSIFICATION',
-                                                classes=list(model_classes),
-                                                code_env_name=MLFLOW_CODE_ENV_NAME) 
+    mlflow_extension.set_run_inference_info(run_id = best_model_run_id, 
+                                            prediction_type = 'BINARY_CLASSIFICATION',
+                                            classes = list(model_classes),
+                                            code_env_name = MLFLOW_CODE_ENV_NAME) 
 
 model_artifact_first_directory = re.search(r'.*/(.+$)', mlflow_experiment.artifact_location).group(1)
 
@@ -780,20 +801,20 @@ if sm_id:
     
 else:
     if prediction_type == "two-class classification":
-        sm = project.create_mlflow_pyfunc_model(name=model_name,
-                                            prediction_type=DSSPredictionMLTaskSettings.PredictionTypes.BINARY)
+        sm = project.create_mlflow_pyfunc_model(name = model_name,
+                                                prediction_type = DSSPredictionMLTaskSettings.PredictionTypes.BINARY)
     else:
-        sm = project.create_mlflow_pyfunc_model(name=model_name,
-                                            prediction_type=DSSPredictionMLTaskSettings.PredictionTypes.REGRESSION)
+        sm = project.create_mlflow_pyfunc_model(name = model_name,
+                                                prediction_type = DSSPredictionMLTaskSettings.PredictionTypes.REGRESSION)
     sm_id = sm.id
     print(f"Saved Model not found, created new one with id {sm_id}")
     
 # Import the final trained model into the Dataiku Saved Model (Green Diamond)
-mlflow_version = sm.import_mlflow_version_from_managed_folder(version_id=run_name,
-                                                              managed_folder=model_experiment_tracking_folder_id,
-                                                              path=model_path,
-                                                              code_env_name=MLFLOW_CODE_ENV_NAME,
-                                                              container_exec_config_name='NONE')
+mlflow_version = sm.import_mlflow_version_from_managed_folder(version_id = best_model["run_name"],
+                                                              managed_folder = model_experiment_tracking_folder_id,
+                                                              path = model_path,
+                                                              code_env_name = MLFLOW_CODE_ENV_NAME,
+                                                              container_exec_config_name = 'NONE')
 # Make this Saved Model version the active one
 sm.set_active_version(mlflow_version.version_id)
 
