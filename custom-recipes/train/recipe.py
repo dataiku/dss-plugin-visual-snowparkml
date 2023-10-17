@@ -100,7 +100,7 @@ random_seed = recipe_config.get('random_seed', None)
 model_metric = recipe_config.get('model_metric', None)
 warehouse = recipe_config.get('warehouse', None)
 deploy_to_snowflake_model_registry = recipe_config.get('deploy_to_snowflake_model_registry', False)
-snowflake_model_registry = recipe_config.get('snowflake_model_registry', None)
+snowflake_model_registry = recipe_config.get('snowflake_model_registry', 'MODEL_REGISTRY')
 
 # Map metric name from dropdown to sklearn-compatible name
 if model_metric == 'ROC AUC':
@@ -831,6 +831,24 @@ else:
 
 # Evaluate the performance of this new version, to populate the performance screens of the saved model version in DSS
 mlflow_version.evaluate(output_test_dataset_name, container_exec_config_name='NONE')
+
+if deploy_to_snowflake_model_registry:
+    try:
+        model_registry_result = model_registry.create_model_registry(session = session, database_name = snowflake_model_registry)
+        registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
+        snowflake_registry_model_description = "Dataiku Project: " + project.project_key + ", Model: " + model_name
+        
+        model_id = registry.log_model(model = best_model["snowml_obj"],
+                                      model_name = model_name,
+                                      model_version = best_model["run_name"],
+                                      description = snowflake_registry_model_description,
+                                      tags = {"application": "Dataiku",
+                                              "dataiku_project_key": project.project_key,
+                                              "dataiku_saved_model_id": sm_id})
+        for test_metric in best_model["test_metrics"]:
+            model_id.set_metric(metric_name = test_metric, metric_value = best_model["test_metrics"][test_metric])
+        
+        print("Successfully deployed model to Snowflake ML Model Registry: " + snowflake_model_registry)
 
 current_recipe_name = FLOW["currentActivityId"][:-3].replace('_NP', '')
 
