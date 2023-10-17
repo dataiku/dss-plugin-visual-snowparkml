@@ -849,6 +849,8 @@ if deploy_to_snowflake_model_registry:
             model_id.set_metric(metric_name = test_metric, metric_value = best_model["test_metrics"][test_metric])
         
         print("Successfully deployed model to Snowflake ML Model Registry: " + snowflake_model_registry)
+    except:
+        print("Failed to deploy model to Snowflake ML Model Registry")
 
 current_recipe_name = FLOW["currentActivityId"][:-3].replace('_NP', '')
 
