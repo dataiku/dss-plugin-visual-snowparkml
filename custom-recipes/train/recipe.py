@@ -99,6 +99,8 @@ train_ratio = recipe_config.get('train_ratio', None)
 random_seed = recipe_config.get('random_seed', None)
 model_metric = recipe_config.get('model_metric', None)
 warehouse = recipe_config.get('warehouse', None)
+deploy_to_snowflake_model_registry = recipe_config.get('deploy_to_snowflake_model_registry', False)
+snowflake_model_registry = recipe_config.get('snowflake_model_registry', None)
 
 # Map metric name from dropdown to sklearn-compatible name
 if model_metric == 'ROC AUC':

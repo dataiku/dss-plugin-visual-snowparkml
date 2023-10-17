@@ -815,5 +815,11 @@ These rules form a tree, with the leaves of the tree carrying the predicted valu
                 <span class="help-inline">If empty, use Snowflake connection default warehouse</span>
             </div>
         </div>
+        <div class="control-group">
+            <label class="control-label">Deploy to Snowflake ML Model Registry</label>
+            <div class="controls">
+                <input name="enable_time_ordering" type="checkbox" ng-model="config.time_ordering"/>
+            </div>
+        </div>
     </form>
 </div>
