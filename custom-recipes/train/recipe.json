@@ -1,6 +1,6 @@
 {
     "meta": {
-        "label": "Train - Visual SnowparkML",
+        "label": "Train",
         "description": "<b style=\"color:#29B5E8; font-size: medium;\">Train ML Models on Snowpark </b>\n \
 <b>Requirements: </b>\n \
 - Build the code environment included in this plugin \
