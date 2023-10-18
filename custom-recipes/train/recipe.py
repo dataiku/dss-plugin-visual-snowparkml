@@ -303,11 +303,13 @@ def convert_snowpark_df_col_dtype(snowpark_df, col):
         'string': T.StringType(),
         'text': T.StringType()
     }
-
+    print("PATPAT")
+    print(col)
+    print(snowpark_df.dtypes)
     for col_dtype in snowpark_df.dtypes:
+        
         if col_dtype[0] == col:
-            print("PATPAT")
-            print(col)
+            
             new_col_dtype = col_label_dtype_mappings[col_dtype[1]]
             print(new_col_dtype)
 
