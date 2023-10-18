@@ -307,7 +307,8 @@ def convert_snowpark_df_col_dtype(snowpark_df, col):
     print(col)
     print(snowpark_df.dtypes)
     for col_dtype in snowpark_df.dtypes:
-        
+        print(col_dtype[0])
+        print(col_dtype[0] == col)
         if col_dtype[0] == col:
             
             new_col_dtype = col_label_dtype_mappings[col_dtype[1]]
@@ -340,7 +341,7 @@ def add_sample_weights_col_to_snowpark_df(snowpark_df, col):
     return snowpark_df
 
 if prediction_type == "two-class classification":
-    input_snowpark_df = add_sample_weights_col_to_snowpark_df(input_snowpark_df, col_label_sf)
+    input_snowpark_df = add_sample_weights_col_to_snowpark_df(input_snowpark_df, col_label)
 
 if time_ordering:
     time_ordering_variable_unix = time_ordering_variable_sf + '_UNIX'
