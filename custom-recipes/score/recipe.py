@@ -124,7 +124,7 @@ if prediction_type == 'BINARY_CLASSIFICATION':
     
     predictions = loaded_model.predict_proba(input_dataset_snow_df)
     predictions = predictions.withColumn('PREDICTION', F.when(F.col('PREDICT_PROBA_1') > model_threshold, 1).otherwise(0))
-        
+    predictions = predictions.drop('SAMPLE_WEIGHTS')
 else:
     predictions = loaded_model.predict_proba(input_dataset_snow_df)
 
