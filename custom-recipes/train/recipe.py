@@ -838,8 +838,9 @@ if deploy_to_snowflake_model_registry:
         registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
         snowflake_registry_model_description = "Dataiku Project: " + project.project_key + ", Model: " + model_name
         
+        snowflake_model_name = project.project_key + "_" + model_name
         model_id = registry.log_model(model = best_model["snowml_obj"],
-                                      model_name = model_name,
+                                      model_name = snowflake_model_name,
                                       model_version = best_model["run_name"],
                                       description = snowflake_registry_model_description,
                                       tags = {"application": "Dataiku",
