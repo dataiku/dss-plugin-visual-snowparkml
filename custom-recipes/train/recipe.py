@@ -306,9 +306,13 @@ def convert_snowpark_df_col_dtype(snowpark_df, col):
 
     for col_dtype in snowpark_df.dtypes:
         if col_dtype[0] == col:
+            print("PATPAT")
+            print(col)
             new_col_dtype = col_label_dtype_mappings[col_dtype[1]]
+            print(new_col_dtype)
 
     return new_col_dtype
+
 
 def add_sample_weights_col_to_snowpark_df(snowpark_df, col):
     sf_col = sf_col_name(col)
