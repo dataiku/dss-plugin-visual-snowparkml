@@ -340,7 +340,7 @@ def add_sample_weights_col_to_snowpark_df(snowpark_df, col):
     return snowpark_df
 
 if prediction_type == "two-class classification":
-    input_snowpark_df = add_sample_weights_col_to_snowpark_df(input_snowpark_df, col_label)
+    input_snowpark_df = add_sample_weights_col_to_snowpark_df(input_snowpark_df, col_label_sf)
 
 if time_ordering:
     time_ordering_variable_unix = time_ordering_variable_sf + '_UNIX'
