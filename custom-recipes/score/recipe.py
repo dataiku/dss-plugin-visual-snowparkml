@@ -68,12 +68,15 @@ output_score_dataset = dataiku.Dataset(output_score_dataset_name)
 saved_model_names = get_input_names_for_role('saved_model_name')
 saved_model_name = saved_model_names[0]
 saved_model_id = saved_model_name.split(".")[1]
+snowflake_model_registry = "MODEL_REGISTRY"
 
 recipe_config = get_recipe_config()
 print("-----------------------------")
 print("Recipe Input Config")
 pprint.pprint(recipe_config)
 print("-----------------------------")
+
+warehouse = recipe_config.get('warehouse', None)
 
 client = dataiku.api_client()
 project = client.get_default_project()

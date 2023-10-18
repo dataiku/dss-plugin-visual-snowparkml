@@ -47,7 +47,7 @@
     ],
     "params": [
         {
-            "name": "snowflake_warehouse",
+            "name": "warehouse",
             "label": "Snowflake Warehouse",
             "type": "STRING",
             "description": "If empty, use Snowflake connection default warehouse"
