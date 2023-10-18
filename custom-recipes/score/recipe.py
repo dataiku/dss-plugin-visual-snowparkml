@@ -113,7 +113,7 @@ registry = model_registry.ModelRegistry(session = session, database_name = snowf
 
 model = model_registry.ModelReference(registry = registry, 
                                       model_name = snowflake_model_name, 
-                                      model_version = active_model_version['id'])
+                                      model_version = active_model_version_id)
 loaded_model = model.load_model()
 
 input_dataset_snow_df = dku_snowpark.get_dataframe(input_dataset, session = session)
