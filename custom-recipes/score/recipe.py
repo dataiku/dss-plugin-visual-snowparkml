@@ -67,17 +67,62 @@ output_score_dataset = dataiku.Dataset(output_score_dataset_name)
 
 saved_model_names = get_input_names_for_role('saved_model_name')
 saved_model_name = saved_model_names[0]
-print("hi")
-print(saved_model_name)
-saved_model = dataiku.Model(saved_model_name) 
-
-# Get recipe user-inputted parameters and print to the logs
-
-def sf_col_name(col_name):
-    return '"{}"'.format(col_name)
+saved_model_id = saved_model_name.split(".")[1]
 
 recipe_config = get_recipe_config()
 print("-----------------------------")
 print("Recipe Input Config")
 pprint.pprint(recipe_config)
 print("-----------------------------")
+
+client = dataiku.api_client()
+project = client.get_default_project()
+
+saved_model = project.get_saved_model(saved_model_id)
+saved_model_name = saved_model.get_settings().settings['name']
+active_model_version_id = saved_model.get_active_version()['id']
+saved_model_version_details = saved_model.get_version_details(active_model_version_id)
+
+prediction_type = saved_model_version_details.details['coreParams']['prediction_type']
+model_threshold = saved_model_version_details.details['perf']['usedThreshold']
+
+snowflake_model_name = project.project_key + "_" + saved_model_name
+
+### SECTION 4 - Set up Snowpark
+dku_snowpark = DkuSnowpark()
+
+snowflake_connection_name = input_dataset.get_config()['params']['connection']
+
+session = dku_snowpark.get_session(snowflake_connection_name)
+
+if warehouse:
+    warehouse = f'"{warehouse}"'
+    session.use_warehouse(warehouse)
+
+connection_schema = session.get_current_schema()
+
+if not connection_schema:    
+    input_dataset_info = input_dataset.get_location_info()
+    input_dataset_schema = input_dataset_info['info']['schema']
+    session.use_schema(input_dataset_schema)
+
+registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
+
+model = model_registry.ModelReference(registry = registry, 
+                                      model_name = snowflake_model_name, 
+                                      model_version = active_model_version['id'])
+loaded_model = model.load_model()
+
+input_dataset_snow_df = dku_snowpark.get_dataframe(input_dataset, session = session)
+
+if prediction_type == 'BINARY_CLASSIFICATION':
+    if 'SAMPLE_WEIGHTS' not in input_dataset_snow_df.columns:
+        input_dataset_snow_df = input_dataset_snow_df.withColumn('SAMPLE_WEIGHTS', F.lit(None).cast(T.StringType()))
+    
+    predictions = loaded_model.predict_proba(input_dataset_snow_df)
+    predictions = predictions.withColumn('PREDICTION', F.when(F.col('PREDICT_PROBA_1') > model_threshold, 1).otherwise(0))
+        
+else:
+    predictions = loaded_model.predict_proba(input_dataset_snow_df)
+
+dku_snowpark.write_with_schema(output_score_dataset, predictions)

@@ -45,7 +45,14 @@
             "acceptsDataset": true
         }
     ],
-
+    "params": [
+        {
+            "name": "snowflake_warehouse",
+            "label": "Snowflake Warehouse",
+            "type": "STRING",
+            "description": "If empty, use Snowflake connection default warehouse"
+        }
+    ],    
     "selectableFromDataset": "input_dataset_name",
     "selectableFromSavedModel": "saved_model_name",
 
