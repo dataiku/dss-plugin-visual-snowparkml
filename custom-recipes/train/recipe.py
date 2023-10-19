@@ -84,13 +84,9 @@ print("-----------------------------")
 
 model_name = recipe_config.get('model_name', None)
 col_label = recipe_config.get('col_label', None)['name']
-col_label_sf = sf_col_name(col_label)
 prediction_type = recipe_config.get('prediction_type', None)
 time_ordering = recipe_config.get('time_ordering', False)
 time_ordering_variable = recipe_config.get('time_ordering_variable', None)
-if time_ordering_variable:
-    time_ordering_variable = time_ordering_variable['name']
-    time_ordering_variable_sf = sf_col_name(time_ordering_variable)
 
 train_ratio = recipe_config.get('train_ratio', None)
 random_seed = recipe_config.get('random_seed', None)
@@ -279,6 +275,12 @@ for snowflake_column in input_snowpark_df.columns:
 
 def sf_col_name(col_name):
     return features_quotes_lookup[col_name]
+
+col_label_sf = sf_col_name(col_label)
+
+if time_ordering_variable:
+    time_ordering_variable = time_ordering_variable['name']
+    time_ordering_variable_sf = sf_col_name(time_ordering_variable)
 
 if prediction_type == "two-class classification":
     col_label_values = list(input_snowpark_df.select(sf_col_name(col_label)).distinct().to_pandas()[col_label])
