@@ -123,6 +123,8 @@ if prediction_type == 'BINARY_CLASSIFICATION':
         input_dataset_snow_df = input_dataset_snow_df.withColumn('SAMPLE_WEIGHTS', F.lit(None).cast(T.StringType()))
     
     predictions = loaded_model.predict_proba(input_dataset_snow_df)
+    print("PAT")
+    print(predictions.columns)
     predictions = predictions.withColumn('PREDICTION', F.when(F.col('PREDICT_PROBA_1') > model_threshold, 1).otherwise(0))
     predictions = predictions.drop('SAMPLE_WEIGHTS')
 else:
