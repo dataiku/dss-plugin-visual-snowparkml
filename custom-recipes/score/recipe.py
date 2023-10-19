@@ -117,13 +117,15 @@ model = model_registry.ModelReference(registry = registry,
 loaded_model = model.load_model()
 
 input_dataset_snow_df = dku_snowpark.get_dataframe(input_dataset, session = session)
-
+print("111")
+print(input_dataset_snow_df.columns)
 if prediction_type == 'BINARY_CLASSIFICATION':
     if 'SAMPLE_WEIGHTS' not in input_dataset_snow_df.columns:
         input_dataset_snow_df = input_dataset_snow_df.withColumn('SAMPLE_WEIGHTS', F.lit(None).cast(T.StringType()))
-    
+        print("222")
+        print(input_dataset_snow_df.columns)
     predictions = loaded_model.predict_proba(input_dataset_snow_df)
-    print("PAT")
+    print("333")
     print(predictions.columns)
     predictions = predictions.withColumn('PREDICTION', F.when(F.col('PREDICT_PROBA_1') > model_threshold, 1).otherwise(0))
     predictions = predictions.drop('SAMPLE_WEIGHTS')
