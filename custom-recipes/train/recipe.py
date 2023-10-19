@@ -319,11 +319,10 @@ def convert_snowpark_df_col_dtype(snowpark_df, col):
     for col_dtype in snowpark_df.dtypes:
 
         #if col_dtype[0] == col.replace('"', ''):
+        if col_dtype[0] == col
+            new_col_dtype = col_label_dtype_mappings[col_dtype[1]]
             
-        new_col_dtype = col_label_dtype_mappings[col_dtype[1]]
-            
-        
-        print(new_col_dtype)
+            print(new_col_dtype)
 
     return new_col_dtype
 
