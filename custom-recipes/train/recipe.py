@@ -76,9 +76,6 @@ model_experiment_tracking_folder_id = model_experiment_tracking_folder.get_id()
     
 # Get recipe user-inputted parameters and print to the logs
 
-def sf_col_name(col_name):
-    return '"{}"'.format(col_name)
-
 recipe_config = get_recipe_config()
 print("-----------------------------")
 print("Recipe Input Config")
@@ -272,6 +269,17 @@ if not connection_schema:
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
 input_snowpark_df = dku_snowpark.get_dataframe(input_dataset)
 
+features_quotes_lookup = {}
+
+for snowflake_column in input_snowpark_df.columns:
+    if snowflake_column.startswith('"') and snowflake_column.endswith('"'):
+        features_quotes_lookup[snowflake_column.replace('"', '')] = snowflake_column
+    else:
+        features_quotes_lookup[snowflake_column] = snowflake_column
+
+def sf_col_name(col_name):
+    return features_quotes_lookup[col_name]
+
 if prediction_type == "two-class classification":
     col_label_values = list(input_snowpark_df.select(sf_col_name(col_label)).distinct().to_pandas()[col_label])
 else:
@@ -308,10 +316,12 @@ def convert_snowpark_df_col_dtype(snowpark_df, col):
     print(snowpark_df.dtypes)
     for col_dtype in snowpark_df.dtypes:
 
-        if col_dtype[0] == col.replace('"', ''):
+        #if col_dtype[0] == col.replace('"', ''):
             
-            new_col_dtype = col_label_dtype_mappings[col_dtype[1]]
-            print(new_col_dtype)
+        new_col_dtype = col_label_dtype_mappings[col_dtype[1]]
+            
+        
+        print(new_col_dtype)
 
     return new_col_dtype
 
