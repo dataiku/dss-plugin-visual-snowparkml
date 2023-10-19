@@ -307,8 +307,7 @@ def convert_snowpark_df_col_dtype(snowpark_df, col):
     print(col)
     print(snowpark_df.dtypes)
     for col_dtype in snowpark_df.dtypes:
-        print(col_dtype[0])
-        print(col_dtype[0] == col)
+
         if col_dtype[0] == col.replace('"', ''):
             
             new_col_dtype = col_label_dtype_mappings[col_dtype[1]]
