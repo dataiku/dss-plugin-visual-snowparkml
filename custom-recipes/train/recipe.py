@@ -265,7 +265,7 @@ if not connection_schema:
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
 input_snowpark_df = dku_snowpark.get_dataframe(input_dataset)
 
-features_quotes_lookup = {}
+features_quotes_lookup = {'SAMPLE_WEIGHTS': 'SAMPLE_WEIGHTS'}
 
 for snowflake_column in input_snowpark_df.columns:
     if snowflake_column.startswith('"') and snowflake_column.endswith('"'):
