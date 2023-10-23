@@ -128,6 +128,7 @@ if prediction_type == 'BINARY_CLASSIFICATION':
     print("333")
     print(predictions.columns) 
     target_col_value_cols = [col for col in predictions.columns if "PREDICT_PROBA" in col]
+    target_col_values = [col.replace('"','').replace('PREDICT_PROBA_','') for col in target_col_value_cols]
     predictions = predictions.withColumn('PREDICTION', F.when(F.col(target_col_value_cols[-1]) > model_threshold, target_col_values[-1]).otherwise(target_col_values[0]))
     predictions = predictions.drop('SAMPLE_WEIGHTS')
 
