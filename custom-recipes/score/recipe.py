@@ -133,6 +133,6 @@ if prediction_type == 'BINARY_CLASSIFICATION':
     predictions = predictions.drop('SAMPLE_WEIGHTS')
 
 else:
-    predictions = loaded_model.predict_proba(input_dataset_snow_df)
+    predictions = loaded_model.predict(input_dataset_snow_df)
 
 dku_snowpark.write_with_schema(output_score_dataset, predictions)
