@@ -566,20 +566,22 @@ class SnowparkMLClassifierWrapper(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
         from cloudpickle import load
         self.model = load(open(context.artifacts["grid_pipe_sklearn"], 'rb'))
+        self.features_quotes_lookup = load(open(context.artifacts["features_quotes_lookup"], 'rb'))
         
     def predict(self, context, input_df):
         input_df_copy = input_df.copy()
-        input_df_copy.columns = [f'"{col}"' for col in input_df_copy.columns]
+        input_df_copy.columns = [self.features_quotes_lookup[col] for col in input_df_copy.columns]
         return self.model.predict_proba(input_df_copy)
 
 class SnowparkMLRegressorWrapper(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
         from cloudpickle import load
         self.model = load(open(context.artifacts["grid_pipe_sklearn"], 'rb'))
+        self.features_quotes_lookup = load(open(context.artifacts["features_quotes_lookup"], 'rb'))
         
     def predict(self, context, input_df):
         input_df_copy = input_df.copy()
-        input_df_copy.columns = [f'"{col}"' for col in input_df_copy.columns]
+        input_df_copy.columns = [self.features_quotes_lookup[col] for col in input_df_copy.columns]
         return self.model.predict(input_df_copy)    
 
 def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_iter):
@@ -762,10 +764,12 @@ for model in trained_models:
     best_score = grid_pipe_sklearn.best_score_
     
     artifacts = {
-        "grid_pipe_sklearn": "grid_pipe_sklearn.plk"
+        "grid_pipe_sklearn": "grid_pipe_sklearn.pkl",
+        "features_quotes_lookup": "features_quotes_lookup.pkl"
     }
 
     dump(grid_pipe_sklearn, open(artifacts.get("grid_pipe_sklearn"), 'wb'))
+    dump(features_quotes_lookup, open(artifacts.get("features_quotes_lookup"), 'wb'))
     
     if prediction_type == "two-class classification":
         logged_model = mlflow.pyfunc.log_model(artifact_path = "model", 
