@@ -87,7 +87,8 @@ active_model_version_id = saved_model.get_active_version()['id']
 saved_model_version_details = saved_model.get_version_details(active_model_version_id)
 
 prediction_type = saved_model_version_details.details['coreParams']['prediction_type']
-model_threshold = saved_model_version_details.details['perf']['usedThreshold']
+if prediction_type == 'BINARY_CLASSIFICATION':
+    model_threshold = saved_model_version_details.details['perf']['usedThreshold']
 
 snowflake_model_name = project.project_key + "_" + saved_model_name
 
