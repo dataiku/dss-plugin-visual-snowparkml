@@ -859,9 +859,7 @@ if deploy_to_snowflake_model_registry:
     try:
         model_registry_result = model_registry.create_model_registry(session = session, database_name = snowflake_model_registry)
         registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
-        print("0000")
         snowflake_registry_model_description = "Dataiku Project: " + project.project_key + ", Model: " + model_name
-        print("1111")
         snowflake_model_name = project.project_key + "_" + model_name
         model_id = registry.log_model(model = best_model["snowml_obj"],
                                       model_name = snowflake_model_name,
@@ -870,7 +868,7 @@ if deploy_to_snowflake_model_registry:
                                       tags = {"application": "Dataiku",
                                               "dataiku_project_key": project.project_key,
                                               "dataiku_saved_model_id": sm_id})
-        print("2222")
+
         for test_metric in best_model["test_metrics"]:
             model_id.set_metric(metric_name = test_metric, metric_value = best_model["test_metrics"][test_metric])
         
