@@ -555,7 +555,6 @@ else:
                            'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
         
 ### SECTION 10 - Train all models, do RandomSearch and hyperparameter tuning
-
 class SnowparkMLClassifierWrapper(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
         from cloudpickle import load
