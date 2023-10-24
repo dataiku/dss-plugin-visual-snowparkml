@@ -685,12 +685,8 @@ for model in trained_models:
         
         test_predictions_df[proba_col_names] = grid_pipe_sklearn.predict_proba(test_predictions_df)
         
-        if sample_weight_column:
-            pred_cols_to_keep = [col_label_sf, "PREDICTION", sample_weight_column] + proba_col_names
-            test_predictions_df = test_predictions_df[pred_cols_to_keep]
-        else:
-            pred_cols_to_keep = [col_label_sf, "PREDICTION"] + proba_col_names
-            test_predictions_df = test_predictions_df[pred_cols_to_keep]
+        pred_cols_to_keep = [col_label_sf, "PREDICTION"] + proba_col_names
+        test_predictions_df = test_predictions_df[pred_cols_to_keep]
 
         test_f1 = f1_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'], pos_label=col_label_values[0])
         mlflow.log_metric("test_f1_score", test_f1)
