@@ -668,27 +668,16 @@ for model in trained_models:
             param_name = param.replace("clf__","")
             mlflow.log_param(param_name, model_best_params[param])
     mlflow.log_param("algorithm", model_algo)
-    
-    #test_predictions_df = test_snowpark_df.to_pandas()
-    #for test_df_col_name in test_predictions_df.columns:
-    #    test_predictions_df = test_predictions_df.rename(columns={test_df_col_name: sf_col_name(test_df_col_name)})
 
-    #test_predictions_df["PREDICTION"] = grid_pipe_sklearn.predict(test_predictions_df)
-    
     test_predictions_df = rs_clf.predict(test_snowpark_df)
 
     test_metrics = {}
     
     if prediction_type == "two-class classification":
         model_classes = grid_pipe_sklearn.classes_
-        #proba_col_names = []
-        #for model_class in model_classes:
-        #    proba_col_names.append("PROBA_" + str(model_class))
-        
+
         test_prediction_probas_df = rs_clf.predict_proba(test_snowpark_df)
-        
-        #pred_cols_to_keep = [col_label_sf, "PREDICTION"] + proba_col_names
-        #test_predictions_df = test_predictions_df[pred_cols_to_keep]
+
         target_col_value_cols = [col for col in test_prediction_probas_df.columns if "PREDICT_PROBA" in col]
         
         test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
@@ -715,10 +704,6 @@ for model in trained_models:
         print("Precision Score: " + str(test_precision))
     
     else:
-        #if sample_weight_column:
-        #    test_predictions_df = test_predictions_df[[col_label_sf, "PREDICTION", sample_weight_column]]
-        #else:
-        #    test_predictions_df = test_predictions_df[[col_label_sf, "PREDICTION"]]
         if scoring_metric == 'neg_mean_poisson_deviance':
             if sample_weight_column:
                 test_d2 = d2_absolute_error_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', sample_weight_col_name = sample_weight_column)
