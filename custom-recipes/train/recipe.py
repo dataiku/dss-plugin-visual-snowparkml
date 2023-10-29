@@ -682,14 +682,19 @@ for model in trained_models:
         
         test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
         mlflow.log_metric("test_f1_score", test_f1)
+        print("F1 Score Done")
         test_roc_auc = roc_auc_score(df = test_prediction_probas_df, y_true_col_names = col_label_sf, y_score_col_names = test_prediction_probas_df.columns[-1])
         mlflow.log_metric("test_roc_auc", test_roc_auc)
+        print("ROC AUC Score Done")
         test_accuracy = accuracy_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"')
         mlflow.log_metric("test_accuracy", test_accuracy)
+        print("Accuracy Score Done")
         test_recall = recall_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
         mlflow.log_metric("test_recall", test_recall)
+        print("Recall Score Done")
         test_precision = precision_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
         mlflow.log_metric("test_precision", test_precision)
+        print("Precision Score Done")
         
         test_metrics["test_f1"] = test_f1
         test_metrics["test_roc_auc"] = test_roc_auc
