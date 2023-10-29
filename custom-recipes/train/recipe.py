@@ -27,6 +27,7 @@ import re
 from cloudpickle import dump, load
 import sys
 import pprint
+import time
 
 # Snowpark Imports
 import snowflake.connector
@@ -679,22 +680,33 @@ for model in trained_models:
         test_prediction_probas_df = rs_clf.predict_proba(test_snowpark_df)
 
         target_col_value_cols = [col for col in test_prediction_probas_df.columns if "PREDICT_PROBA" in col]
-        
+
+        t1 = time.time()
         test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
         mlflow.log_metric("test_f1_score", test_f1)
-        print("F1 Score Done")
+        t2 = time.time()
+        elapsed_time = t2 - t1
+        print("F1 Score Calculated in " + str(elapsed_time) + "seconds")
         test_roc_auc = roc_auc_score(df = test_prediction_probas_df, y_true_col_names = col_label_sf, y_score_col_names = test_prediction_probas_df.columns[-1])
         mlflow.log_metric("test_roc_auc", test_roc_auc)
-        print("ROC AUC Score Done")
+        t3 = time.time()
+        elapsed_time = t3 - t2
+        print("ROC AUC Score Calculated in " + str(elapsed_time) + "seconds")
         test_accuracy = accuracy_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"')
         mlflow.log_metric("test_accuracy", test_accuracy)
-        print("Accuracy Score Done")
+        t4 = time.time()
+        elapsed_time = t4 - t3
+        print("Accuracy Score Calculated in " + str(elapsed_time) + "seconds")
         test_recall = recall_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
         mlflow.log_metric("test_recall", test_recall)
-        print("Recall Score Done")
+        t5 = time.time()
+        elapsed_time = t5 - t4
+        print("Recall Score Calculated in " + str(elapsed_time) + "seconds")
         test_precision = precision_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
         mlflow.log_metric("test_precision", test_precision)
-        print("Precision Score Done")
+        t6 = time.time()
+        elapsed_time = t6 - t5
+        print("Precision Score Calculated in " + str(elapsed_time) + "seconds")
         
         test_metrics["test_f1"] = test_f1
         test_metrics["test_roc_auc"] = test_roc_auc
