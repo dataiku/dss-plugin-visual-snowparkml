@@ -669,34 +669,37 @@ for model in trained_models:
             mlflow.log_param(param_name, model_best_params[param])
     mlflow.log_param("algorithm", model_algo)
     
-    test_predictions_df = test_snowpark_df.to_pandas()
-    for test_df_col_name in test_predictions_df.columns:
-        test_predictions_df = test_predictions_df.rename(columns={test_df_col_name: sf_col_name(test_df_col_name)})
+    #test_predictions_df = test_snowpark_df.to_pandas()
+    #for test_df_col_name in test_predictions_df.columns:
+    #    test_predictions_df = test_predictions_df.rename(columns={test_df_col_name: sf_col_name(test_df_col_name)})
 
-    test_predictions_df["PREDICTION"] = grid_pipe_sklearn.predict(test_predictions_df)
+    #test_predictions_df["PREDICTION"] = grid_pipe_sklearn.predict(test_predictions_df)
     
+    test_predictions_df = rs_clf.predict(test_snowpark_df)
+
     test_metrics = {}
     
     if prediction_type == "two-class classification":
         model_classes = grid_pipe_sklearn.classes_
-        proba_col_names = []
-        for model_class in model_classes:
-            proba_col_names.append("PROBA_" + str(model_class))
+        #proba_col_names = []
+        #for model_class in model_classes:
+        #    proba_col_names.append("PROBA_" + str(model_class))
         
-        test_predictions_df[proba_col_names] = grid_pipe_sklearn.predict_proba(test_predictions_df)
+        test_prediction_probas_df = rs_clf.predict_proba(test_snowpark_df)
         
-        pred_cols_to_keep = [col_label_sf, "PREDICTION"] + proba_col_names
-        test_predictions_df = test_predictions_df[pred_cols_to_keep]
-
-        test_f1 = f1_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'], pos_label=col_label_values[0])
+        #pred_cols_to_keep = [col_label_sf, "PREDICTION"] + proba_col_names
+        #test_predictions_df = test_predictions_df[pred_cols_to_keep]
+        target_col_value_cols = [col for col in test_prediction_probas_df.columns if "PREDICT_PROBA" in col]
+        
+        test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
         mlflow.log_metric("test_f1_score", test_f1)
-        test_roc_auc = roc_auc_score(test_predictions_df[col_label_sf], test_predictions_df[test_predictions_df.columns[-1]])
+        test_roc_auc = roc_auc_score(df = test_prediction_probas_df, y_true_col_names = col_label_sf, y_score_col_names = test_prediction_probas_df.columns[-1])
         mlflow.log_metric("test_roc_auc", test_roc_auc)
-        test_accuracy = accuracy_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION']) 
+        test_accuracy = accuracy_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"')
         mlflow.log_metric("test_accuracy", test_accuracy)
-        test_recall = recall_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'], pos_label=col_label_values[0])
+        test_recall = recall_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
         mlflow.log_metric("test_recall", test_recall)
-        test_precision = precision_score(test_predictions_df[col_label_sf], test_predictions_df['PREDICTION'], pos_label=col_label_values[0])
+        test_precision = precision_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
         mlflow.log_metric("test_precision", test_precision)
         
         test_metrics["test_f1"] = test_f1
