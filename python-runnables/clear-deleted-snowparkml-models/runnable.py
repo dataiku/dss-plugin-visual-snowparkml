@@ -73,8 +73,8 @@ class MyRunnable(Runnable):
                     if registry_dataiku_saved_model_id not in dataiku_saved_model_ids:
 
                         models_to_delete.append[{
-                            'name': registry_model['NAME'],
-                            'version': registry_model['VERSION']
+                            "name": registry_model['NAME'],
+                            "version": registry_model['VERSION']
                             
                         }]
                         if self.perform_deletion:
@@ -85,8 +85,8 @@ class MyRunnable(Runnable):
                         print(registry_model['NAME'])
                         print(registry_model['VERSION'])
                         models_to_delete.append[{
-                            'name': registry_model['NAME'],
-                            'version': registry_model['VERSION']
+                            "name": registry_model['NAME'],
+                            "version": registry_model['VERSION']
                         }]
                         print('madeit')
                         if self.perform_deletion:
