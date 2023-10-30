@@ -75,20 +75,16 @@ class MyRunnable(Runnable):
                         models_to_delete.append({
                             "name": registry_model['NAME'],
                             "version": registry_model['VERSION']
-                            
                         })
                         if self.perform_deletion:
                             registry.delete_model(model_name = registry_model['NAME'],
                                                   model_version = registry_model['VERSION'])
                     elif registry_model['VERSION'] not in dataiku_saved_model_ids_and_versions[registry_dataiku_saved_model_id]:
-                        print('hipat')
-                        print(registry_model['NAME'])
-                        print(registry_model['VERSION'])
+
                         models_to_delete.append({
                             "name": registry_model['NAME'],
                             "version": registry_model['VERSION']
                         })
-                        print('madeit')
                         if self.perform_deletion:
                             registry.delete_model(model_name = registry_model['NAME'],
                                                   model_version = registry_model['VERSION'])
@@ -97,15 +93,13 @@ class MyRunnable(Runnable):
                 else:
                     continue
             except:
-                print('hipatbad')
                 continue
         
         if self.perform_deletion:
             html = "<h4>Models Deleted</h4>"
         else:
             html = "<h4>Models to Delete (Simulation)</h4>"
-        print("patpatpat")
-        print(models_to_delete)
+
         models_to_delete_df = pd.DataFrame(models_to_delete)
         if len(models_to_delete_df) == 0:
             html += "<span>No models to delete</span>"
