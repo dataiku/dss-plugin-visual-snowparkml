@@ -24,6 +24,13 @@
             "description":"If not checked, only lists what will be deleted",
             "mandatory" : true,
             "defaultValue" : false
-        }        
+        },
+        {
+            "name": "snowflake_connection",
+            "label" : "Snowflake Connection",
+            "type": "CONNECTION",
+            "description":"Snowflake connection where models are stored (in the MODEL_REGISTRY database)",
+            "mandatory" : true
+        }    
     ]
 }
