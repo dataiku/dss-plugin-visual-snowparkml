@@ -105,6 +105,9 @@ class MyRunnable(Runnable):
             html = "<h4>Models to Delete (Simulation)</h4>"
         
         models_to_delete_df = pd.DataFrame(models_to_delete)
-        html += models_to_delete_df.to_html()
+        if len(models_to_delete_df) == 0:
+            html += "<span>No models to delete</span>"
+        else    
+            html += models_to_delete_df.to_html()
         
         return html
