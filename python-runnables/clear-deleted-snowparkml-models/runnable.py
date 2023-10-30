@@ -36,9 +36,6 @@ class MyRunnable(Runnable):
 
     def run(self, progress_callback):
         """
-        This method first identifies which model evaluations will be deleted and which will remain.
-        It builds a summary of the actions for the user.
-        If perform_deletion param is set to True, the model evaluations in model_evaluations_to_delete will be deleted.
         """
         
         if self.client.get_connection(self.snowflake_connection_name).get_info()['type'] != 'Snowflake':
