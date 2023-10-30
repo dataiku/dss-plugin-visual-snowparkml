@@ -72,11 +72,11 @@ class MyRunnable(Runnable):
                     registry_dataiku_saved_model_id = registry_model['TAGS']['dataiku_saved_model_id']
                     if registry_dataiku_saved_model_id not in dataiku_saved_model_ids:
 
-                        models_to_delete.append[{
+                        models_to_delete.append({
                             "name": registry_model['NAME'],
                             "version": registry_model['VERSION']
                             
-                        }]
+                        })
                         if self.perform_deletion:
                             registry.delete_model(model_name = registry_model['NAME'],
                                                   model_version = registry_model['VERSION'])
@@ -84,10 +84,10 @@ class MyRunnable(Runnable):
                         print('hipat')
                         print(registry_model['NAME'])
                         print(registry_model['VERSION'])
-                        models_to_delete.append[{
+                        models_to_delete.append({
                             "name": registry_model['NAME'],
                             "version": registry_model['VERSION']
-                        }]
+                        })
                         print('madeit')
                         if self.perform_deletion:
                             registry.delete_model(model_name = registry_model['NAME'],
