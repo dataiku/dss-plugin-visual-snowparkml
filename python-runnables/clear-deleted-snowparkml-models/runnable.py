@@ -1,10 +1,18 @@
 import dataiku
 from dataiku.runnables import Runnable
 from dataikuapi.utils import DataikuException
-from datetime import datetime as dt
-from datetime import timedelta
 from dataiku.base.utils import safe_unicode_str
 
+from datetime import datetime as dt
+from datetime import timedelta
+import pandas as pd
+import json
+
+from dataiku.snowpark import DkuSnowpark
+from snowflake.ml.registry import model_registry
+import snowflake.connector
+from snowflake.connector.pandas_tools import write_pandas
+from snowflake.snowpark.session import Session
 
 class MyRunnable(Runnable):
     """The base interface for a Python runnable"""
@@ -18,12 +26,7 @@ class MyRunnable(Runnable):
         super(MyRunnable, self).__init__(project_key, config, plugin_config)
         self.config = config
         self.perform_deletion = self.config.get("perform_deletion", False)
-        if not config.get('mes_id'):
-            raise ValueError('No model evaluation store was selected.')
         self.project = dataiku.api_client().get_project(project_key)
-        self.mes = dataiku.api_client().get_project(project_key).get_model_evaluation_store(config.get('mes_id'))
-        if not config.get('min_days') >= 0:
-            raise ValueError('Invalid number of days upon which older model evaluations will be deleted, minimum 0.')
 
     def get_progress_target(self):
         return 100, 'NONE'
@@ -34,6 +37,8 @@ class MyRunnable(Runnable):
         It builds a summary of the actions for the user.
         If perform_deletion param is set to True, the model evaluations in model_evaluations_to_delete will be deleted.
         """
+        
+        
 
         min_days = int(self.config.get('min_days')) - 1
         model_evaluations_raw = self.project.client._perform_json("GET", "/projects/%s/modelevaluationstores/%s/evaluations/" % (self.project_key, self.mes.id))
