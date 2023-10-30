@@ -89,6 +89,7 @@ class MyRunnable(Runnable):
                             'creation_time': registry_model['CREATION_TIME']
                             
                         }]
+                        print('madeit')
                         if self.perform_deletion:
                             registry.delete_model(model_name = registry_model['NAME'],
                                                   model_version = registry_model['VERSION'])
