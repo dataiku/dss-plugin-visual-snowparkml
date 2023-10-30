@@ -104,6 +104,6 @@ class MyRunnable(Runnable):
         if len(models_to_delete_df) == 0:
             html += "<span>No models to delete</span>"
         else:
-            html += models_to_delete_df.to_html()
+            html += models_to_delete_df.to_html(justify="center")
         
         return html
