@@ -83,10 +83,10 @@ class MyRunnable(Runnable):
                                                   model_version = registry_model['VERSION'])
                     elif registry_model['VERSION'] not in dataiku_saved_model_ids_and_versions[registry_dataiku_saved_model_id]:
                         print('hipat')
+                        
                         models_to_delete.append[{
                             'name': registry_model['NAME'],
-                            'version': registry_model['VERSION'],
-                            'creation_time': registry_model['CREATION_TIME']
+                            'version': registry_model['VERSION']
                             
                         }]
                         print('madeit')
