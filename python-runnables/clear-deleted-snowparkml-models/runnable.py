@@ -25,9 +25,12 @@ class MyRunnable(Runnable):
         """
         super(MyRunnable, self).__init__(project_key, config, plugin_config)
         self.config = config
+        self.client = dataiku.api_client()
         self.perform_deletion = self.config.get("perform_deletion", False)
+        self.snowflake_connection_name = self.config.get("snowflake_connection", None)
         self.project = dataiku.api_client().get_project(project_key)
-
+        
+        
     def get_progress_target(self):
         return 100, 'NONE'
 
@@ -38,61 +41,70 @@ class MyRunnable(Runnable):
         If perform_deletion param is set to True, the model evaluations in model_evaluations_to_delete will be deleted.
         """
         
+        if self.client.get_connection(self.snowflake_connection_name).get_info()['type'] != 'Snowflake':
+            return 'Please select a Snowflake connection'
         
+        snowflake_model_registry = "MODEL_REGISTRY"
+        
+        dku_snowpark = DkuSnowpark()
 
-        min_days = int(self.config.get('min_days')) - 1
-        model_evaluations_raw = self.project.client._perform_json("GET", "/projects/%s/modelevaluationstores/%s/evaluations/" % (self.project_key, self.mes.id))
+        session = dku_snowpark.get_session(self.snowflake_connection_name)
 
-        # Sorting between versions listed in dry runs and actual deletion is guaranteed to be stable.
-        # See docs https://docs.python.org/3/howto/sorting.html#sort-stability-and-complex-sorts
-        # See docstring under to_numeric explaining why this is required.
+        registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
+        registry_models = registry.list_models().to_pandas()
 
-        model_evaluations = [{'name': me['userMeta']['name'],
-                              'timestamp': me['created'],
-                              'id': me['ref']['evaluationId']
-                              } for me in model_evaluations_raw]
+        dataiku_saved_model_ids = [model['id'] for model in self.project.list_saved_models()]
 
-        model_evaluations = sorted(model_evaluations, key=lambda k: k['timestamp'], reverse=True)
+        dataiku_saved_model_ids_and_versions = {}
 
-        model_evaluations_to_delete = list(filter(filter_old_me(min_days), model_evaluations))
-        model_evaluations_to_keep = [me for me in model_evaluations if me not in model_evaluations_to_delete]
+        for saved_model_id in dataiku_saved_model_ids:
+            saved_model = self.project.get_saved_model(saved_model_id)
+            saved_model_versions = [version['id'] for version in saved_model.list_versions()]
+            dataiku_saved_model_ids_and_versions[saved_model_id] = saved_model_versions
 
-        html = "<h4>Summary</h4>"
-        html += "<span>{}</span><br>".format(summarize(model_evaluations_to_keep, 'to keep'))
-        html += "<span>{}</span><br>".format(summarize(model_evaluations_to_delete, 'to delete'))
+        registry_models['TAGS'] = registry_models['TAGS'].apply(json.loads)
 
-        if self.perform_deletion:
+        models_to_delete = []
+        
+        for i, registry_model in registry_models.iterrows():
             try:
-                ids_to_delete = [me['id'] for me in model_evaluations_to_delete]
-                self.mes.delete_model_evaluations(ids_to_delete)
-                html += "<br/><span><strong>{} model evaluation(s) deleted according to summary</strong></span>".format(len(model_evaluations_to_delete))
-            except DataikuException as e:
-                html += '<span>An error occurred while trying to delete versions.</span><br>'
-                html += u'<span>{}</span>'.format(safe_unicode_str(e))
+                if registry_model['TAGS']['dataiku_project_key'] == self.project.project_key:
+                    registry_dataiku_saved_model_id = registry_model['TAGS']['dataiku_saved_model_id']
+                    if registry_dataiku_saved_model_id not in dataiku_saved_model_ids:
+
+                        models_to_delete.append[{
+                            'name': registry_model['NAME'],
+                            'version': registry_model['VERSION'],
+                            'creation_time': registry_model['CREATION_TIME']
+                            
+                        }]
+                        if self.perform_deletion:
+                            registry.delete_model(model_name = registry_model['NAME'],
+                                                  model_version = registry_model['VERSION'])
+                    elif registry_model['VERSION'] not in dataiku_saved_model_ids_and_versions[registry_dataiku_saved_model_id]:
+                        
+                        models_to_delete.append[{
+                            'name': registry_model['NAME'],
+                            'version': registry_model['VERSION'],
+                            'creation_time': registry_model['CREATION_TIME']
+                            
+                        }]
+                        if self.perform_deletion:
+                            registry.delete_model(model_name = registry_model['NAME'],
+                                                  model_version = registry_model['VERSION'])
+                    else:
+                        continue
+                else:
+                    continue
+            except:
+                continue
+        
+        if self.perform_deletion:
+            html = "<h4>Models Deleted</h4>"
+        else:
+            html = "<h4>Models to Delete (Simulation)</h4>"
+        
+        models_to_delete_df = pd.DataFrame(models_to_delete)
+        html += models_to_delete_df.to_html()
+        
         return html
-
-
-def filter_old_me(min_days):
-    def ret(me):
-        today = dt.now().date()
-        date = dt.utcfromtimestamp(me['timestamp']/1000).date()
-        return today - date > timedelta(days=min_days)
-    return ret
-
-
-def timestamp_to_date(timestamp):
-    return dt.utcfromtimestamp(timestamp/1000).strftime("%Y-%m-%d")
-
-
-def summarize(model_evaluations, action):
-    if len(model_evaluations) == 0:
-        text = "<strong>0 model evaluations {}</strong>".format(action)
-    elif len(model_evaluations) == 1:
-        me = model_evaluations[0]
-        text = "<strong>1 model evaluation {}:</strong> {}, evaluated on {}".format(action, me['name'], timestamp_to_date(me['timestamp']))
-    else:
-        text = "<strong>{} model evaluations {}: </strong><br/>".format(len(model_evaluations), action)
-        text += '<br/>'.join(list(map(lambda me:
-                                      "- {}, evaluated on {}".format(me['name'], timestamp_to_date(me['timestamp'])),
-                                      model_evaluations)))
-    return text
