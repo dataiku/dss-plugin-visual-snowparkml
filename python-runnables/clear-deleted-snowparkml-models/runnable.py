@@ -97,6 +97,7 @@ class MyRunnable(Runnable):
                 else:
                     continue
             except:
+                print('hipatbad')
                 continue
         
         if self.perform_deletion:
