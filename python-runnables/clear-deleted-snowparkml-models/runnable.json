@@ -9,32 +9,14 @@
     "impersonate": false,
     "permissions" : ["WRITE_CONF"],
     "resultType" : "HTML",
-    "resultLabel" : "Deleted Snowpa",
+    "resultLabel" : "Deleted SnowparkML Model Versions",
     "macroRoles": [     
-        {
-             "type": "MODEL_EVALUATION_STORE",
-             "targetParamsKey": "mes_id"
-         },
          {
              "type": "PROJECT_MACROS"
          }
      ],
 
     "params": [
-        {
-            "name": "mes_id",
-            "label": "Model evaluation store",
-            "type": "MODEL_EVALUATION_STORE",
-            "description": "Model evaluation store for which to delete old model evaluations",
-            "mandatory": true
-        },
-        {
-            "name": "min_days",
-            "label": "Delete evaluations older than (days)",
-            "type": "INT",
-            "defaultValue": 30,
-            "minI":0
-        },
         {
             "name": "perform_deletion",
             "label" : "Perform deletion",
