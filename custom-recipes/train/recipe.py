@@ -819,6 +819,12 @@ mlflow_version = sm.import_mlflow_version_from_managed_folder(version_id = best_
 # Make this Saved Model version the active one
 sm.set_active_version(mlflow_version.version_id)
 
+active_version_details = sm.get_version_details(mlflow_version.version_id)
+model_version_labels = active_version_details.details['userMeta']['labels']
+model_version_labels.append({'key': 'model:algorithm', 'value': best_model['algorithm']})
+active_version_details.details['userMeta']['labels'] = model_version_labels
+active_version_details.save_user_meta()
+
 output_test_dataset_name = output_test_dataset_names[0].split('.')[1]
 
 # Set model metadata (target name, classes,...)
