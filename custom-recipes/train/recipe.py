@@ -789,6 +789,7 @@ for model in trained_models:
                          'test_metrics': test_metrics})
     
 ### SECTION 12 - Pull the best model, import it into a SavedModel green diamond (it will create a new one if doesn't exist), and evaluate on the hold out Test dataset
+# Get the final best model (of the best models of each algorithm type) based on the performance metric chosen
 if scoring_metric in ['roc_auc','accuracy','f1','precision','recall','r2']:
     best_model = max(final_models, key=lambda x:x['best_score'])
 else:
@@ -796,6 +797,7 @@ else:
     
 best_model_run_id = best_model['mlflow_best_run_id']
 
+# If two-class classification, set the Dataiku MLflow imported model run inference info 
 if prediction_type == "two-class classification":
     model_classes = best_model['sklearn_obj'].classes_
     if 'int' in str(type(model_classes[0])):
@@ -805,11 +807,11 @@ if prediction_type == "two-class classification":
                                             classes = list(model_classes),
                                             code_env_name = MLFLOW_CODE_ENV_NAME) 
 
+# Get the managed folder subpath for the best trained model
 model_artifact_first_directory = re.search(r'.*/(.+$)', mlflow_experiment.artifact_location).group(1)
-
 model_path = f"{model_artifact_first_directory}/{best_model_run_id}/artifacts/model"
 
-# Create a new Dataiku Saved Model (if doesn't exist already)
+# If the Saved Model already exists in the flow (matching the user-inputted model name in the plugin), get it 
 sm_id = None
 for sm in project.list_saved_models():
     if sm["name"] != model_name:
@@ -821,7 +823,8 @@ for sm in project.list_saved_models():
 
 if sm_id:
     sm = project.get_saved_model(sm_id)
-    
+
+# If the Saved Model does not exist, create a new placeholder
 else:
     if prediction_type == "two-class classification":
         sm = project.create_mlflow_pyfunc_model(name = model_name,
@@ -841,24 +844,26 @@ mlflow_version = sm.import_mlflow_version_from_managed_folder(version_id = best_
 # Make this Saved Model version the active one
 sm.set_active_version(mlflow_version.version_id)
 
+# Add the algorithm name as a label in the Saved Model version metadata (so you can see whether XGBoost, LogisticRegression, etc.)
 active_version_details = sm.get_version_details(mlflow_version.version_id)
 model_version_labels = active_version_details.details['userMeta']['labels']
 model_version_labels.append({'key': 'model:algorithm', 'value': best_model['algorithm']})
 active_version_details.details['userMeta']['labels'] = model_version_labels
 active_version_details.save_user_meta()
 
+# Get the output test dataset name
 output_test_dataset_name = output_test_dataset_names[0].split('.')[1]
 
-# Set model metadata (target name, classes,...)
+# Set the Saved Model metadata (target name, classes,...)
 if prediction_type == "two-class classification":
-       
     mlflow_version.set_core_metadata(target_column_name = col_label, class_labels = list(model_classes), get_features_from_dataset = output_test_dataset_name)
 else:
     mlflow_version.set_core_metadata(target_column_name = col_label, get_features_from_dataset = output_test_dataset_name)
 
-# Evaluate the performance of this new version, to populate the performance screens of the saved model version in DSS
+# Evaluate the performance of this new version, to populate the performance screens of the Saved Model version in Dataiku
 mlflow_version.evaluate(output_test_dataset_name, container_exec_config_name='NONE')
 
+# If selected, deploy the best trained model to a Snowpark ML Model Registry under the 'MODEL_REGISTRY' database
 if deploy_to_snowflake_model_registry:
     try:
         model_registry_result = model_registry.create_model_registry(session = session, database_name = snowflake_model_registry)
@@ -880,8 +885,10 @@ if deploy_to_snowflake_model_registry:
     except:
         print("Failed to deploy model to Snowflake ML Model Registry")
 
+# Get the current plugin recipe instance name
 current_recipe_name = FLOW["currentActivityId"][:-3].replace('_NP', '')
 
+# Get the Dataiku.Recipe object, and add the new trained Saved Model as an output of the recipe (if it isn't already)
 recipe = project.get_recipe(current_recipe_name)
 recipe_settings = recipe.get_settings()
 saved_model_names = get_output_names_for_role('saved_model_name')
