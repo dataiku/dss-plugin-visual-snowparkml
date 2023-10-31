@@ -292,11 +292,9 @@ if prediction_type == "two-class classification":
 else:
     col_label_values = None
 
-# 
+# Function to retrieve the Snowflake data type from the corresponding pandas data type 
 def convert_snowpark_df_col_dtype(snowpark_df, col):
-    """
-    inputs: snowpark dataframe
-    """
+
     col_label_dtype_mappings = {
         'binary': T.BinaryType(),
         'boolean': T.BooleanType(),
