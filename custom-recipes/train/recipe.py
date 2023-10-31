@@ -326,7 +326,7 @@ def convert_snowpark_df_col_dtype(snowpark_df, col):
             
     return new_col_dtype
 
-
+# Function to add sample weights (inverse proportion of target class column) to the Snowpark df 
 def add_sample_weights_col_to_snowpark_df(snowpark_df, col):
     sf_col = sf_col_name(col)
     y_collect = snowpark_df.select(sf_col).groupBy(sf_col).count().collect()
@@ -350,9 +350,11 @@ def add_sample_weights_col_to_snowpark_df(snowpark_df, col):
 
     return snowpark_df
 
+# Add sample weights column if two-class classification
 if prediction_type == "two-class classification":
     input_snowpark_df = add_sample_weights_col_to_snowpark_df(input_snowpark_df, col_label)
 
+# If chosen by the user, split train/test sets based on the time ordering column
 if time_ordering:
     time_ordering_variable_unix = time_ordering_variable_sf + '_UNIX'
     input_snowpark_df = input_snowpark_df.withColumn(time_ordering_variable_unix, F.unix_timestamp(input_snowpark_df[time_ordering_variable_sf]))
@@ -370,6 +372,8 @@ if time_ordering:
     
     #cv = TimeSeriesSplit(n_splits=3)
     cv = 3
+    
+# Regular train/test split
 else:
     test_ratio = 1 - train_ratio
     train_snowpark_df, test_snowpark_df = input_snowpark_df.random_split(weights = [train_ratio, test_ratio], seed = random_seed)
@@ -380,6 +384,7 @@ dku_snowpark.write_with_schema(output_train_dataset, train_snowpark_df)
 dku_snowpark.write_with_schema(output_test_dataset, test_snowpark_df)
 
 ### SECTION 7 - Create a feature preprocessing Pipeline for all selected input columns and the encoding/rescaling + imputation methods chosen
+# List of numeric and categorical dtypes in order to auto-select a reasonable encoding/rescaling and missingness imputation method based on the column
 numeric_dtypes_list = ['number','decimal','numeric','int','integer','bigint','smallint','tinyint','byteint',
                        'float','float4','float8','double','double precision','real']
 
@@ -387,6 +392,7 @@ categorical_dtypes_list = ['varchar','char','character','string','text','binary'
                            'datetime','time','timestamp','timestamp_ltz','timestamp_ntz','timestamp_tz',
                            'variant','object','array','geography','geometry']
 
+# Create list of input features and the encoding/rescaling and missingness imputation method chosen
 included_features_handling_list = []
 
 for feature_column in inputDatasetColumns:
@@ -420,8 +426,10 @@ for feature_column in inputDatasetColumns:
                 
             included_features_handling_list.append(feature_column)
 
+# List of just the input feature names
 included_feature_names = [feature['name'] for feature in included_features_handling_list]
 
+# Create a list of Pipelines for each feature, the encoding/rescaling method, and missingness imputation method
 col_transformer_list = []
 
 for feature in included_features_handling_list:
@@ -561,6 +569,9 @@ else:
                            'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
         
 ### SECTION 10 - Train all models, do RandomSearch and hyperparameter tuning
+
+# These ML algorithm wrappers will allow Dataiku's MLflow imported model to properly evaluate the model on another dataset 
+# This solves the pandas column name (e.g. 'col_1' vs. Snowflake column name '"col_1"' issue)
 class SnowparkMLClassifierWrapper(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
         from cloudpickle import load
@@ -583,6 +594,8 @@ class SnowparkMLRegressorWrapper(mlflow.pyfunc.PythonModel):
         input_df_copy.columns = [self.features_quotes_lookup[col] for col in input_df_copy.columns]
         return self.model.predict(input_df_copy)    
 
+# Function to run a RandomizedSearchCV hyperparameter tuning process, passing in the preprocessing Pipeline and and algorithm 
+# Return the trained RandomizedSearchCV object and algorithm name
 def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_iter):
     print(f"Training model... " + algo['algorithm'])
     pipe = Pipeline(steps=[
@@ -620,15 +633,19 @@ def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_it
 
     return {'algorithm': algo['algorithm'],'sklearn_obj': rs_clf}
 
+# Tune hyperparameters for all models chosen - store the trained RandomizedSearchCV objects and algorithm names in a list
 trained_models = []
 for alg in algorithms:
     trained_model = train_model(alg, preprocessor, scoring_metric, col_label_sf, included_feature_names, train_snowpark_df, n_iter)
     trained_models.append(trained_model)
 
 ### SECTION 11 - Log all trained model hyperparameters and performance metrics to MLflow
+# Function to get the current time
 def now_str() -> str:
     return datetime.now().strftime("%Y_%m_%d_%H_%M")
 
+# Loop through all trained models, log all hyperparameter tuning cross validation metrics, calculate holdout test set metrics on the best 
+# model from each algorithm, then add these best models to a final_models list
 final_models = []
 
 for model in trained_models:
