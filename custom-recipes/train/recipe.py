@@ -20,8 +20,6 @@ import joblib
 from itertools import chain
 from scipy.stats import uniform, truncnorm, randint, loguniform
 from datetime import datetime
-#from sklearn.metrics import accuracy_score, recall_score, f1_score, roc_auc_score, precision_score, r2_score, mean_absolute_error, mean_squared_error, d2_absolute_error_score, d2_pinball_score
-from sklearn.metrics import classification_report
 import os
 import re
 from cloudpickle import dump, load
@@ -55,10 +53,6 @@ from snowflake.ml.modeling.metrics import accuracy_score, recall_score, f1_score
 import snowflake.snowpark.functions as F
 from snowflake.ml.registry import model_registry
 
-MLFLOW_CODE_ENV_NAME = re.search(r'.*\/code-envs\/python\/([^/]+).*', sys.executable).group(1)
-
-print("MLflow code env: " + MLFLOW_CODE_ENV_NAME)
-
 ### SECTION 2 - Recipe Inputs, Outputs, and User-Inputted Parameters
 # Get input and output datasets
 input_dataset_names = get_input_names_for_role('input_dataset_name')
@@ -76,7 +70,6 @@ model_experiment_tracking_folder = dataiku.Folder(model_experiment_tracking_fold
 model_experiment_tracking_folder_id = model_experiment_tracking_folder.get_id()
     
 # Get recipe user-inputted parameters and print to the logs
-
 recipe_config = get_recipe_config()
 print("-----------------------------")
 print("Recipe Input Config")
@@ -237,35 +230,44 @@ MLFLOW_EXPERIMENT_NAME = model_name + "_exp"
 SAVED_MODEL_NAME = model_name
 MODEL_NAME = model_name
 
+# Get a Dataiku API client and the current project
 client = dataiku.api_client()
 project = client.get_default_project()
 
+# Set up the Dataiku MLflow extension and setup an experiment pointing to the output models folder
 mlflow_extension = project.get_mlflow_extension()
 mlflow_handle = project.setup_mlflow(managed_folder=model_experiment_tracking_folder)
 mlflow.set_experiment(experiment_name=MLFLOW_EXPERIMENT_NAME)
 mlflow_experiment = mlflow.get_experiment_by_name(MLFLOW_EXPERIMENT_NAME)
 
 ### SECTION 4 - Set up Snowpark
+# Get a Snowpark session using the input dataset Snowflake connection
 dku_snowpark = DkuSnowpark()
 
 snowflake_connection_name = input_dataset.get_config()['params']['connection']
 
 session = dku_snowpark.get_session(snowflake_connection_name)
 
+# Change the Snowflake warehouse if user chose to override the connection's default warehouse
 if warehouse:
     warehouse = f'"{warehouse}"'
     session.use_warehouse(warehouse)
 
+# If the Snowflake connection doesn't have a default schema, pull the schema name from the input dataset settings
 connection_schema = session.get_current_schema()
-
 if not connection_schema:    
     input_dataset_info = input_dataset.get_location_info()
     input_dataset_schema = input_dataset_info['info']['schema']
     session.use_schema(input_dataset_schema)
 
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
+# Convert the input dataset into a Snowpark dataframe
 input_snowpark_df = dku_snowpark.get_dataframe(input_dataset)
 
+# Create a dictionary to store all dataset columns as read in by pandas vs. how they're stored on Snowflake. 
+# E.g. {'feat_1':'"feat_1"', 'feat_2':'"feat_2"', 'FEAT_1':'FEAT_1'}
+# We use this lookup dictionary later on to map column names to their actual Snowflake names, 
+# where many have double quotes surrounding them to prevent Snowflake from auto-capitalizing
 features_quotes_lookup = {'SAMPLE_WEIGHTS': 'SAMPLE_WEIGHTS'}
 
 for snowflake_column in input_snowpark_df.columns:
@@ -273,7 +275,8 @@ for snowflake_column in input_snowpark_df.columns:
         features_quotes_lookup[snowflake_column.replace('"', '')] = snowflake_column
     else:
         features_quotes_lookup[snowflake_column] = snowflake_column
-
+        
+# This function will call the lookup dictionary and return the Snowflake column name
 def sf_col_name(col_name):
     return features_quotes_lookup[col_name]
 
@@ -283,13 +286,17 @@ if time_ordering_variable:
     time_ordering_variable = time_ordering_variable['name']
     time_ordering_variable_sf = sf_col_name(time_ordering_variable)
 
+# Get a list of Target column values if two-class classification
 if prediction_type == "two-class classification":
     col_label_values = list(input_snowpark_df.select(sf_col_name(col_label)).distinct().to_pandas()[col_label])
 else:
     col_label_values = None
 
+# 
 def convert_snowpark_df_col_dtype(snowpark_df, col):
-
+    """
+    inputs: snowpark dataframe
+    """
     col_label_dtype_mappings = {
         'binary': T.BinaryType(),
         'boolean': T.BooleanType(),
