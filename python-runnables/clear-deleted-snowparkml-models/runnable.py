@@ -34,35 +34,43 @@ class MyRunnable(Runnable):
     def get_progress_target(self):
         return 100, 'NONE'
 
-    def run(self, progress_callback):
-        """
-        """
-        
+    def run(self, progress_callback):        
+        # If user chooses a non-Snowflake connection, return an error message
         if self.client.get_connection(self.snowflake_connection_name).get_info()['type'] != 'Snowflake':
             return 'Please select a Snowflake connection'
         
+        # Check the 'MODEL_REGISTRY' Snowflake database for models
         snowflake_model_registry = "MODEL_REGISTRY"
         
+        # Get a Snowpark session
         dku_snowpark = DkuSnowpark()
-
         session = dku_snowpark.get_session(self.snowflake_connection_name)
-
+        
+        # Get the Snowflake Model Registry
         registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
+        
+        # List models in the registry
         registry_models = registry.list_models().to_pandas()
-
+        
+        # List Dataiku Saved Models in the current project
         dataiku_saved_model_ids = [model['id'] for model in self.project.list_saved_models()]
-
+        
+        # Create dictionary with key: Dataiku Saved Model IDs and values: Saved Model Versions
         dataiku_saved_model_ids_and_versions = {}
 
         for saved_model_id in dataiku_saved_model_ids:
             saved_model = self.project.get_saved_model(saved_model_id)
             saved_model_versions = [version['id'] for version in saved_model.list_versions()]
             dataiku_saved_model_ids_and_versions[saved_model_id] = saved_model_versions
-
+        
+        # Get tags from Snowflake Model Registry models
         registry_models['TAGS'] = registry_models['TAGS'].apply(json.loads)
 
         models_to_delete = []
         
+        # Loop through all models in Snowflake Model Registry. If the model has the current Dataiku project key as a tag, and
+        # if the model doesn't exist as a Dataiku Saved Model or version (meaning it was delete from Dataiku side), then 
+        # simulate its deletion or actually delete it, depending on what the user selected
         for i, registry_model in registry_models.iterrows():
             try:
                 if registry_model['TAGS']['dataiku_project_key'] == self.project.project_key:
@@ -92,6 +100,7 @@ class MyRunnable(Runnable):
             except:
                 continue
         
+        # Return HTML with a table of deleted models from the Snowflake Model Registry (or simulated deletions)
         if self.perform_deletion:
             html = "<h4>Models Deleted</h4>"
         else:
