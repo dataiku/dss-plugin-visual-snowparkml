@@ -737,67 +737,6 @@ These rules form a tree, with the leaves of the tree carrying the predicted valu
             </div>
             <div style="clear:both;">&nbsp;</div>
           </div>
-          <div class="form-group">
-            <div class="algo-group">
-            <div class="control-group">
-                <label class="control-label">Generalized Linear Model (GLM) Regression</label>
-                <div class="controls">
-                    <input name="glm-regression" type="checkbox" ng-model="config.glm_regression"/>
-                </div>
-            </div>
-            </div>
-            <div class="algo-details" ng-show="config.glm_regression">
-              <div class="algo-hparam-parent-first">
-              <h5 title = "The penalty weight of the Elastic Net regularization"> Elastic Net Penalty </h5>
-              <div class="algo-hparam">
-              <label for="glm-regression-elastic-net-penalty-min">(min)</label>
-              <input class="hparam-input" type="number" step="0.001" id="glm-regression-elastic-net-penalty-min" ng-model="config.glm_regression_elastic_net_penalty_min"/>
-              </div>
-              <div class="algo-hparam">
-              <label for="glm-regression-elastic-net-penalty-max">(max)</label>
-              <input class="hparam-input" type="number" step="0.001" id="glm-regression-elastic-net-penalty-max" ng-model="config.glm_regression_elastic_net_penalty_max"/>
-              </div>
-              
-              </div>
-              <div class="algo-hparam-parent-second">
-              <h5 title = "The distribution family of the response"> Distribution </h5>
-              <div class="algo-hparam">
-                <select class = "hparam-select" name="glm_distribution" ng-model="config.glm_distribution">
-                    <option value="poisson">Poisson</option>
-                    <option value="gamma">Gamma</option>
-                    <option value="tweedie">Tweedie</option>
-                </select>
-              </div>
-              </div>
-              <div class="algo-hparam-parent-third">
-              <h5 title = "Relates the expected value of the response to the linear predictors in the model"> Link Function </h5>
-              <div class="algo-hparam">
-                <select class = "hparam-select" name="glm_link_function" ng-model="config.glm_link_function">
-                    <option value="log">Log</option>
-                    <option value="identity">Identity</option>
-                </select>
-              </div>
-              </div>
-              <div class="algo-hparam-parent-fourth">
-              <h5 title = "Column to offset model predictions. The offset column must be included in the feature handling section"> Sample Weight Column </h5>
-              <div class="algo-hparam">
-                <select class = "hparam-select"
-                        name="sample_weight_column"
-                        ng-model="config.sample_weight_column"
-                        ng-options="c.name for c in config.inputDatasetColumns">
-                </select>
-              </div>
-              </div>
-              <div class="algo-hparam-parent-fifth">
-              <h5 title = "The power of the variance function of the tweedie distribution"> Variance Power </h5>
-              <div class="algo-hparam">
-              
-              <input class="hparam-input" type="number" id="glm-regression-variance-power" ng-model="config.glm_regression_variance_power"/>
-              </div>
-              </div>
-            </div> 
-            <div style="clear:both;">&nbsp;</div>
-          </div>
         </div>
         <hr>
         <div class="control-group">

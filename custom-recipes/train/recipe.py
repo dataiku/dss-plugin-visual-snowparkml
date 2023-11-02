@@ -106,8 +106,6 @@ elif model_metric == 'MAE':
     scoring_metric = 'neg_mean_absolute_error'
 elif model_metric == 'MSE':
     scoring_metric = 'neg_mean_squared_error'
-elif model_metric == 'D2 (GLM Only)':
-    scoring_metric = 'neg_mean_poisson_deviance'
 
 inputDatasetColumns = recipe_config.get('inputDatasetColumns', None)
 selectedInputColumns = recipe_config.get('selectedInputColumns', None)
@@ -210,16 +208,6 @@ decision_tree_regression_max_depth_min = recipe_config.get('decision_tree_regres
 decision_tree_regression_max_depth_max = recipe_config.get('decision_tree_regression_max_depth_max', None)
 decision_tree_regression_min_samples_leaf_min = recipe_config.get('decision_tree_regression_min_samples_leaf_min', None)
 decision_tree_regression_min_samples_leaf_max = recipe_config.get('decision_tree_regression_min_samples_leaf_max', None)
-
-glm_regression = recipe_config.get('glm_regression', None)
-glm_regression_elastic_net_penalty_min = recipe_config.get('glm_regression_elastic_net_penalty_min', None)
-glm_regression_elastic_net_penalty_max = recipe_config.get('glm_regression_elastic_net_penalty_max', None)
-glm_distribution = recipe_config.get('glm_distribution', None)
-glm_link_function = recipe_config.get('glm_link_function', None)
-sample_weight_column = recipe_config.get('sample_weight_column', None)
-if sample_weight_column:
-    sample_weight_column = sample_weight_column['name']
-glm_regression_variance_power = recipe_config.get('glm_regression_variance_power', None)
 
 n_iter = recipe_config.get('n_iter', None)
 
@@ -552,22 +540,6 @@ else:
                            'gs_params': {'clf__max_depth': randint(decision_tree_regression_max_depth_min,decision_tree_regression_max_depth_max),
                                          'clf__min_samples_leaf': randint(decision_tree_regression_min_samples_leaf_min,decision_tree_regression_min_samples_leaf_max)}})
 
-    if glm_regression:
-        if glm_distribution == "poisson":
-            algorithms.append({'algorithm': 'glm_regression_poisson',
-                           'sklearn_obj': PoissonRegressor(sample_weight_col = sample_weight_column),
-                           'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
-        elif glm_distribution == "gamma":
-            algorithms.append({'algorithm': 'glm_regression_gamma',
-                           'sklearn_obj': GammaRegressor(sample_weight_col = sample_weight_column),
-                           'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
-        elif glm_distribution == "tweedie":
-            algorithms.append({'algorithm': 'glm_regression_tweedie',
-                           'sklearn_obj': TweedieRegressor(power = glm_regression_variance_power,
-                                                           link = glm_link_function,
-                                                           sample_weight_col = sample_weight_column),
-                           'gs_params': {'clf__alpha': uniform(glm_regression_elastic_net_penalty_min,glm_regression_elastic_net_penalty_max)}})
-        
 ### SECTION 10 - Train all models, do RandomSearch and hyperparameter tuning
 
 # These ML algorithm wrappers will allow Dataiku's MLflow imported model to properly evaluate the model on another dataset 
@@ -727,37 +699,24 @@ for model in trained_models:
         print("Precision Score: " + str(test_precision))
     
     else:
-        if scoring_metric == 'neg_mean_poisson_deviance':
-            if sample_weight_column:
-                test_d2 = d2_absolute_error_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', sample_weight_col_name = sample_weight_column)
-            else:
-                test_d2 = d2_absolute_error_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"')
-            
-            mlflow.log_metric("test_d2_score", test_d2)
-            
-            test_metrics["test_d2_score"] = test_d2
-            
-            print("D2 Score: " + str(test_d2))
-        else:
-            test_r2 = r2_score(df = test_predictions_df, y_true_col_name = col_label_sf, y_pred_col_name = '"PREDICTION"')
-            mlflow.log_metric("test_r2_score", test_r2)
-            test_mae = mean_absolute_error(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"')
-            mlflow.log_metric("test_mae_score", test_mae)
-            test_mse = mean_squared_error(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"')
-            mlflow.log_metric("test_mse_score", test_mse)
-            test_rmse = mean_squared_error(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', squared=False)
-            mlflow.log_metric("test_rmse_score", test_rmse)
-            
-            test_metrics["test_r2"] = test_r2
-            test_metrics["test_mae"] = test_mae
-            test_metrics["test_mse"] = test_mse
-            test_metrics["test_rmse"] = test_rmse
-            
-            print("R2 Score: " + str(test_r2))
-            print("Mean Absolute Error: " + str(test_mae))
-            print("Mean Squared Error: " + str(test_mse))
-            print("Root Mean Squared Error: " + str(test_rmse))
-            
+        test_r2 = r2_score(df = test_predictions_df, y_true_col_name = col_label_sf, y_pred_col_name = '"PREDICTION"')
+        mlflow.log_metric("test_r2_score", test_r2)
+        test_mae = mean_absolute_error(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"')
+        mlflow.log_metric("test_mae_score", test_mae)
+        test_mse = mean_squared_error(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"')
+        mlflow.log_metric("test_mse_score", test_mse)
+        test_rmse = mean_squared_error(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', squared=False)
+        mlflow.log_metric("test_rmse_score", test_rmse)
+
+        test_metrics["test_r2"] = test_r2
+        test_metrics["test_mae"] = test_mae
+        test_metrics["test_mse"] = test_mse
+        test_metrics["test_rmse"] = test_rmse
+
+        print("R2 Score: " + str(test_r2))
+        print("Mean Absolute Error: " + str(test_mae))
+        print("Mean Squared Error: " + str(test_mse))
+        print("Root Mean Squared Error: " + str(test_rmse))
     
     best_score = grid_pipe_sklearn.best_score_
     
