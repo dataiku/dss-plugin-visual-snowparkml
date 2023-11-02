@@ -53,7 +53,7 @@
         },
         {
             "name": "saved_model_name",
-            "label": "Saved Model",
+            "label": "Saved Model (LEAVE EMPTY)",
             "description": "The final, best trained model",
             "arity": "UNARY",
             "required": false,
