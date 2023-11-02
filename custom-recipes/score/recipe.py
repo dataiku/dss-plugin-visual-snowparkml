@@ -6,25 +6,12 @@ from dataiku.customrecipe import get_output_names_for_role
 from dataiku.customrecipe import get_recipe_config
 from dataiku import pandasutils as pdu
 from dataiku.snowpark import DkuSnowpark
-from dataikuapi.dss.ml import DSSPredictionMLTaskSettings
-from dataiku.core.flow import FLOW
 from dataiku import customrecipe
 
 # Other ML Imports
 import pandas as pd, numpy as np
-import mlflow
-from mlflow.deployments import get_deploy_client
 import json
-import joblib
-from itertools import chain
-from scipy.stats import uniform, truncnorm, randint, loguniform
-from datetime import datetime
-from sklearn.metrics import accuracy_score, recall_score, f1_score, roc_auc_score, precision_score, r2_score, mean_absolute_error, mean_squared_error, d2_absolute_error_score, d2_pinball_score
-from sklearn.metrics import classification_report
 import os
-import re
-from cloudpickle import dump, load
-import sys
 import pprint
 
 # Snowpark Imports
