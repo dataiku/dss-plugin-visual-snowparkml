@@ -1,0 +1,90 @@
+thead th {
+  position: sticky;
+  top: 0;
+}
+th {
+  background-color: #bebebe;
+}
+.settings-overall-title {
+    color: #29B5E8;
+    font-size: x-large;
+}
+.settings-section-title {
+    color: #29B5E8;
+    font-size: large;
+}
+.table td, .table th {
+  padding: 8px;
+  vertical-align: middle !important;
+    
+}
+.table-responsive {
+    table-layout:fixed;
+    max-height: 400px;
+    overflow-y: auto;
+    position: relative;
+}
+td div {
+    word-break: break-all;
+    box-sizing: border-box;
+    overflow-x: auto;
+    width: 100%;
+}
+.feature-select{
+    word-break: break-all;
+    box-sizing: border-box;
+    width: 90%;
+}
+.feature-input {
+    word-break: break-all;
+    width: 85%;
+}
+.hparam-input{
+    word-break: break-all;
+    width: 85% !important;
+}
+
+.hparam-select{
+    word-break: break-all;
+    box-sizing: border-box;
+    width: 85% !important;
+}
+
+.form-group {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    margin: 8px;
+    background-color: #f9f9f9;
+    padding: 8px;
+}
+.algo-label {
+    font-size: medium;
+}
+.algo-description {
+    font-size: small;
+}
+.algo-hparam-parent-first {
+    width: 20%;
+    float: left;
+}
+
+.algo-hparam-parent-second {
+    width: 20%;
+    float: left;
+}
+
+.algo-hparam-parent-third {
+    width: 20%;
+    float: left;
+}
+
+.algo-hparam-parent-fourth {
+    width: 20%;
+    float: left;
+}
+
+.algo-hparam-parent-fifth {
+    width: 20%;
+    float: left;
+}

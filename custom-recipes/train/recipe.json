@@ -1,0 +1,72 @@
+{
+    "meta": {
+        "label": "Visual SnowparkML",
+        "description": "<b style=\"color:#29B5E8; font-size: medium;\">Train Machine Learning Models on Snowpark </b>\n \
+<b>Requirements: </b>\n \
+- Build the code environment included in this plugin \
+- In addition, create another python 3.8 code environment called 'py_38_snowpark' with the python packages listed here:  \
+- All columns must be UPPER_CASE \
+- If doing two-class classification + XGBoost, convert your target column to numeric (0,1) before this recipe (XGBoost requirement) \
+- No int type columns can have missing values. If you have an int column with missing values, convert the type to double before this recipe. (MLflow requirement)",
+        "icon": "icon-snowflake",
+        "iconColor": "blue"
+    },
+
+    "kind": "PYTHON",
+
+    "inputRoles": [
+        {
+            "name": "input_dataset_name",
+            "label": "Input Dataset",
+            "description": "Must have labels for all values of the target column",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "outputRoles": [
+        {
+            "name": "output_train_dataset_name",
+            "label": "Train Dataset Output",
+            "description": "Post train/test split",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        {
+            "name": "output_test_dataset_name",
+            "label": "Test Dataset Output",
+            "description": "Post train/test split",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        {
+            "name": "model_experiment_tracking_folder_name",
+            "label": "Model Folder",
+            "description": "To store MLflow experiment tracking data and trained models",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": false,
+            "acceptsManagedFolder": true
+        },
+        {
+            "name": "saved_model_name",
+            "label": "Saved Model",
+            "description": "The final, best trained model",
+            "arity": "UNARY",
+            "required": false,
+            "acceptsDataset": false,
+            "acceptsSavedModel": true
+        }
+    ],
+
+    "paramsTemplate" : "templates/train-snowpark-model.html",
+    "paramsModule" : "trainSnowparkModel.recipe",
+    "paramsPythonSetup": "helpers/recipes-helper.py",
+    "selectableFromDataset": "input_dataset_name",
+
+    "resourceKeys": []
+
+}
