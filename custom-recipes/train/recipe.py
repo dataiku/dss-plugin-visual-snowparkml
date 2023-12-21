@@ -79,7 +79,7 @@ print("-----------------------------")
 model_name = recipe_config.get('model_name', None)
 col_label = recipe_config.get('col_label', None)['name']
 prediction_type = recipe_config.get('prediction_type', None)
-class_weights = recipe_config.get('class_weights', None)
+disable_class_weights = recipe_config.get('disable_class_weights', None)
 time_ordering = recipe_config.get('time_ordering', False)
 time_ordering_variable = recipe_config.get('time_ordering_variable', None)
 
@@ -340,7 +340,7 @@ def add_sample_weights_col_to_snowpark_df(snowpark_df, col):
     return snowpark_df
 
 # Add sample weights column if two-class classification
-if class_weights:
+if prediction_type == "two-class classification" and not disable_class_weights:
     input_snowpark_df = add_sample_weights_col_to_snowpark_df(input_snowpark_df, col_label)
 
 # If chosen by the user, split train/test sets based on the time ordering column
