@@ -41,7 +41,7 @@
         <div class="control-group" ng-show="config.prediction_type === 'two-class classification'">
             <label class="control-label">Disable Class Weights</label>
             <div class="controls">
-                <input name="disable_class_weights" type="checkbox" ng-model="config.disable_class_weights">
+                <input name="disable_class_weights" type="checkbox" ng-model="config.disable_class_weights"/>
                 <span class="help-inline">Not Recommended. Class weights are row weights that are inversely proportional to the cardinality of its target class and help with class imbalance issues.</span>
             </div>
         </div>      
