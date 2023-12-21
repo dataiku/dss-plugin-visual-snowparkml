@@ -257,7 +257,12 @@ input_snowpark_df = dku_snowpark.get_dataframe(input_dataset)
 # E.g. {'feat_1':'"feat_1"', 'feat_2':'"feat_2"', 'FEAT_1':'FEAT_1'}
 # We use this lookup dictionary later on to map column names to their actual Snowflake names, 
 # where many have double quotes surrounding them to prevent Snowflake from auto-capitalizing
-features_quotes_lookup = {'SAMPLE_WEIGHTS': 'SAMPLE_WEIGHTS'}
+if disable_class_weights:
+    features_quotes_lookup = {}
+    sample_weight_col = None
+else:
+    features_quotes_lookup = {'SAMPLE_WEIGHTS': 'SAMPLE_WEIGHTS'}
+    sample_weight_col = 'SAMPLE_WEIGHTS'
 
 for snowflake_column in input_snowpark_df.columns:
     if snowflake_column.startswith('"') and snowflake_column.endswith('"'):
@@ -569,7 +574,7 @@ class SnowparkMLRegressorWrapper(mlflow.pyfunc.PythonModel):
 
 # Function to run a RandomizedSearchCV hyperparameter tuning process, passing in the preprocessing Pipeline and and algorithm 
 # Return the trained RandomizedSearchCV object and algorithm name
-def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_iter):
+def train_model(algo, prepr, score_met, col_lab, samp_weight_col, feat_names, train_sp_df, num_iter):
     print(f"Training model... " + algo['algorithm'])
     pipe = Pipeline(steps=[
                         ('preprocessor', prepr),
@@ -587,7 +592,7 @@ def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_it
                          input_cols=feat_names,
                          label_cols=col_lab,
                          output_cols="PREDICTION",
-                         sample_weight_col="SAMPLE_WEIGHTS"
+                         sample_weight_col=samp_weight_col
                          )
     else:
         rs_clf = RandomizedSearchCV(estimator = pipe,
@@ -609,7 +614,7 @@ def train_model(algo, prepr, score_met, col_lab, feat_names, train_sp_df, num_it
 # Tune hyperparameters for all models chosen - store the trained RandomizedSearchCV objects and algorithm names in a list
 trained_models = []
 for alg in algorithms:
-    trained_model = train_model(alg, preprocessor, scoring_metric, col_label_sf, included_feature_names, train_snowpark_df, n_iter)
+    trained_model = train_model(alg, preprocessor, scoring_metric, col_label_sf, sample_weight_col, included_feature_names, train_snowpark_df, n_iter)
     trained_models.append(trained_model)
 
 ### SECTION 11 - Log all trained model hyperparameters and performance metrics to MLflow
