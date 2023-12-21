@@ -37,7 +37,14 @@
                     <option value="regression">Regression</option>
                 </select>
             </div>
-        </div>        
+        </div>   
+        <div class="control-group" ng-show="config.prediction_type === 'two-class classification'">
+            <label class="control-label">Class Weights</label>
+            <div class="controls">
+                <input name="class_weights" type="checkbox" ng-model="config.class_weights"/>
+                <span class="help-inline">Recommended. Class weights: row weights are defined as inversely proportional to the cardinality of its target class.</span>
+            </div>
+        </div>      
         <hr>
         <h2 class="settings-section-title">Train / Test Set</h2>
         <div class="control-group">
