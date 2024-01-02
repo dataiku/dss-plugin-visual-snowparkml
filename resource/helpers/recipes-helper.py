@@ -20,9 +20,6 @@ def do(payload, config, plugin_config, inputs):
             input_dataset_columns_new.append(input_dataset_column)
             
         response['input_dataset_columns'] = input_dataset_columns_new
-
-        #col_label = config.get('col_label', None)
-        #response['col_label'] = col_label
         
     response['pluginId'] = 'visual-snowparkml'
     

@@ -37,7 +37,14 @@
                     <option value="regression">Regression</option>
                 </select>
             </div>
-        </div>        
+        </div>   
+        <div class="control-group" ng-show="config.prediction_type === 'two-class classification'">
+            <label class="control-label">Disable Class Weights</label>
+            <div class="controls">
+                <input name="disable_class_weights" type="checkbox" ng-model="config.disable_class_weights"/>
+                <span class="help-inline">Not Recommended. Class weights are row weights that are inversely proportional to the cardinality of its target class and help with class imbalance issues.</span>
+            </div>
+        </div>      
         <hr>
         <h2 class="settings-section-title">Train / Test Set</h2>
         <div class="control-group">
@@ -54,6 +61,25 @@
                 <span class="help-inline">Using a fixed random seed allows for reproducible result</span>
             </div>
         </div>
+            
+        <div class="control-group">
+            <label class="control-label">Enable time ordering</label>
+            <div class="controls">
+                <input name="enable_time_ordering" type="checkbox" ng-model="config.time_ordering"/>
+            </div>
+        </div>
+
+        <div class="control-group" ng-show="config.time_ordering">
+            <label class="control-label">Time ordering column</label>
+            <div class="controls">
+                <select dku-bs-select
+                        name="time_ordering_variable"
+                        ng-model="config.time_ordering_variable"
+                        ng-options="t as t.name for t in config.inputDatasetColumns track by t.id">
+                </select>
+            </div>
+        </div> 
+                
         <hr>
         <h2 class="settings-section-title">Metrics</h2>        
         <div class="control-group">
@@ -131,9 +157,12 @@
         <div ng-show="config.prediction_type === 'two-class classification'">
           <div class="form-group">
             <div class="algo-group">
-            <label for="logistic-regression" class="algo-label">Logistic Regression
-            <input type="checkbox" id="logistic-regression" ng-model="config.logistic_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">Logistic Regression</label>
+                <div class="controls">
+                    <input name="logistic-regression" type="checkbox" ng-model="config.logistic_regression"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.logistic_regression">
               <div class="algo-hparam-parent-first">
@@ -163,9 +192,12 @@ When 'growing' (ie, training) the forest:
     - for each decision point in the tree, a random subset of the input features is considered.
                                            
 Random Forests generally provide good results, at the expense of 'explainability' of the model.">
-            <label for="random-forest-classification" class="algo-label">Random Forest Classification
-            <input type="checkbox" id="random-forest-classification" ng-model="config.random_forest_classification"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">Random Forest Classification</label>
+                <div class="controls">
+                    <input name="random-forest-classification" type="checkbox" ng-model="config.random_forest_classification"/>
+                </div>
+            </div>   
             </div>
             <div class="algo-details" ng-show="config.random_forest_classification">
               <div class="algo-hparam-parent-first">
@@ -208,9 +240,12 @@ Random Forests generally provide good results, at the expense of 'explainability
           
           <div class="form-group">
             <div class="algo-group">
-            <label for="xgb-classification" class="algo-label">XGBoost Classification
-            <input type="checkbox" id="xgb-classification" ng-model="config.xgb_classification"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">XGBoost Classification</label>
+                <div class="controls">
+                    <input name="xgb-classification" type="checkbox" ng-model="config.xgb_classification"/>
+                </div>
+            </div>    
             </div>
             <div class="algo-details" ng-show="config.xgb_classification">
               <div class="algo-hparam-parent-first">
@@ -240,11 +275,11 @@ Random Forests generally provide good results, at the expense of 'explainability
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="xgb-classification-min-child-weight-min">(min)</label>
-              <input class="hparam-input" type="number" id="xgb-classification-min-child-weight-min" ng-model="config.xgb_classification_min_child_weight_min"/>
+              <input class="hparam-input" type="number" step="0.001" id="xgb-classification-min-child-weight-min" ng-model="config.xgb_classification_min_child_weight_min"/>
               </div>
               <div class="algo-hparam">
               <label for="xgb-classification-min-child-weight-max">(max)</label>
-              <input class="hparam-input" type="number" id="xgb-classification-min-child-weight-max" ng-model="config.xgb_classification_min_child_weight_max"/>
+              <input class="hparam-input" type="number" step="0.001" id="xgb-classification-min-child-weight-max" ng-model="config.xgb_classification_min_child_weight_max"/>
               </div>
               </div>
               <div class="algo-hparam-parent-fourth">
@@ -263,9 +298,12 @@ Random Forests generally provide good results, at the expense of 'explainability
           </div>
           <div class="form-group">
             <div class="algo-group">
-            <label for="lgbm-classification" class="algo-label">LightGBM Classification
-            <input type="checkbox" id="lgbm-classification" ng-model="config.lgbm_classification"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">LightGBM Classification</label>
+                <div class="controls">
+                    <input name="lgbm-classification" type="checkbox" ng-model="config.lgbm_classification"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.lgbm_classification">
               <div class="algo-hparam-parent-first">
@@ -295,11 +333,11 @@ Random Forests generally provide good results, at the expense of 'explainability
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="lgbm-classification-min-child-weight-min">(min)</label>
-              <input class="hparam-input" type="number" id="lgbm-classification-min-child-weight-min" ng-model="config.lgbm_classification_min_child_weight_min"/>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-classification-min-child-weight-min" ng-model="config.lgbm_classification_min_child_weight_min"/>
               </div>
               <div class="algo-hparam">
               <label for="lgbm-classification-min-child-weight-max">(max)</label>
-              <input class="hparam-input" type="number" id="lgbm-classification-min-child-weight-max" ng-model="config.lgbm_classification_min_child_weight_max"/>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-classification-min-child-weight-max" ng-model="config.lgbm_classification_min_child_weight_max"/>
               </div>
               </div>
               <div class="algo-hparam-parent-fourth">
@@ -316,15 +354,117 @@ Random Forests generally provide good results, at the expense of 'explainability
             </div>  
             <div style="clear:both;">&nbsp;</div>
           </div>
+          <div class="form-group">
+            <div class="algo-group" title="Gradient boosting is a technique which produces a prediction model in the form of an ensemble of 'weak' prediction models (small decision trees).
+
+The concept is to train a set of decision trees (weak learners) to create a final strong learner. This is an iterative method. After each tree is trained, the data is reweighted: samples that were misclassified gain weight while the correctly classified ones lose weight. 
+
+This allows future weak learners to focus on the 'difficult' examples that the previous weak learners missed.
+Due to the iterative nature of boosting, it is not very parallelizable and is less scalable than other algorithms.">
+            <div class="control-group">
+                <label class="control-label">Gradient Tree Boosting Classification</label>
+                <div class="controls">
+                    <input name="gb-classification" type="checkbox" ng-model="config.gb_classification"/>
+                </div>
+            </div>
+            </div>
+            <div class="algo-details" ng-show="config.gb_classification">
+              <div class="algo-hparam-parent-first">
+              <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
+              <div class="algo-hparam-first">
+              <label for="gb-classification-n-estimators-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-classification-n-estimators-min" ng-model="config.gb_classification_n_estimators_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-classification-n-estimators-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-classification-n-estimators-max" ng-model="config.gb_classification_n_estimators_max"/>
+              </div>
+              </div>
+              
+              <div class="algo-hparam-parent-second">
+              <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
+              <div class="algo-hparam">
+              <label for="gb-classification-max-depth-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-classification-max-depth-min" ng-model="config.gb_classification_max_depth_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-classification-max-depth-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-classification-max-depth-max" ng-model="config.gb_classification_max_depth_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-third">
+              <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
+              <div class="algo-hparam">
+              <label for="gb-classification-min-samples-leaf-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-classification-min-samples-leaf-min" ng-model="config.gb_classification_min_samples_leaf_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-classification-min-samples-leaf-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-classification-min-samples-leaf-max" ng-model="config.gb_classification_min_samples_leaf_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-fourth">
+              <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
+              <div class="algo-hparam">
+              <label for="gb-classification-learning-rate-min">(min)</label>
+              <input class="hparam-input" type="number" step="0.001" id="gb-classification-learning-rate-min" ng-model="config.gb_classification_learning_rate_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-classification-learning-rate-max">(max)</label>
+              <input class="hparam-input" type="number" step="0.001" id="gb-classification-learning-rate-max" ng-model="config.gb_classification_learning_rate_max"/>
+              </div>
+              </div>
+            </div>
+            <div style="clear:both;">&nbsp;</div>
+          </div>
+          <div class="form-group">
+            <div class="algo-group" title="Decision Tree is a simple non-parametric algorithm. It creates a model that predicts the value of the target by learning simple decision rules inferred from the data features.
+
+These rules form a tree, with the leaves of the tree carrying the predicted class. Evaluation simply goes down the tree and evaluates the rule at each split.">
+            <div class="control-group">
+                <label class="control-label">Decision Tree Classification</label>
+                <div class="controls">
+                    <input name="decision-tree-classification" type="checkbox" ng-model="config.decision_tree_classification"/>
+                </div>
+            </div>   
+            </div>
+            <div class="algo-details" ng-show="config.decision_tree_classification">              
+              <div class="algo-hparam-parent-first">
+              <h5 title = "Maximum depth of the tree. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
+              <div class="algo-hparam">
+              <label for="decision-tree-classification-max-depth-min">(min)</label>
+              <input class="hparam-input" type="number" id="decision-tree-classification-max-depth-min" ng-model="config.decision_tree_classification_max_depth_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="decision-tree-classification-max-depth-max">(max)</label>
+              <input class="hparam-input" type="number" id="decision-tree-classification-max-depth-max" ng-model="config.decision_tree_classification_max_depth_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-second">
+              <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
+              <div class="algo-hparam">
+              <label for="decision-tree-classification-min-samples-leaf-min">(min)</label>
+              <input class="hparam-input" type="number" id="decision-tree-classification-min-samples-leaf-min" ng-model="config.decision_tree_classification_min_samples_leaf_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="decision-tree-classification-min-samples-leaf-max">(max)</label>
+              <input class="hparam-input" type="number" id="decision-tree-classification-min-samples-leaf-max" ng-model="config.decision_tree_classification_min_samples_leaf_max"/>
+              </div>
+              </div>
+            </div>
+            <div style="clear:both;">&nbsp;</div>
+          </div>
         </div>
         <div ng-show="config.prediction_type === 'regression'">
           <div class="form-group">
             <div class="algo-group">
-            <label for="lasso-regression" class="algo-label">Lasso Regression
-            <input type="checkbox" id="lasso-regression" ng-model="config.lasso_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">Lasso Regression</label>
+                <div class="controls">
+                    <input name="lasso-regression" type="checkbox" ng-model="config.lasso_regression"/>
+                </div>
             </div>
-              
+            </div>
             <div class="algo-details" ng-show="config.lasso_regression">
               <div class="algo-hparam-parent-first">
               <h5 title = "Regularization parameter alpha. A high value of alpha will shrink coefficients in order to prevent overfitting. A low value of alpha will lead to a better model on the train set, at the risk of overfitting (high variance)."> Alpha </h5>
@@ -343,9 +483,12 @@ Random Forests generally provide good results, at the expense of 'explainability
           </div>
           <div class="form-group">
             <div class="algo-group">
-            <label for="random-forest-regression" class="algo-label">Random Forest Regression
-            <input type="checkbox" id="random-forest-regression" ng-model="config.random_forest_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">Random Forest Regression</label>
+                <div class="controls">
+                    <input name="random-forest-regression" type="checkbox" ng-model="config.random_forest_regression"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.random_forest_regression">
               <div class="algo-hparam-parent-first">
@@ -367,7 +510,7 @@ Random Forests generally provide good results, at the expense of 'explainability
               <input class="hparam-input" type="number" id="random-forest-regression-max-depth-min" ng-model="config.random_forest_regression_max_depth_min"/>
               </div>
               <div class="algo-hparam">
-              <label for="random-forest-classification-max-depth-max">(max)</label>
+              <label for="random-forest-regression-max-depth-max">(max)</label>
               <input class="hparam-input" type="number" id="random-forest-regression-max-depth-max" ng-model="config.random_forest_regression_max_depth_max"/>
               </div>
               </div>
@@ -387,9 +530,12 @@ Random Forests generally provide good results, at the expense of 'explainability
           </div>
           <div class="form-group">
             <div class="algo-group">
-            <label for="xgb-regression" class="algo-label">XGBoost Regression
-            <input type="checkbox" id="xgb-regression" ng-model="config.xgb_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">XGBoost Regression</label>
+                <div class="controls">
+                    <input name="xgb-regression" type="checkbox" ng-model="config.xgb_regression"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.xgb_regression">
               <div class="algo-hparam-parent-first">
@@ -419,11 +565,11 @@ Random Forests generally provide good results, at the expense of 'explainability
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="xgb-regression-min-child-weight-min">(min)</label>
-              <input class="hparam-input" type="number" id="xgb-regression-min-child-weight-min" ng-model="config.xgb_regression_min_child_weight_min"/>
+              <input class="hparam-input" type="number" step="0.001" id="xgb-regression-min-child-weight-min" ng-model="config.xgb_regression_min_child_weight_min"/>
               </div>
               <div class="algo-hparam">
               <label for="xgb-regression-min-child-weight-max">(max)</label>
-              <input class="hparam-input" type="number" id="xgb-regression-min-child-weight-max" ng-model="config.xgb_regression_min_child_weight_max"/>
+              <input class="hparam-input" type="number" step="0.001" id="xgb-regression-min-child-weight-max" ng-model="config.xgb_regression_min_child_weight_max"/>
               </div>
               </div>
               <div class="algo-hparam-parent-fourth">
@@ -442,9 +588,12 @@ Random Forests generally provide good results, at the expense of 'explainability
           </div>
           <div class="form-group">
             <div class="algo-group">
-            <label for="lgbm-regression" class="algo-label">LightGBM Regression
-            <input type="checkbox" id="lgbm-regression" ng-model="config.lgbm_regression"/>
-            </label>
+            <div class="control-group">
+                <label class="control-label">LightGBM Regression</label>
+                <div class="controls">
+                    <input name="lgbm-regression" type="checkbox" ng-model="config.lgbm_regression"/>
+                </div>
+            </div>
             </div>
             <div class="algo-details" ng-show="config.lgbm_regression">
               <div class="algo-hparam-parent-first">
@@ -474,11 +623,11 @@ Random Forests generally provide good results, at the expense of 'explainability
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="lgbm-regression-min-child-weight-min">(min)</label>
-              <input class="hparam-input" type="number" id="lgbm-regression-min-child-weight-min" ng-model="config.lgbm_regression_min_child_weight_min"/>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-regression-min-child-weight-min" ng-model="config.lgbm_regression_min_child_weight_min"/>
               </div>
               <div class="algo-hparam">
               <label for="lgbm-regression-min-child-weight-max">(max)</label>
-              <input class="hparam-input" type="number" id="lgbm-regression-min-child-weight-max" ng-model="config.lgbm_regression_min_child_weight_max"/>
+              <input class="hparam-input" type="number" step="0.001" id="lgbm-regression-min-child-weight-max" ng-model="config.lgbm_regression_min_child_weight_max"/>
               </div>
               </div>
               <div class="algo-hparam-parent-fourth">
@@ -496,61 +645,103 @@ Random Forests generally provide good results, at the expense of 'explainability
             <div style="clear:both;">&nbsp;</div>
           </div>
           <div class="form-group">
-            <div class="algo-group">
-            <label for="glm-regression" class="algo-label">Generalized Linear Model (GLM) Regression
-            <input type="checkbox" id="glm-regression" ng-model="config.glm_regression"/>
-            </label>
+            <div class="algo-group" title="Gradient boosting is a technique which produces a prediction model in the form of an ensemble of 'weak' prediction models (small decision trees).
+
+The concept is to train a set of decision trees (weak learners) to create a final strong learner. This is an iterative method. After each tree is trained, the data is reweighted: samples that were misclassified gain weight while the correctly classified ones lose weight. 
+
+This allows future weak learners to focus on the 'difficult' examples that the previous weak learners missed.
+Due to the iterative nature of boosting, it is not very parallelizable and is less scalable than other algorithms.">
+            <div class="control-group">
+                <label class="control-label">Gradient Tree Boosting Regression</label>
+                <div class="controls">
+                    <input name="gb-regression" type="checkbox" ng-model="config.gb_regression"/>
+                </div>
             </div>
-            <div class="algo-details" ng-show="config.glm_regression">
+            </div>
+            <div class="algo-details" ng-show="config.gb_regression">
               <div class="algo-hparam-parent-first">
-              <h5 title = "The penalty weight of the Elastic Net regularization"> Elastic Net Penalty </h5>
-              <div class="algo-hparam">
-              <label for="glm-regression-elastic-net-penalty-min">(min)</label>
-              <input class="hparam-input" type="number" step="0.001" id="glm-regression-elastic-net-penalty-min" ng-model="config.glm_regression_elastic_net_penalty_min"/>
+              <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
+              <div class="algo-hparam-first">
+              <label for="gb-regression-n-estimators-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-regression-n-estimators-min" ng-model="config.gb_regression_n_estimators_min"/>
               </div>
               <div class="algo-hparam">
-              <label for="glm-regression-elastic-net-penalty-max">(max)</label>
-              <input class="hparam-input" type="number" step="0.001" id="glm-regression-elastic-net-penalty-max" ng-model="config.glm_regression_elastic_net_penalty_max"/>
+              <label for="gb-regression-n-estimators-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-regression-n-estimators-max" ng-model="config.gb_regression_n_estimators_max"/>
+              </div>
               </div>
               
-              </div>
               <div class="algo-hparam-parent-second">
-              <h5 title = "The distribution family of the response"> Distribution </h5>
+              <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
-                <select class = "hparam-select" name="glm_distribution" ng-model="config.glm_distribution">
-                    <option value="poisson">Poisson</option>
-                    <option value="gamma">Gamma</option>
-                    <option value="tweedie">Tweedie</option>
-                </select>
+              <label for="gb-regression-max-depth-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-regression-max-depth-min" ng-model="config.gb_regression_max_depth_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-regression-max-depth-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-regression-max-depth-max" ng-model="config.gb_regression_max_depth_max"/>
               </div>
               </div>
               <div class="algo-hparam-parent-third">
-              <h5 title = "Relates the expected value of the response to the linear predictors in the model"> Link Function </h5>
+              <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
               <div class="algo-hparam">
-                <select class = "hparam-select" name="glm_link_function" ng-model="config.glm_link_function">
-                    <option value="log">Log</option>
-                    <option value="identity">Identity</option>
-                </select>
+              <label for="gb-regression-min-samples-leaf-min">(min)</label>
+              <input class="hparam-input" type="number" id="gb-regression-min-samples-leaf-min" ng-model="config.gb_regression_min_samples_leaf_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="gb-regression-min-samples-leaf-max">(max)</label>
+              <input class="hparam-input" type="number" id="gb-regression-min-samples-leaf-max" ng-model="config.gb_regression_min_samples_leaf_max"/>
               </div>
               </div>
               <div class="algo-hparam-parent-fourth">
-              <h5 title = "Column to offset model predictions. The offset column must be included in the feature handling section"> Sample Weight Column </h5>
+              <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
               <div class="algo-hparam">
-                <select class = "hparam-select"
-                        name="sample_weight_column"
-                        ng-model="config.sample_weight_column"
-                        ng-options="c.name for c in config.inputDatasetColumns">
-                </select>
+              <label for="gb-regression-learning-rate-min">(min)</label>
+              <input class="hparam-input" type="number" step="0.001" id="gb-regression-learning-rate-min" ng-model="config.gb_regression_learning_rate_min"/>
               </div>
-              </div>
-              <div class="algo-hparam-parent-fifth">
-              <h5 title = "The power of the variance function of the tweedie distribution"> Variance Power </h5>
               <div class="algo-hparam">
-              
-              <input class="hparam-input" type="number" id="glm-regression-variance-power" ng-model="config.glm_regression_variance_power"/>
+              <label for="gb-regression-learning-rate-max">(max)</label>
+              <input class="hparam-input" type="number" step="0.001" id="gb-regression-learning-rate-max" ng-model="config.gb_regression_learning_rate_max"/>
               </div>
               </div>
-            </div> 
+            </div>
+            <div style="clear:both;">&nbsp;</div>
+          </div>
+          <div class="form-group">
+            <div class="algo-group" title="Decision Tree is a simple non-parametric algorithm. It creates a model that predicts the value of the target by learning simple decision rules inferred from the data features.
+
+These rules form a tree, with the leaves of the tree carrying the predicted value. Evaluation simply goes down the tree and evaluates the rule at each split.">
+            <div class="control-group">
+                <label class="control-label">Decision Tree Regression</label>
+                <div class="controls">
+                    <input name="decision-tree-regression" type="checkbox" ng-model="config.decision_tree_regression"/>
+                </div>
+            </div>   
+            </div>
+            <div class="algo-details" ng-show="config.decision_tree_regression">              
+              <div class="algo-hparam-parent-first">
+              <h5 title = "Maximum depth of the tree. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
+              <div class="algo-hparam">
+              <label for="decision-tree-regression-max-depth-min">(min)</label>
+              <input class="hparam-input" type="number" id="decision-tree-regression-max-depth-min" ng-model="config.decision_tree_regression_max_depth_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="decision-tree-regression-max-depth-max">(max)</label>
+              <input class="hparam-input" type="number" id="decision-tree-regression-max-depth-max" ng-model="config.decision_tree_regression_max_depth_max"/>
+              </div>
+              </div>
+              <div class="algo-hparam-parent-second">
+              <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
+              <div class="algo-hparam">
+              <label for="decision-tree-regression-min-samples-leaf-min">(min)</label>
+              <input class="hparam-input" type="number" id="decision-tree-regression-min-samples-leaf-min" ng-model="config.decision_tree_regression_min_samples_leaf_min"/>
+              </div>
+              <div class="algo-hparam">
+              <label for="decision-tree-regression-min-samples-leaf-max">(max)</label>
+              <input class="hparam-input" type="number" id="decision-tree-regression-min-samples-leaf-max" ng-model="config.decision_tree_regression_min_samples_leaf_max"/>
+              </div>
+              </div>
+            </div>
             <div style="clear:both;">&nbsp;</div>
           </div>
         </div>
@@ -560,6 +751,21 @@ Random Forests generally provide good results, at the expense of 'explainability
             <div class="controls">
                 <input type="number" min="1" step="1" value="8" ng-model="config.n_iter"/>
                 <span class="help-inline">Maximum number of hyperparameter combinations to explore.</span>
+            </div>
+        </div>
+        <hr>
+        <div class="control-group">
+            <label class="control-label">Snowflake Warehouse</label>
+            <div class="controls">
+                <input type="text" ng-model="config.warehouse" />
+                <span class="help-inline">If empty, use Snowflake connection default warehouse</span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Deploy to Snowflake ML Model Registry</label>
+            <div class="controls">
+                <input name="deploy_to_snowflake_model_registry" type="checkbox" ng-model="config.deploy_to_snowflake_model_registry" />
+                <span class="help-inline">Deploys model to MODEL_REGISTRY database. See Snowflake privilege requirements here: https://docs.snowflake.com/LIMITEDACCESS/snowflake-ml-model-registry</span>
             </div>
         </div>
     </form>

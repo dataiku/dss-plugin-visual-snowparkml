@@ -60,14 +60,17 @@ app.controller('retrainRecipeController', function ($scope, utils) {
         $scope.updateMetrics();
         utils.retrieveInfoBackend($scope, "get-info-retrain", updateScopeData);
         utils.initVariable($scope, 'col_label', '');
+        utils.initVariable($scope, 'time_ordering_variable', '');
     };
 
     init();
     console.log($scope.config.col_label);
+    console.log($scope.config.time_ordering_variable);
 });
 
 
 app.service("utils", function () {
+    
     this.retrieveInfoBackend = function ($scope, method, updateScopeData) {
       $scope.callPythonDo({method}).then(function (data) {
         updateScopeData(data);
@@ -90,23 +93,6 @@ app.service("utils", function () {
         }
         $scope.config[varName] = initValue;
     };
-    /*
-    this.initVariable = function ($scope, varName, initValue) {
-        const isVarDefined = $scope.config[varName] !== undefined;
-        $scope.config[varName] = isVarDefined ? $scope.config[varName] : initValue;
-    };
-    */
-    /*
-    this.initVariable = function ($scope, varName, initValue) {
-        const isConfigDefined = angular.isDefined($scope.config);
-        if (isConfigDefined) {
-            const isVarDefined = angular.isDefined($scope.config[varName]);
-            $scope.config[varName] = isVarDefined ? $scope.config[varName] : initValue;
-        } else {
-            $scope.config = { [varName]: initValue };
-        }
-    };
-    */
     
     this.getStylesheetUrl = function (pluginId) {
         return `/plugins/${pluginId}/resource/stylesheets/dl-image-toolbox.css`;
