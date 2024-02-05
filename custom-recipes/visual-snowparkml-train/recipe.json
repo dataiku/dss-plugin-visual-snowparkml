@@ -1,13 +1,7 @@
 {
     "meta": {
         "label": "Train ML Models on Snowpark",
-        "description": "<b style=\"color:#29B5E8; font-size: medium;\">Train ML Models on Snowpark </b>\n \
-<b>Requirements: </b>\n \
-- Build the code environment included in this plugin \
-- In addition, create another python 3.8 code environment called 'py_38_snowpark' with the python packages listed here:  \
-- If doing two-class classification + XGBoost, convert your target column to numeric (0,1) before this recipe (XGBoost requirement) \
-- No int type columns can have missing values. If you have an int column with missing values, convert the type to double before this recipe. (MLflow requirement) \
-- If you want to treat a numeric column as categorical, change its storage type to string in a prior recipe",
+        "description": "See README for requirements",
         "icon": "icon-snowflake",
         "iconColor": "blue"
     },
