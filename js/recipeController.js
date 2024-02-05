@@ -65,8 +65,6 @@ app.controller('retrainRecipeController', function ($scope, utils) {
     };
 
     init();
-    console.log($scope.config.col_label);
-    console.log($scope.config.time_ordering_variable);
 });
 
 
