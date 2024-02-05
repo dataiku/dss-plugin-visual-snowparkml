@@ -22,7 +22,7 @@
     "outputRoles": [
         {
             "name": "output_train_dataset_name",
-            "label": "Train Dataset Output",
+            "label": "Generated Train Dataset",
             "description": "Post train/test split",
             "arity": "UNARY",
             "required": true,
@@ -30,7 +30,7 @@
         },
         {
             "name": "output_test_dataset_name",
-            "label": "Test Dataset Output",
+            "label": "Generated Test Dataset",
             "description": "Post train/test split",
             "arity": "UNARY",
             "required": true,
