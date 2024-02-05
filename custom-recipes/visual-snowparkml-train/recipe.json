@@ -2,8 +2,7 @@
     "meta": {
         "label": "Train ML Models on Snowpark",
         "description": "See README for requirements",
-        "icon": "icon-snowflake",
-        "iconColor": "blue"
+        "icon": "icon-snowflake"
     },
 
     "kind": "PYTHON",
