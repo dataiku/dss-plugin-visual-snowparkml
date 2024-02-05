@@ -15,7 +15,6 @@ from dataiku import customrecipe
 import pandas as pd, numpy as np
 import mlflow
 from mlflow.deployments import get_deploy_client
-import json
 import joblib
 from itertools import chain
 from scipy.stats import uniform, truncnorm, randint, loguniform
