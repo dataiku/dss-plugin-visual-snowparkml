@@ -76,7 +76,7 @@ pprint.pprint(recipe_config)
 print("-----------------------------")
 
 model_name = recipe_config.get('model_name', None)
-col_label = recipe_config.get('col_label', None)['name']
+col_label = recipe_config.get('col_label', None)
 prediction_type = recipe_config.get('prediction_type', None)
 disable_class_weights = recipe_config.get('disable_class_weights', None)
 time_ordering = recipe_config.get('time_ordering', False)
