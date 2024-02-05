@@ -2,7 +2,7 @@
     "meta": {
         "label": "Train ML Models on Snowpark",
         "description": "See README for requirements",
-        "icon": "dku-icon-snowpark-48",
+        "icon": "dku-icon-snowpark-24",
         "iconColor": "blue"
     },
 
