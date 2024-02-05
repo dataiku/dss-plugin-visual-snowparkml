@@ -9,7 +9,7 @@ matplotlib
 scipy
 snowflake-snowpark-python==1.12.0
 snowflake-snowpark-python[pandas]==1.12.0
-snowflake-connector-python[pandas]==1.12.0
+snowflake-connector-python[pandas]==3.7.0
 numpy==1.23.5
 MarkupSafe<2.1.0
 cloudpickle
