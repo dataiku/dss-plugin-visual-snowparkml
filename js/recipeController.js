@@ -67,7 +67,6 @@ app.controller('retrainRecipeController', function ($scope, utils) {
     init();
 });
 
-
 app.service("utils", function () {
     
     this.retrieveInfoBackend = function ($scope, method, updateScopeData) {
