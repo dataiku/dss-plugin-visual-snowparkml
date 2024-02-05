@@ -13,10 +13,8 @@ def do(payload, config, plugin_config, inputs):
         input_dataset_columns = [c for c in input_dataset.read_schema()]
         input_dataset_columns_new = []
         i = 1
-        for input_dataset_column in input_dataset_columns:
+        for i, input_dataset_column in enumerate(input_dataset_columns, 1)
             input_dataset_column["id"] = i
-                        
-            i += 1
             input_dataset_columns_new.append(input_dataset_column)
             
         response['input_dataset_columns'] = input_dataset_columns_new
