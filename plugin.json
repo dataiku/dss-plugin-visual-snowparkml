@@ -5,7 +5,7 @@
         "label": "Visual SnowparkML",
         "description": "Train Machine Learning Models Using Snowpark ML",
         "author": "Dataiku (Pat Masi-Phelps)",
-        "icon": "dku-icon-snowpark-48",
+        "icon": "dku-icon-snowpark-32",
         "tags": ["Machine Learning", "Snowflake"], 
         "supportLevel": "UNSUPPORTED",
         "url": "https://www.dataiku.com/community/plugins/info/visual-snowparkml.html",
