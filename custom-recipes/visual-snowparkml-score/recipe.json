@@ -1,9 +1,7 @@
 {
     "meta": {
-        "label": "Score",
-        "description": "<b style=\"color:#29B5E8; font-size: medium;\">Score New Records on Snowpark </b>\n \
-<b>Requirements: </b>\n \
-- Must use a model trained by the Visual SnowparkML plugin and successfully deployed to Snowflake Model Registry",
+        "label": "Score new records on Snowpark",
+        "description": "Must use a model trained by the Visual SnowparkML plugin and successfully deployed to Snowflake Model Registry",
         "icon": "icon-snowflake",
         "iconColor": "blue"
     },
