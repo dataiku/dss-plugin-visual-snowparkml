@@ -22,10 +22,10 @@
         <div class="control-group">
             <label class="control-label">Target column</label>
             <div class="controls">
-                <select dku-bs-select
-                        name="col_label"
-                        ng-model="config.col_label"
-                        ng-options="c as c.name for c in config.inputDatasetColumns">
+                <select dku-bs-select 
+                        name="col_label" 
+                        ng-model="config.col_label" 
+                        ng-options="c for c in inputDatasetColNames"> 
                 </select>
             </div>
         </div>        

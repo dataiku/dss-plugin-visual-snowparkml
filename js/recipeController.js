@@ -14,6 +14,7 @@ app.controller('retrainRecipeController', function ($scope, utils) {
               
         updateCommonScopeData(data)
         $scope.inputDatasetColumns = data.input_dataset_columns;
+        $scope.inputDatasetColNames = data.input_dataset_columns.map(col => col.name);
                 
         $scope.categoricalOptions = ["Dummy encoding", "Ordinal encoding"];
         $scope.numericOptions = ["Standard rescaling","Min-max rescaling"];
