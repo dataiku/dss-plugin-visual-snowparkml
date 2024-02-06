@@ -79,6 +79,7 @@ app.service("utils", function () {
     };
     
     this.initVariable = function ($scope, varName, initValue) {
+        /*
         const isConfigDefined = angular.isDefined($scope.config);
         if (isConfigDefined) {
             const isVarDefined = angular.isDefined($scope.config[varName]);
@@ -89,6 +90,7 @@ app.service("utils", function () {
         } else {
             $scope.config = {};
         }
+        */
         $scope.config[varName] = initValue;
     };
     
