@@ -33,7 +33,7 @@ td div {
 }
 .feature-input .hparam-input {
     word-break: break-all;
-    width: 85%;
+    width: 85% !important;
 }
 .form-group {
     box-sizing: border-box;
