@@ -858,7 +858,7 @@ recipe_settings = recipe.get_settings()
 saved_model_names = get_output_names_for_role('saved_model_name')
 
 if len(saved_model_names)>0:
-    prev_saved_model_name = saved_model_names[0].split('.')[1]
+    prev_saved_model_name = saved_model_names[0].split('.')[-1]
     if prev_saved_model_name != sm_id:
         recipe_settings.replace_output(current_output_ref = prev_saved_model_name, new_output_ref = sm_id)
         recipe_settings.save()

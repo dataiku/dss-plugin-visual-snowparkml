@@ -93,6 +93,6 @@ app.service("utils", function () {
     };
     
     this.getStylesheetUrl = function (pluginId) {
-        return `/plugins/${pluginId}/resource/stylesheets/dl-image-toolbox.css`;
+        return `/plugins/${pluginId}/resource/stylesheets/visual-snowparkml-stylesheet.css`;
     };
 });
