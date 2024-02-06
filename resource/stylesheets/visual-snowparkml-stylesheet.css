@@ -35,12 +35,6 @@ td div {
     word-break: break-all;
     width: 85%;
 }
-.hparam-select{
-    word-break: break-all;
-    box-sizing: border-box;
-    width: 85% !important;
-}
-
 .form-group {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -48,12 +42,6 @@ td div {
     margin: 8px;
     background-color: #f9f9f9;
     padding: 8px;
-}
-.algo-label {
-    font-size: medium;
-}
-.algo-description {
-    font-size: small;
 }
 .algo-hparam-parent-first {
     width: 20%;

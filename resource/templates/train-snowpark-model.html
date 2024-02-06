@@ -165,7 +165,7 @@
             </div>
             </div>
             <div class="algo-details" ng-show="config.logistic_regression">
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title = "Penalty parameter C of the error term. A low value of C will generate a smoother decision boundary (higher bias) while a high value aims at correctly classifying all training examples, at the risk of overfitting (high variance). (C corresponds to the inverse of a regularization parameter)."> C </h5>
               <div class="algo-hparam">
               <label for="logistic-regression-c-min">(min)</label>
@@ -200,7 +200,7 @@ Random Forests generally provide good results, at the expense of 'explainability
             </div>   
             </div>
             <div class="algo-details" ng-show="config.random_forest_classification">
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title="Number of trees in the forest." > Number of trees </h5>
               <div class="algo-hparam-first">
               <label for="random-forest-classification-n-estimators-min">(min)</label>
@@ -212,7 +212,7 @@ Random Forests generally provide good results, at the expense of 'explainability
               </div>
               </div>
               
-              <div class="algo-hparam-parent-second">
+              <div class="algo-hparam-parent">
               <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
               <label for="random-forest-classification-max-depth-min">(min)</label>
@@ -223,7 +223,7 @@ Random Forests generally provide good results, at the expense of 'explainability
               <input class="hparam-input" type="number" id="random-forest-classification-max-depth-max" ng-model="config.random_forest_classification_max_depth_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-third">
+              <div class="algo-hparam-parent">
               <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
               <div class="algo-hparam">
               <label for="random-forest-classification-min-samples-leaf-min">(min)</label>
@@ -248,7 +248,7 @@ Random Forests generally provide good results, at the expense of 'explainability
             </div>    
             </div>
             <div class="algo-details" ng-show="config.xgb_classification">
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
               <div class="algo-hparam">
               <label for="xgb-classification-n-estimators-min">(min)</label>
@@ -260,7 +260,7 @@ Random Forests generally provide good results, at the expense of 'explainability
               </div>
               
               </div>
-              <div class="algo-hparam-parent-second">
+              <div class="algo-hparam-parent">
               <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
               <label for="xgb-classification-max-depth-min">(min)</label>
@@ -271,7 +271,7 @@ Random Forests generally provide good results, at the expense of 'explainability
               <input class="hparam-input" type="number" id="xgb-classification-max-depth-max" ng-model="config.xgb_classification_max_depth_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-third">
+              <div class="algo-hparam-parent">
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="xgb-classification-min-child-weight-min">(min)</label>
@@ -282,7 +282,7 @@ Random Forests generally provide good results, at the expense of 'explainability
               <input class="hparam-input" type="number" step="0.001" id="xgb-classification-min-child-weight-max" ng-model="config.xgb_classification_min_child_weight_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-fourth">
+              <div class="algo-hparam-parent">
               <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
               <div class="algo-hparam">
               <label for="xgb-classification-learning-rate-min">(min)</label>
@@ -306,7 +306,7 @@ Random Forests generally provide good results, at the expense of 'explainability
             </div>
             </div>
             <div class="algo-details" ng-show="config.lgbm_classification">
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
               <div class="algo-hparam">
               <label for="lgbm-classification-n-estimators-min">(min)</label>
@@ -318,7 +318,7 @@ Random Forests generally provide good results, at the expense of 'explainability
               </div>
               
               </div>
-              <div class="algo-hparam-parent-second">
+              <div class="algo-hparam-parent">
               <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
               <label for="lgbm-classification-max-depth-min">(min)</label>
@@ -329,7 +329,7 @@ Random Forests generally provide good results, at the expense of 'explainability
               <input class="hparam-input" type="number" id="lgbm-classification-max-depth-max" ng-model="config.lgbm_classification_max_depth_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-third">
+              <div class="algo-hparam-parent">
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="lgbm-classification-min-child-weight-min">(min)</label>
@@ -340,7 +340,7 @@ Random Forests generally provide good results, at the expense of 'explainability
               <input class="hparam-input" type="number" step="0.001" id="lgbm-classification-min-child-weight-max" ng-model="config.lgbm_classification_min_child_weight_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-fourth">
+              <div class="algo-hparam-parent">
               <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
               <div class="algo-hparam">
               <label for="lgbm-classification-learning-rate-min">(min)</label>
@@ -369,7 +369,7 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
             </div>
             </div>
             <div class="algo-details" ng-show="config.gb_classification">
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
               <div class="algo-hparam-first">
               <label for="gb-classification-n-estimators-min">(min)</label>
@@ -381,7 +381,7 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
               </div>
               </div>
               
-              <div class="algo-hparam-parent-second">
+              <div class="algo-hparam-parent">
               <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
               <label for="gb-classification-max-depth-min">(min)</label>
@@ -392,7 +392,7 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
               <input class="hparam-input" type="number" id="gb-classification-max-depth-max" ng-model="config.gb_classification_max_depth_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-third">
+              <div class="algo-hparam-parent">
               <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
               <div class="algo-hparam">
               <label for="gb-classification-min-samples-leaf-min">(min)</label>
@@ -403,7 +403,7 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
               <input class="hparam-input" type="number" id="gb-classification-min-samples-leaf-max" ng-model="config.gb_classification_min_samples_leaf_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-fourth">
+              <div class="algo-hparam-parent">
               <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
               <div class="algo-hparam">
               <label for="gb-classification-learning-rate-min">(min)</label>
@@ -429,7 +429,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
             </div>   
             </div>
             <div class="algo-details" ng-show="config.decision_tree_classification">              
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title = "Maximum depth of the tree. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
               <label for="decision-tree-classification-max-depth-min">(min)</label>
@@ -440,7 +440,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
               <input class="hparam-input" type="number" id="decision-tree-classification-max-depth-max" ng-model="config.decision_tree_classification_max_depth_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-second">
+              <div class="algo-hparam-parent">
               <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
               <div class="algo-hparam">
               <label for="decision-tree-classification-min-samples-leaf-min">(min)</label>
@@ -466,7 +466,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
             </div>
             </div>
             <div class="algo-details" ng-show="config.lasso_regression">
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title = "Regularization parameter alpha. A high value of alpha will shrink coefficients in order to prevent overfitting. A low value of alpha will lead to a better model on the train set, at the risk of overfitting (high variance)."> Alpha </h5>
               <div class="algo-hparam">
               <label class="hparam-input" for="lasso-regression-alpha-min">(min)</label>
@@ -491,7 +491,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
             </div>
             </div>
             <div class="algo-details" ng-show="config.random_forest_regression">
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title="Number of trees in the forest."> Number of trees </h5>
               <div class="algo-hparam">
               <label for="random-forest-regression-n-estimators-min">(min)</label>
@@ -503,7 +503,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
               </div>
               
               </div>
-              <div class="algo-hparam-parent-second">
+              <div class="algo-hparam-parent">
               <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
               <label for="random-forest-regression-max-depth-min">(min)</label>
@@ -514,7 +514,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
               <input class="hparam-input" type="number" id="random-forest-regression-max-depth-max" ng-model="config.random_forest_regression_max_depth_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-third">
+              <div class="algo-hparam-parent">
               <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
               <div class="algo-hparam">
               <label for="random-forest-regression-min-samples-leaf-min">(min)</label>
@@ -538,7 +538,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
             </div>
             </div>
             <div class="algo-details" ng-show="config.xgb_regression">
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
               <div class="algo-hparam">
               <label for="xgb-regression-n-estimators-min">(min)</label>
@@ -550,7 +550,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
               </div>
               
               </div>
-              <div class="algo-hparam-parent-second">
+              <div class="algo-hparam-parent">
               <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
               <label for="xgb-regression-max-depth-min">(min)</label>
@@ -561,7 +561,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
               <input class="hparam-input" type="number" id="xgb-regression-max-depth-max" ng-model="config.xgb_regression_max_depth_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-third">
+              <div class="algo-hparam-parent">
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="xgb-regression-min-child-weight-min">(min)</label>
@@ -572,7 +572,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
               <input class="hparam-input" type="number" step="0.001" id="xgb-regression-min-child-weight-max" ng-model="config.xgb_regression_min_child_weight_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-fourth">
+              <div class="algo-hparam-parent">
               <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
               <div class="algo-hparam">
               <label for="xgb-regression-learning-rate-min">(min)</label>
@@ -596,7 +596,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
             </div>
             </div>
             <div class="algo-details" ng-show="config.lgbm_regression">
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
               <div class="algo-hparam">
               <label for="lgbm-regression-n-estimators-min">(min)</label>
@@ -608,7 +608,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
               </div>
               
               </div>
-              <div class="algo-hparam-parent-second">
+              <div class="algo-hparam-parent">
               <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
               <label for="lgbm-regression-max-depth-min">(min)</label>
@@ -619,7 +619,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
               <input class="hparam-input" type="number" id="lgbm-regression-max-depth-max" ng-model="config.lgbm_regression_max_depth_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-third">
+              <div class="algo-hparam-parent">
               <h5 title = "Minimum sum of weights (hessian) in a node. High values can prevent overfitting by learning highly specific cases. Smaller values allow leaf nodes to match a small set of rows, which can be relevant for highly imbalanced sets."> Min child weight </h5>
               <div class="algo-hparam">
               <label for="lgbm-regression-min-child-weight-min">(min)</label>
@@ -630,7 +630,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted clas
               <input class="hparam-input" type="number" step="0.001" id="lgbm-regression-min-child-weight-max" ng-model="config.lgbm_regression_min_child_weight_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-fourth">
+              <div class="algo-hparam-parent">
               <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
               <div class="algo-hparam">
               <label for="lgbm-regression-learning-rate-min">(min)</label>
@@ -659,7 +659,7 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
             </div>
             </div>
             <div class="algo-details" ng-show="config.gb_regression">
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title = "Number of gradient boosted trees. Equivalent to number of boosting rounds."> Number of trees </h5>
               <div class="algo-hparam-first">
               <label for="gb-regression-n-estimators-min">(min)</label>
@@ -671,7 +671,7 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
               </div>
               </div>
               
-              <div class="algo-hparam-parent-second">
+              <div class="algo-hparam-parent">
               <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
               <label for="gb-regression-max-depth-min">(min)</label>
@@ -682,7 +682,7 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
               <input class="hparam-input" type="number" id="gb-regression-max-depth-max" ng-model="config.gb_regression_max_depth_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-third">
+              <div class="algo-hparam-parent">
               <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
               <div class="algo-hparam">
               <label for="gb-regression-min-samples-leaf-min">(min)</label>
@@ -693,7 +693,7 @@ Due to the iterative nature of boosting, it is not very parallelizable and is le
               <input class="hparam-input" type="number" id="gb-regression-min-samples-leaf-max" ng-model="config.gb_regression_min_samples_leaf_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-fourth">
+              <div class="algo-hparam-parent">
               <h5 title = "Lower values slow down convergence and can make the model more robust. Typical values: 0.001 - 0.3"> Learning rate </h5>
               <div class="algo-hparam">
               <label for="gb-regression-learning-rate-min">(min)</label>
@@ -719,7 +719,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted valu
             </div>   
             </div>
             <div class="algo-details" ng-show="config.decision_tree_regression">              
-              <div class="algo-hparam-parent-first">
+              <div class="algo-hparam-parent">
               <h5 title = "Maximum depth of the tree. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
               <label for="decision-tree-regression-max-depth-min">(min)</label>
@@ -730,7 +730,7 @@ These rules form a tree, with the leaves of the tree carrying the predicted valu
               <input class="hparam-input" type="number" id="decision-tree-regression-max-depth-max" ng-model="config.decision_tree_regression_max_depth_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-second">
+              <div class="algo-hparam-parent">
               <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
               <div class="algo-hparam">
               <label for="decision-tree-regression-min-samples-leaf-min">(min)</label>
