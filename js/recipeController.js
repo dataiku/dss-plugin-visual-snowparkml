@@ -87,7 +87,7 @@ app.service("utils", function () {
                 initValue = $scope.config[varName];
             }
         } else {
-            //$scope.config = {};
+            $scope.config = {};
         }
         $scope.config[varName] = initValue;
     };
