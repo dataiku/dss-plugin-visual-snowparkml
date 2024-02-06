@@ -31,10 +31,16 @@ td div {
     box-sizing: border-box;
     width: 90%;
 }
-.feature-input .hparam-input {
+.feature-input {
+    word-break: break-all;
+    width: 85%;
+}
+
+.hparam-input {
     word-break: break-all;
     width: 85% !important;
 }
+
 .form-group {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
