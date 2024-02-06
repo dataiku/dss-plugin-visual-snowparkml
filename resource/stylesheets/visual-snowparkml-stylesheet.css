@@ -43,27 +43,7 @@ td div {
     background-color: #f9f9f9;
     padding: 8px;
 }
-.algo-hparam-parent-first {
-    width: 20%;
-    float: left;
-}
-
-.algo-hparam-parent-second {
-    width: 20%;
-    float: left;
-}
-
-.algo-hparam-parent-third {
-    width: 20%;
-    float: left;
-}
-
-.algo-hparam-parent-fourth {
-    width: 20%;
-    float: left;
-}
-
-.algo-hparam-parent-fifth {
+.algo-hparam-parent {
     width: 20%;
     float: left;
 }
