@@ -165,7 +165,7 @@
             </div>
             </div>
             <div class="algo-details" ng-show="config.logistic_regression">
-              <div class="algo-hparam-parent-one">
+              <div class="algo-hparam-parent">
               <h5 title = "Penalty parameter C of the error term. A low value of C will generate a smoother decision boundary (higher bias) while a high value aims at correctly classifying all training examples, at the risk of overfitting (high variance). (C corresponds to the inverse of a regularization parameter)."> C </h5>
               <div class="algo-hparam">
               <label for="logistic-regression-c-min">(min)</label>
@@ -200,7 +200,7 @@ Random Forests generally provide good results, at the expense of 'explainability
             </div>   
             </div>
             <div class="algo-details" ng-show="config.random_forest_classification">
-              <div class="algo-hparam-parent-one">
+              <div class="algo-hparam-parent">
               <h5 title="Number of trees in the forest." > Number of trees </h5>
               <div class="algo-hparam-first">
               <label for="random-forest-classification-n-estimators-min">(min)</label>
@@ -212,7 +212,7 @@ Random Forests generally provide good results, at the expense of 'explainability
               </div>
               </div>
               
-              <div class="algo-hparam-parent-two">
+              <div class="algo-hparam-parent">
               <h5 title = "Maximum depth of each tree in the forest. Higher values generally increase the quality of the prediction, but can lead to overfitting. High values also increase the training and prediction time."> Max depth of tree </h5>
               <div class="algo-hparam">
               <label for="random-forest-classification-max-depth-min">(min)</label>
@@ -223,7 +223,7 @@ Random Forests generally provide good results, at the expense of 'explainability
               <input class="hparam-input" type="number" id="random-forest-classification-max-depth-max" ng-model="config.random_forest_classification_max_depth_max"/>
               </div>
               </div>
-              <div class="algo-hparam-parent-three">
+              <div class="algo-hparam-parent">
               <h5 title = "Minimum number of samples required in a single tree node to split this node. Lower values increase the quality of the prediction (by splitting the tree node), but can lead to overfitting and increased training and prediction time."> Min samples per leaf </h5>
               <div class="algo-hparam">
               <label for="random-forest-classification-min-samples-leaf-min">(min)</label>
