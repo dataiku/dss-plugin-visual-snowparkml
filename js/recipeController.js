@@ -64,6 +64,9 @@ app.controller('retrainRecipeController', function ($scope, utils) {
         utils.initVariable($scope, 'time_ordering_variable', '');
         utils.initVariable($scope, 'train_ratio', 0.8);
         utils.initVariable($scope, 'random_seed', 42);
+        utils.initVariable($scope, 'logistic_regression_c_min', 0.01);
+        utils.initVariable($scope, 'logistic_regression_c_max', 100);
+        
     };
 
     init();
