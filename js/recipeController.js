@@ -64,8 +64,92 @@ app.controller('retrainRecipeController', function ($scope, utils) {
         utils.initVariable($scope, 'time_ordering_variable', '');
         utils.initVariable($scope, 'train_ratio', 0.8);
         utils.initVariable($scope, 'random_seed', 42);
+        
         utils.initVariable($scope, 'logistic_regression_c_min', 0.01);
         utils.initVariable($scope, 'logistic_regression_c_max', 100);
+        
+        utils.initVariable($scope, 'random_forest_classification_n_estimators_min', 80);
+        utils.initVariable($scope, 'random_forest_classification_n_estimators_max', 200);
+        utils.initVariable($scope, 'random_forest_classification_max_depth_min', 6);
+        utils.initVariable($scope, 'random_forest_classification_max_depth_max', 20);
+        utils.initVariable($scope, 'random_forest_classification_min_samples_leaf_min', 1);
+        utils.initVariable($scope, 'random_forest_classification_min_samples_leaf_max', 20);
+        
+        utils.initVariable($scope, 'xgb_classification_n_estimators_min', 200);
+        utils.initVariable($scope, 'xgb_classification_n_estimators_max', 400);
+        utils.initVariable($scope, 'xgb_classification_max_depth_min', 3);
+        utils.initVariable($scope, 'xgb_classification_max_depth_max', 10);
+        utils.initVariable($scope, 'xgb_classification_min_child_weight_min', 1);
+        utils.initVariable($scope, 'xgb_classification_min_child_weight_max', 5);
+        utils.initVariable($scope, 'xgb_classification_learning_rate_min', 0.01);
+        utils.initVariable($scope, 'xgb_classification_learning_rate_max', 0.2);
+        
+        utils.initVariable($scope, 'lgbm_classification_n_estimators_min', 200);
+        utils.initVariable($scope, 'lgbm_classification_n_estimators_max', 400);
+        utils.initVariable($scope, 'lgbm_classification_max_depth_min', 3);
+        utils.initVariable($scope, 'lgbm_classification_max_depth_max', 10);
+        utils.initVariable($scope, 'lgbm_classification_min_child_weight_min', 1);
+        utils.initVariable($scope, 'lgbm_classification_min_child_weight_max', 5);
+        utils.initVariable($scope, 'lgbm_classification_learning_rate_min', 0.01);
+        utils.initVariable($scope, 'lgbm_classification_learning_rate_max', 0.2);
+        
+        utils.initVariable($scope, 'gb_classification_n_estimators_min', 200);
+        utils.initVariable($scope, 'gb_classification_n_estimators_max', 400);
+        utils.initVariable($scope, 'gb_classification_max_depth_min', 3);
+        utils.initVariable($scope, 'gb_classification_max_depth_max', 10);
+        utils.initVariable($scope, 'gb_classification_min_samples_leaf_min', 1);
+        utils.initVariable($scope, 'gb_classification_min_samples_leaf_max', 20);
+        utils.initVariable($scope, 'gb_classification_learning_rate_min', 0.01);
+        utils.initVariable($scope, 'gb_classification_learning_rate_max', 0.2);
+        
+        utils.initVariable($scope, 'decision_tree_classification_max_depth_min', 3);
+        utils.initVariable($scope, 'decision_tree_classification_max_depth_max', 10);
+        utils.initVariable($scope, 'decision_tree_classification_min_samples_leaf_min', 1);
+        utils.initVariable($scope, 'decision_tree_classification_min_samples_leaf_max', 20);
+        
+        utils.initVariable($scope, 'lasso_regression_alpha_min', 0.1);
+        utils.initVariable($scope, 'lasso_regression_alpha_max', 10);
+        
+        utils.initVariable($scope, 'random_forest_regression_n_estimators_min', 80);
+        utils.initVariable($scope, 'random_forest_regression_n_estimators_max', 200);
+        utils.initVariable($scope, 'random_forest_regression_max_depth_min', 6);
+        utils.initVariable($scope, 'random_forest_regression_max_depth_max', 20);
+        utils.initVariable($scope, 'random_forest_regression_min_samples_leaf_min', 1);
+        utils.initVariable($scope, 'random_forest_regression_min_samples_leaf_max', 20);
+        
+        utils.initVariable($scope, 'xgb_regression_n_estimators_min', 200);
+        utils.initVariable($scope, 'xgb_regression_n_estimators_max', 400);
+        utils.initVariable($scope, 'xgb_regression_max_depth_min', 3);
+        utils.initVariable($scope, 'xgb_regression_max_depth_max', 10);
+        utils.initVariable($scope, 'xgb_regression_min_child_weight_min', 1);
+        utils.initVariable($scope, 'xgb_regression_min_child_weight_max', 5);
+        utils.initVariable($scope, 'xgb_regression_learning_rate_min', 0.01);
+        utils.initVariable($scope, 'xgb_regression_learning_rate_max', 0.2);
+        
+        utils.initVariable($scope, 'lgbm_regression_n_estimators_min', 200);
+        utils.initVariable($scope, 'lgbm_regression_n_estimators_max', 400);
+        utils.initVariable($scope, 'lgbm_regression_max_depth_min', 3);
+        utils.initVariable($scope, 'lgbm_regression_max_depth_max', 10);
+        utils.initVariable($scope, 'lgbm_regression_min_child_weight_min', 1);
+        utils.initVariable($scope, 'lgbm_regression_min_child_weight_max', 5);
+        utils.initVariable($scope, 'lgbm_regression_learning_rate_min', 0.01);
+        utils.initVariable($scope, 'lgbm_regression_learning_rate_max', 0.2);
+        
+        utils.initVariable($scope, 'gb_regression_n_estimators_min', 200);
+        utils.initVariable($scope, 'gb_regression_n_estimators_max', 400);
+        utils.initVariable($scope, 'gb_regression_max_depth_min', 3);
+        utils.initVariable($scope, 'gb_regression_max_depth_max', 10);
+        utils.initVariable($scope, 'gb_regression_min_samples_leaf_min', 1);
+        utils.initVariable($scope, 'gb_regression_min_samples_leaf_max', 20);
+        utils.initVariable($scope, 'gb_regression_learning_rate_min', 0.01);
+        utils.initVariable($scope, 'gb_regression_learning_rate_max', 0.2);
+        
+        utils.initVariable($scope, 'decision_tree_regression_max_depth_min', 3);
+        utils.initVariable($scope, 'decision_tree_regression_max_depth_max', 10);
+        utils.initVariable($scope, 'decision_tree_regression_min_samples_leaf_min', 1);
+        utils.initVariable($scope, 'decision_tree_regression_min_samples_leaf_max', 20);
+        
+        utils.initVariable($scope, 'n_iter', 4);
         
     };
 
