@@ -62,6 +62,7 @@ app.controller('retrainRecipeController', function ($scope, utils) {
         utils.retrieveInfoBackend($scope, "get-info-retrain", updateScopeData);
         utils.initVariable($scope, 'col_label', '');
         utils.initVariable($scope, 'time_ordering_variable', '');
+        utils.initVariable($scope, 'train_ratio', 0.8);
     };
 
     init();
