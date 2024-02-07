@@ -63,6 +63,7 @@ app.controller('retrainRecipeController', function ($scope, utils) {
         utils.initVariable($scope, 'col_label', '');
         utils.initVariable($scope, 'time_ordering_variable', '');
         utils.initVariable($scope, 'train_ratio', 0.8);
+        utils.initVariable($scope, 'random_seed', 42);
     };
 
     init();
