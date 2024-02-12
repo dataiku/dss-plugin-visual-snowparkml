@@ -210,11 +210,12 @@ decision_tree_regression_min_samples_leaf_min = recipe_config.get('decision_tree
 decision_tree_regression_min_samples_leaf_max = recipe_config.get('decision_tree_regression_min_samples_leaf_max', None)
 
 n_iter = recipe_config.get('n_iter', None)
+DEFAULT_CROSS_VAL_FOLDS = 3
 
 ### SECTION 3 - Set up MLflow Experiment Tracking
 # MLFLOW Variables
 MLFLOW_CODE_ENV_NAME = "py_38_snowpark"
-MLFLOW_EXPERIMENT_NAME = model_name + "_exp"
+MLFLOW_EXPERIMENT_NAME = f"{model_name}_exp"
 SAVED_MODEL_NAME = model_name
 MODEL_NAME = model_name
 
@@ -349,7 +350,7 @@ if prediction_type == "two-class classification" and not disable_class_weights:
 
 # If chosen by the user, split train/test sets based on the time ordering column
 if time_ordering:
-    time_ordering_variable_unix = time_ordering_variable_sf + '_UNIX'
+    time_ordering_variable_unix = f"{time_ordering_variable_sf}_UNIX"
     input_snowpark_df = input_snowpark_df.withColumn(time_ordering_variable_unix, F.unix_timestamp(input_snowpark_df[time_ordering_variable_sf]))
     
     split_percentile_value = input_snowpark_df.approx_quantile(time_ordering_variable_unix, [train_ratio])[0]
@@ -360,17 +361,15 @@ if time_ordering:
     train_snowpark_df = train_snowpark_df.drop(time_ordering_variable_unix)
     test_snowpark_df = test_snowpark_df.drop(time_ordering_variable_unix)
 
-    print("train set nrecords: " + str(train_snowpark_df.count()))
-    print("test set nrecords: " + str(test_snowpark_df.count()))
+    print(f"train set nrecords: {train_snowpark_df.count()}")
+    print(f"test set nrecords: {test_snowpark_df.count()}")
     
-    #cv = TimeSeriesSplit(n_splits=3)
-    cv = 3
+    #cv = TimeSeriesSplit(n_splits=DEFAULT_CROSS_VAL_FOLDS)
     
 # Regular train/test split
 else:
     test_ratio = 1 - train_ratio
     train_snowpark_df, test_snowpark_df = input_snowpark_df.random_split(weights = [train_ratio, test_ratio], seed = random_seed)
-    cv = 3
 
 ### SECTION 6 - Write Train/Test Datasets to Output Tables
 dku_snowpark.write_with_schema(output_train_dataset, train_snowpark_df)
@@ -697,11 +696,11 @@ for model in trained_models:
         test_metrics["test_recall"] = test_recall
         test_metrics["test_precision"] = test_precision
         
-        print("F1 Score: " + str(test_f1))
-        print("ROC AUC Score: " + str(test_roc_auc))
-        print("Accuracy Score: " + str(test_accuracy))
-        print("Recall Score: " + str(test_recall))
-        print("Precision Score: " + str(test_precision))
+        print(f"F1 Score: {test_f1}")
+        print(f"ROC AUC Score: {test_roc_auc}")
+        print(f"Accuracy Score: {test_accuracy}")
+        print(f"Recall Score: {test_recall}")
+        print(f"Precision Score: {test_precision}")
     
     else:
         test_r2 = r2_score(df = test_predictions_df, y_true_col_name = col_label_sf, y_pred_col_name = '"PREDICTION"')
@@ -718,10 +717,10 @@ for model in trained_models:
         test_metrics["test_mse"] = test_mse
         test_metrics["test_rmse"] = test_rmse
 
-        print("R2 Score: " + str(test_r2))
-        print("Mean Absolute Error: " + str(test_mae))
-        print("Mean Squared Error: " + str(test_mse))
-        print("Root Mean Squared Error: " + str(test_rmse))
+        print(f"R2 Score: {test_r2}")
+        print(f"Mean Absolute Error: {test_mae}")
+        print(f"Mean Squared Error: {test_mse}")
+        print(f"Root Mean Squared Error: {test_rmse}")
     
     best_score = grid_pipe_sklearn.best_score_
     
@@ -832,8 +831,8 @@ if deploy_to_snowflake_model_registry:
     try:
         model_registry_result = model_registry.create_model_registry(session = session, database_name = snowflake_model_registry)
         registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
-        snowflake_registry_model_description = "Dataiku Project: " + project.project_key + ", Model: " + model_name
-        snowflake_model_name = project.project_key + "_" + model_name
+        snowflake_registry_model_description = f"Dataiku Project: {project.project_key}, Model: {model_name}"
+        snowflake_model_name = f"{project.project_key}_{model_name}"
         model_id = registry.log_model(model = best_model["snowml_obj"],
                                       model_name = snowflake_model_name,
                                       model_version = best_model["run_name"],
@@ -845,7 +844,7 @@ if deploy_to_snowflake_model_registry:
         for test_metric in best_model["test_metrics"]:
             model_id.set_metric(metric_name = test_metric, metric_value = best_model["test_metrics"][test_metric])
         
-        print("Successfully deployed model to Snowflake ML Model Registry: " + snowflake_model_registry)
+        print(f"Successfully deployed model to Snowflake ML Model Registry: {snowflake_model_registry}")
     except:
         print("Failed to deploy model to Snowflake ML Model Registry")
 
