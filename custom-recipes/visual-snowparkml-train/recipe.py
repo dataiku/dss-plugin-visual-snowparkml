@@ -90,22 +90,18 @@ deploy_to_snowflake_model_registry = recipe_config.get('deploy_to_snowflake_mode
 snowflake_model_registry = 'MODEL_REGISTRY'
 
 # Map metric name from dropdown to sklearn-compatible name
-if model_metric == 'ROC AUC':
-    scoring_metric = 'roc_auc'
-elif model_metric == 'Accuracy':
-    scoring_metric = 'accuracy'
-elif model_metric == 'F1 Score':
-    scoring_metric = 'f1'
-elif model_metric == 'Precision':
-    scoring_metric = 'precision'
-elif model_metric == 'Recall':
-    scoring_metric = 'recall'
-elif model_metric == 'R2':
-    scoring_metric = 'r2'
-elif model_metric == 'MAE':
-    scoring_metric = 'neg_mean_absolute_error'
-elif model_metric == 'MSE':
-    scoring_metric = 'neg_mean_squared_error'
+metric_to_sklearn_mapping = {
+    'ROC AUC': 'roc_auc',
+    'Accuracy': 'accuracy',
+    'F1 Score': 'f1',
+    'Precision': 'precision',
+    'Recall': 'recall',
+    'R2': 'r2',
+    'MAE': 'neg_mean_absolute_error',
+    'MSE': 'neg_mean_squared_error'
+}
+
+scoring_metric = metric_to_sklearn_mapping[model_metric]
 
 inputDatasetColumns = recipe_config.get('inputDatasetColumns', None)
 selectedInputColumns = recipe_config.get('selectedInputColumns', None)
