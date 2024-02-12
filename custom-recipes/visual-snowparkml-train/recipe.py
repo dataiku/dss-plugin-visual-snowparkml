@@ -426,7 +426,7 @@ col_transformer_list = []
 
 for feature in included_features_handling_list:
     feature_name = feature["name"]    
-    transformer_name = feature_name[1:-1] + '_tform'
+    transformer_name = f"{feature_name[1:-1]}_tform"
 
     feature_transformers = []
 
@@ -573,7 +573,7 @@ class SnowparkMLRegressorWrapper(mlflow.pyfunc.PythonModel):
 # Function to run a RandomizedSearchCV hyperparameter tuning process, passing in the preprocessing Pipeline and and algorithm 
 # Return the trained RandomizedSearchCV object and algorithm name
 def train_model(algo, prepr, score_met, col_lab, samp_weight_col, feat_names, train_sp_df, num_iter):
-    print(f"Training model... " + algo['algorithm'])
+    print(f"Training model... {algo['algorithm']}")
     pipe = Pipeline(steps=[
                         ('preprocessor', prepr),
                         ('clf', algo['sklearn_obj'])
@@ -642,7 +642,7 @@ for model in trained_models:
         mlflow.log_param("algorithm", row['algorithm'])
         
         mlflow.log_metric("mean_fit_time", row["mean_fit_time"])
-        score_name = "mean_test_" + scoring_metric
+        score_name = f"mean_test_{scoring_metric}"
         mlflow.log_metric(score_name, row["mean_test_score"])
         mlflow.log_metric("rank_test_score", int(row["rank_test_score"]))
 
