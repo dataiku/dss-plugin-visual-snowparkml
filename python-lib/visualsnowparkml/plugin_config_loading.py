@@ -14,7 +14,7 @@ from dataiku.customrecipe import (
     get_output_names_for_role,
     get_recipe_resource,
 )
-
+from dataiku.snowpark import DkuSnowpark
 from snowflake.snowpark.session import Session
 from snowflake.snowpark.table import Table
 
