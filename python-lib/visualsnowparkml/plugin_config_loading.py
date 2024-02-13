@@ -262,7 +262,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
     snowflake_connection_name = input_dataset.get_config()['params']['connection']
     session = dku_snowpark.get_session(snowflake_connection_name)
 
-    warehouse = recipe_config.get('warehouse', None)
+    params.warehouse = recipe_config.get('warehouse', None)
     if warehouse:
         warehouse = f'"{warehouse}"'
         try:
@@ -311,141 +311,99 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
                 raise PluginParamValidationError(f"Constant imputation selected for input feature: {selected_input_col}, but no value chosen. Choose a value")                
 
     # Check that all algorithms have hyperparameter ranges chosen
-    logistic_regression = recipe_config.get('logistic_regression', None)
-    logistic_regression_c_min = recipe_config.get('logistic_regression_c_min', None)
-    logistic_regression_c_max = recipe_config.get('logistic_regression_c_max', None)
+    params.logistic_regression = recipe_config.get('logistic_regression', None)
+    params.logistic_regression_c_min = recipe_config.get('logistic_regression_c_min', None)
+    params.logistic_regression_c_max = recipe_config.get('logistic_regression_c_max', None)
 
-    if logistic_regression:
-        params.logistic_regression = logistic_regression
+    if params.logistic_regression:
         if not logistic_regression_c_min or not logistic_regression_c_max:
             raise PluginParamValidationError("For the Logistic Regression algorithm, please choose a min and max value for C")
-        else:
-            params.logistic_regression_c_min = logistic_regression_c_min
-            params.logistic_regression_c_max = logistic_regression_c_max
         if logistic_regression_c_min > logistic_regression_c_max:
             raise PluginParamValidationError(f"The Logistic Regression C min you selected: {logistic_regression_c_min} is greater than C max: {logistic_regression_c_max}. Choose a C min that is lesser than C max")
 
-    random_forest_classification = recipe_config.get('random_forest_classification', None)
-    random_forest_classification_n_estimators_min = recipe_config.get('random_forest_classification_n_estimators_min', None)
-    random_forest_classification_n_estimators_max = recipe_config.get('random_forest_classification_n_estimators_max', None)
-    random_forest_classification_max_depth_min = recipe_config.get('random_forest_classification_max_depth_min', None)
-    random_forest_classification_max_depth_max = recipe_config.get('random_forest_classification_max_depth_max', None)
-    random_forest_classification_min_samples_leaf_min = recipe_config.get('random_forest_classification_min_samples_leaf_min', None)
-    random_forest_classification_min_samples_leaf_max = recipe_config.get('random_forest_classification_min_samples_leaf_max', None)
+    params.random_forest_classification = recipe_config.get('random_forest_classification', None)
+    params.random_forest_classification_n_estimators_min = recipe_config.get('random_forest_classification_n_estimators_min', None)
+    params.random_forest_classification_n_estimators_max = recipe_config.get('random_forest_classification_n_estimators_max', None)
+    params.random_forest_classification_max_depth_min = recipe_config.get('random_forest_classification_max_depth_min', None)
+    params.random_forest_classification_max_depth_max = recipe_config.get('random_forest_classification_max_depth_max', None)
+    params.random_forest_classification_min_samples_leaf_min = recipe_config.get('random_forest_classification_min_samples_leaf_min', None)
+    params.random_forest_classification_min_samples_leaf_max = recipe_config.get('random_forest_classification_min_samples_leaf_max', None)
     
-    if random_forest_classification:
-        params.random_forest_classification = random_forest_classification
-        if not random_forest_classification_n_estimators_min or not random_forest_classification_n_estimators_max or not random_forest_classification_max_depth_min or not random_forest_classification_max_depth_max or not random_forest_classification_min_samples_leaf_min or not random_forest_classification_min_samples_leaf_max:
+    if params.random_forest_classification:
+        if not params.random_forest_classification_n_estimators_min or not params.random_forest_classification_n_estimators_max or not params.random_forest_classification_max_depth_min or not params.random_forest_classification_max_depth_max or not params.random_forest_classification_min_samples_leaf_min or not params.random_forest_classification_min_samples_leaf_max:
             raise PluginParamValidationError("For the Random Forest algorithm, please choose a min and max value for all hyperparameters")
-        if random_forest_classification_n_estimators_min > random_forest_classification_n_estimators_max:
-            raise PluginParamValidationError(f"The Random Forest Number of Trees min you selected: {random_forest_classification_n_estimators_min} is greater than Number of Trees max: {random_forest_classification_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
-        if random_forest_classification_max_depth_min > random_forest_classification_max_depth_max:
-            raise PluginParamValidationError(f"The Random Forest Max Depth min you selected: {random_forest_classification_max_depth_min} is greater than Max Depth max: {random_forest_classification_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
-        if random_forest_classification_min_samples_leaf_min > random_forest_classification_min_samples_leaf_max:
-            raise PluginParamValidationError(f"The Random Forest Min Samples per Leaf min you selected: {random_forest_classification_min_samples_leaf_min} is greater than Min Samples per Leaf max: {random_forest_classification_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
-
-        params.random_forest_classification_n_estimators_min = random_forest_classification_n_estimators_min
-        params.random_forest_classification_n_estimators_max = random_forest_classification_n_estimators_max
-        params.random_forest_classification_max_depth_min = random_forest_classification_max_depth_min
-        params.random_forest_classification_max_depth_max = random_forest_classification_max_depth_max
-        params.random_forest_classification_min_samples_leaf_min = random_forest_classification_min_samples_leaf_min
-        params.random_forest_classification_min_samples_leaf_max = random_forest_classification_min_samples_leaf_max
+        if params.random_forest_classification_n_estimators_min > params.random_forest_classification_n_estimators_max:
+            raise PluginParamValidationError(f"The Random Forest Number of Trees min you selected: {params.random_forest_classification_n_estimators_min} is greater than Number of Trees max: {params.random_forest_classification_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
+        if params.random_forest_classification_max_depth_min > params.random_forest_classification_max_depth_max:
+            raise PluginParamValidationError(f"The Random Forest Max Depth min you selected: {params.random_forest_classification_max_depth_min} is greater than Max Depth max: {params.random_forest_classification_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
+        if params.random_forest_classification_min_samples_leaf_min > params.random_forest_classification_min_samples_leaf_max:
+            raise PluginParamValidationError(f"The Random Forest Min Samples per Leaf min you selected: {params.random_forest_classification_min_samples_leaf_min} is greater than Min Samples per Leaf max: {params.random_forest_classification_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
         
-    xgb_classification = recipe_config.get('xgb_classification', None)
-    xgb_classification_n_estimators_min = recipe_config.get('xgb_classification_n_estimators_min', None)
-    xgb_classification_n_estimators_max = recipe_config.get('xgb_classification_n_estimators_max', None)
-    xgb_classification_max_depth_min = recipe_config.get('xgb_classification_max_depth_min', None)
-    xgb_classification_max_depth_max = recipe_config.get('xgb_classification_max_depth_max', None)
-    xgb_classification_min_child_weight_min = recipe_config.get('xgb_classification_min_child_weight_min', None)
-    xgb_classification_min_child_weight_max = recipe_config.get('xgb_classification_min_child_weight_max', None)
-    xgb_classification_learning_rate_min = recipe_config.get('xgb_classification_learning_rate_min', None)
-    xgb_classification_learning_rate_max = recipe_config.get('xgb_classification_learning_rate_max', None)
+    params.xgb_classification = recipe_config.get('xgb_classification', None)
+    params.xgb_classification_n_estimators_min = recipe_config.get('xgb_classification_n_estimators_min', None)
+    params.xgb_classification_n_estimators_max = recipe_config.get('xgb_classification_n_estimators_max', None)
+    params.xgb_classification_max_depth_min = recipe_config.get('xgb_classification_max_depth_min', None)
+    params.xgb_classification_max_depth_max = recipe_config.get('xgb_classification_max_depth_max', None)
+    params.xgb_classification_min_child_weight_min = recipe_config.get('xgb_classification_min_child_weight_min', None)
+    params.xgb_classification_min_child_weight_max = recipe_config.get('xgb_classification_min_child_weight_max', None)
+    params.xgb_classification_learning_rate_min = recipe_config.get('xgb_classification_learning_rate_min', None)
+    params.xgb_classification_learning_rate_max = recipe_config.get('xgb_classification_learning_rate_max', None)
 
-    if xgb_classification:
-        params.xgb_classification = xgb_classification
-        if not xgb_classification_n_estimators_min or not xgb_classification_n_estimators_max or not xgb_classification_max_depth_min or not xgb_classification_max_depth_max or not xgb_classification_min_child_weight_min or not xgb_classification_min_child_weight_max or not xgb_classification_learning_rate_min or not xgb_classification_learning_rate_max:
+    if params.xgb_classification:
+        if not params.xgb_classification_n_estimators_min or not params.xgb_classification_n_estimators_max or not params.xgb_classification_max_depth_min or not params.xgb_classification_max_depth_max or not params.xgb_classification_min_child_weight_min or not params.xgb_classification_min_child_weight_max or not params.xgb_classification_learning_rate_min or not params.xgb_classification_learning_rate_max:
             raise PluginParamValidationError("For the XGBoost algorithm, please choose a min and max value for all hyperparameters")
-        if xgb_classification_n_estimators_min > xgb_classification_n_estimators_max:
-            raise PluginParamValidationError(f"The XGBoost Number of Trees min you selected: {xgb_classification_n_estimators_min} is greater than Number of Trees max: {xgb_classification_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
-        if xgb_classification_max_depth_min > xgb_classification_max_depth_max:
-            raise PluginParamValidationError(f"The XGBoost Max Depth min you selected: {xgb_classification_max_depth_min} is greater than Max Depth max: {xgb_classification_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
-        if xgb_classification_min_child_weight_min > xgb_classification_min_child_weight_min:
-            raise PluginParamValidationError(f"The XGBoost Min Child Weight min you selected: {xgb_classification_min_child_weight_min} is greater than Min Child Weight max: {xgb_classification_min_child_weight_min}. Choose a Min Child Weight min that is lesser than Min Child Weight max")
-        if xgb_classification_learning_rate_min > xgb_classification_learning_rate_max:
-            raise PluginParamValidationError(f"The XGBoost Learning Rate min you selected: {xgb_classification_learning_rate_min} is greater than Learning Rate max: {xgb_classification_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
+        if params.xgb_classification_n_estimators_min > params.xgb_classification_n_estimators_max:
+            raise PluginParamValidationError(f"The XGBoost Number of Trees min you selected: {params.xgb_classification_n_estimators_min} is greater than Number of Trees max: {params.xgb_classification_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
+        if params.xgb_classification_max_depth_min > params.xgb_classification_max_depth_max:
+            raise PluginParamValidationError(f"The XGBoost Max Depth min you selected: {params.xgb_classification_max_depth_min} is greater than Max Depth max: {params.xgb_classification_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
+        if params.xgb_classification_min_child_weight_min > params.xgb_classification_min_child_weight_min:
+            raise PluginParamValidationError(f"The XGBoost Min Child Weight min you selected: {params.xgb_classification_min_child_weight_min} is greater than Min Child Weight max: {params.xgb_classification_min_child_weight_min}. Choose a Min Child Weight min that is lesser than Min Child Weight max")
+        if params.xgb_classification_learning_rate_min > params.xgb_classification_learning_rate_max:
+            raise PluginParamValidationError(f"The XGBoost Learning Rate min you selected: {params.xgb_classification_learning_rate_min} is greater than Learning Rate max: {params.xgb_classification_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
 
-        params.xgb_classification_n_estimators_min = xgb_classification_n_estimators_min
-        params.xgb_classification_n_estimators_max = xgb_classification_n_estimators_max
-        params.xgb_classification_max_depth_min = xgb_classification_max_depth_min
-        params.xgb_classification_max_depth_max = xgb_classification_max_depth_max
-        params.xgb_classification_min_child_weight_min = xgb_classification_min_child_weight_min
-        params.xgb_classification_min_child_weight_max = xgb_classification_min_child_weight_max
-        params.xgb_classification_learning_rate_min = xgb_classification_learning_rate_min
-        params.xgb_classification_learning_rate_max = xgb_classification_learning_rate_max
+    params.lgbm_classification = recipe_config.get('lgbm_classification', None)
+    params.lgbm_classification_n_estimators_min = recipe_config.get('lgbm_classification_n_estimators_min', None)
+    params.lgbm_classification_n_estimators_max = recipe_config.get('lgbm_classification_n_estimators_max', None)
+    params.lgbm_classification_max_depth_min = recipe_config.get('lgbm_classification_max_depth_min', None)
+    params.lgbm_classification_max_depth_max = recipe_config.get('lgbm_classification_max_depth_max', None)
+    params.lgbm_classification_min_child_weight_min = recipe_config.get('lgbm_classification_min_child_weight_min', None)
+    params.lgbm_classification_min_child_weight_max = recipe_config.get('lgbm_classification_min_child_weight_max', None)
+    params.lgbm_classification_learning_rate_min = recipe_config.get('lgbm_classification_learning_rate_min', None)
+    params.lgbm_classification_learning_rate_max = recipe_config.get('lgbm_classification_learning_rate_max', None)
 
-    lgbm_classification = recipe_config.get('lgbm_classification', None)
-    lgbm_classification_n_estimators_min = recipe_config.get('lgbm_classification_n_estimators_min', None)
-    lgbm_classification_n_estimators_max = recipe_config.get('lgbm_classification_n_estimators_max', None)
-    lgbm_classification_max_depth_min = recipe_config.get('lgbm_classification_max_depth_min', None)
-    lgbm_classification_max_depth_max = recipe_config.get('lgbm_classification_max_depth_max', None)
-    lgbm_classification_min_child_weight_min = recipe_config.get('lgbm_classification_min_child_weight_min', None)
-    lgbm_classification_min_child_weight_max = recipe_config.get('lgbm_classification_min_child_weight_max', None)
-    lgbm_classification_learning_rate_min = recipe_config.get('lgbm_classification_learning_rate_min', None)
-    lgbm_classification_learning_rate_max = recipe_config.get('lgbm_classification_learning_rate_max', None)
-
-    if lgbm_classification:
-        params.lgbm_classification = lgbm_classification
-        if not lgbm_classification_n_estimators_min or not lgbm_classification_n_estimators_max or not lgbm_classification_max_depth_min or not lgbm_classification_max_depth_max or not lgbm_classification_min_child_weight_min or not lgbm_classification_min_child_weight_max or not lgbm_classification_learning_rate_min or not lgbm_classification_learning_rate_max:
+    if params.lgbm_classification:
+        if not params.lgbm_classification_n_estimators_min or not params.lgbm_classification_n_estimators_max or not params.lgbm_classification_max_depth_min or not params.lgbm_classification_max_depth_max or not params.lgbm_classification_min_child_weight_min or not params.lgbm_classification_min_child_weight_max or not params.lgbm_classification_learning_rate_min or not params.lgbm_classification_learning_rate_max:
             raise PluginParamValidationError("For the LightGBM algorithm, please choose a min and max value for all hyperparameters")
-        if lgbm_classification_n_estimators_min > lgbm_classification_n_estimators_max:
-            raise PluginParamValidationError(f"The LightGBM Number of Trees min you selected: {lgbm_classification_n_estimators_min} is greater than Number of Trees max: {lgbm_classification_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
-        if lgbm_classification_max_depth_min > lgbm_classification_max_depth_max:
-            raise PluginParamValidationError(f"The LightGBM Max Depth min you selected: {lgbm_classification_max_depth_min} is greater than Max Depth max: {lgbm_classification_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
-        if lgbm_classification_min_child_weight_min > lgbm_classification_min_child_weight_min:
-            raise PluginParamValidationError(f"The LightGBM Min Child Weight min you selected: {lgbm_classification_min_child_weight_min} is greater than Min Child Weight max: {lgbm_classification_min_child_weight_min}. Choose a Min Child Weight min that is lesser than Min Child Weight max")
-        if lgbm_classification_learning_rate_min > lgbm_classification_learning_rate_max:
-            raise PluginParamValidationError(f"The LightGBM Learning Rate min you selected: {lgbm_classification_learning_rate_min} is greater than Learning Rate max: {lgbm_classification_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
+        if params.lgbm_classification_n_estimators_min > params.lgbm_classification_n_estimators_max:
+            raise PluginParamValidationError(f"The LightGBM Number of Trees min you selected: {params.lgbm_classification_n_estimators_min} is greater than Number of Trees max: {params.lgbm_classification_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
+        if params.lgbm_classification_max_depth_min > params.lgbm_classification_max_depth_max:
+            raise PluginParamValidationError(f"The LightGBM Max Depth min you selected: {params.lgbm_classification_max_depth_min} is greater than Max Depth max: {params.lgbm_classification_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
+        if params.lgbm_classification_min_child_weight_min > params.lgbm_classification_min_child_weight_min:
+            raise PluginParamValidationError(f"The LightGBM Min Child Weight min you selected: {params.lgbm_classification_min_child_weight_min} is greater than Min Child Weight max: {params.lgbm_classification_min_child_weight_min}. Choose a Min Child Weight min that is lesser than Min Child Weight max")
+        if params.lgbm_classification_learning_rate_min > params.lgbm_classification_learning_rate_max:
+            raise PluginParamValidationError(f"The LightGBM Learning Rate min you selected: {params.lgbm_classification_learning_rate_min} is greater than Learning Rate max: {params.lgbm_classification_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
 
-        params.lgbm_classification_n_estimators_min = lgbm_classification_n_estimators_min
-        params.lgbm_classification_n_estimators_max = lgbm_classification_n_estimators_max
-        params.lgbm_classification_max_depth_min = lgbm_classification_max_depth_min
-        params.lgbm_classification_max_depth_max = lgbm_classification_max_depth_max
-        params.lgbm_classification_min_child_weight_min = lgbm_classification_min_child_weight_min
-        params.lgbm_classification_min_child_weight_max = lgbm_classification_min_child_weight_max
-        params.lgbm_classification_learning_rate_min = lgbm_classification_learning_rate_min
-        params.lgbm_classification_learning_rate_max = lgbm_classification_learning_rate_max
+    params.gb_classification = recipe_config.get('gb_classification', None)
+    params.gb_classification_n_estimators_min = recipe_config.get('gb_classification_n_estimators_min', None)
+    params.gb_classification_n_estimators_max = recipe_config.get('gb_classification_n_estimators_max', None)
+    params.gb_classification_max_depth_min = recipe_config.get('gb_classification_max_depth_min', None)
+    params.gb_classification_max_depth_max = recipe_config.get('gb_classification_max_depth_max', None)
+    params.gb_classification_min_samples_leaf_min = recipe_config.get('gb_classification_min_samples_leaf_min', None)
+    params.gb_classification_min_samples_leaf_max = recipe_config.get('gb_classification_min_samples_leaf_max', None)
+    params.gb_classification_learning_rate_min = recipe_config.get('gb_classification_learning_rate_min', None)
+    params.gb_classification_learning_rate_max = recipe_config.get('gb_classification_learning_rate_max', None)
 
-    gb_classification = recipe_config.get('gb_classification', None)
-    gb_classification_n_estimators_min = recipe_config.get('gb_classification_n_estimators_min', None)
-    gb_classification_n_estimators_max = recipe_config.get('gb_classification_n_estimators_max', None)
-    gb_classification_max_depth_min = recipe_config.get('gb_classification_max_depth_min', None)
-    gb_classification_max_depth_max = recipe_config.get('gb_classification_max_depth_max', None)
-    gb_classification_min_samples_leaf_min = recipe_config.get('gb_classification_min_samples_leaf_min', None)
-    gb_classification_min_samples_leaf_max = recipe_config.get('gb_classification_min_samples_leaf_max', None)
-    gb_classification_learning_rate_min = recipe_config.get('gb_classification_learning_rate_min', None)
-    gb_classification_learning_rate_max = recipe_config.get('gb_classification_learning_rate_max', None)
-
-    if gb_classification:
-        params.gb_classification = gb_classification
-        if not gb_classification_n_estimators_min or not gb_classification_n_estimators_max or not gb_classification_max_depth_min or not gb_classification_max_depth_max or not gb_classification_min_samples_leaf_min or not gb_classification_min_samples_leaf_max or not gb_classification_learning_rate_min or not gb_classification_learning_rate_max:
+    if params.gb_classification:
+        if not params.gb_classification_n_estimators_min or not params.gb_classification_n_estimators_max or not params.gb_classification_max_depth_min or not params.gb_classification_max_depth_max or not params.gb_classification_min_samples_leaf_min or not params.gb_classification_min_samples_leaf_max or not params.gb_classification_learning_rate_min or not params.gb_classification_learning_rate_max:
             raise PluginParamValidationError("For the Gradient Tree Boosting algorithm, please choose a min and max value for all hyperparameters")
-        if gb_classification_n_estimators_min > gb_classification_n_estimators_max:
-            raise PluginParamValidationError(f"The Gradient Tree Boosting Number of Trees min you selected: {gb_classification_n_estimators_min} is greater than Number of Trees max: {gb_classification_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
-        if gb_classification_max_depth_min > gb_classification_max_depth_max:
-            raise PluginParamValidationError(f"The Gradient Tree Boosting Max Depth min you selected: {gb_classification_max_depth_min} is greater than Max Depth max: {gb_classification_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
-        if gb_classification_min_samples_leaf_min > gb_classification_min_samples_leaf_max:
-            raise PluginParamValidationError(f"The Gradient Tree Boosting Min Samples per Leaf min you selected: {gb_classification_min_samples_leaf_min} is greater than Min Samples per Leaf max: {gb_classification_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
-        if gb_classification_learning_rate_min > gb_classification_learning_rate_max:
-            raise PluginParamValidationError(f"The Gradient Tree Boosting Learning Rate min you selected: {gb_classification_learning_rate_min} is greater than Learning Rate max: {gb_classification_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
-
-        params.gb_classification_n_estimators_min = gb_classification_n_estimators_min
-        params.gb_classification_n_estimators_max = lgbm_classification_n_estimators_max
-        params.gb_classification_max_depth_min = lgbm_classification_max_depth_min
-        params.gb_classification_max_depth_max = lgbm_classification_max_depth_max
-        params.gb_classification_min_samples_leaf_min = gb_classification_min_samples_leaf_min
-        params.gb_classification_min_samples_leaf_max = gb_classification_min_samples_leaf_max
-        params.gb_classification_learning_rate_min = gb_classification_learning_rate_min
-        params.gb_classification_learning_rate_max = gb_classification_learning_rate_max
+        if params.gb_classification_n_estimators_min > params.gb_classification_n_estimators_max:
+            raise PluginParamValidationError(f"The Gradient Tree Boosting Number of Trees min you selected: {params.gb_classification_n_estimators_min} is greater than Number of Trees max: {params.gb_classification_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
+        if params.gb_classification_max_depth_min > params.gb_classification_max_depth_max:
+            raise PluginParamValidationError(f"The Gradient Tree Boosting Max Depth min you selected: {params.gb_classification_max_depth_min} is greater than Max Depth max: {params.gb_classification_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
+        if params.gb_classification_min_samples_leaf_min > params.gb_classification_min_samples_leaf_max:
+            raise PluginParamValidationError(f"The Gradient Tree Boosting Min Samples per Leaf min you selected: {params.gb_classification_min_samples_leaf_min} is greater than Min Samples per Leaf max: {params.gb_classification_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
+        if params.gb_classification_learning_rate_min > params.gb_classification_learning_rate_max:
+            raise PluginParamValidationError(f"The Gradient Tree Boosting Learning Rate min you selected: {params.gb_classification_learning_rate_min} is greater than Learning Rate max: {params.gb_classification_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
 
     decision_tree_classification = recipe_config.get('decision_tree_classification', None)
     decision_tree_classification_max_depth_min = recipe_config.get('decision_tree_classification_max_depth_min', None)
