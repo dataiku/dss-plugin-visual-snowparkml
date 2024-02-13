@@ -504,44 +504,29 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
     if params.gb_regression:
         if not params.gb_regression_n_estimators_min or not params.gb_regression_n_estimators_max or not params.gb_regression_max_depth_min or not params.gb_regression_max_depth_max or not params.gb_regression_min_samples_leaf_min or not params.gb_regression_min_samples_leaf_max or not params.gb_regression_learning_rate_min or not params.gb_regression_learning_rate_max:
             raise PluginParamValidationError("For the Gradient Tree Boosting algorithm, please choose a min and max value for all hyperparameters")
-        if gb_regression_n_estimators_min > gb_regression_n_estimators_max:
-            raise PluginParamValidationError(f"The Gradient Tree Boosting Number of Trees min you selected: {gb_regression_n_estimators_min} is greater than Number of Trees max: {gb_regression_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
-        if gb_regression_max_depth_min > gb_regression_max_depth_max:
-            raise PluginParamValidationError(f"The Gradient Tree Boosting Max Depth min you selected: {gb_regression_max_depth_min} is greater than Max Depth max: {gb_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
-        if gb_regression_min_samples_leaf_min > gb_regression_min_samples_leaf_max:
-            raise PluginParamValidationError(f"The Gradient Tree Boosting Min Samples per Leaf min you selected: {gb_regression_min_samples_leaf_min} is greater than Min Samples per Leaf max: {gb_regression_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
-        if gb_regression_learning_rate_min > gb_regression_learning_rate_max:
-            raise PluginParamValidationError(f"The Gradient Tree Boosting Learning Rate min you selected: {gb_regression_learning_rate_min} is greater than Learning Rate max: {gb_regression_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
+        if params.gb_regression_n_estimators_min > params.gb_regression_n_estimators_max:
+            raise PluginParamValidationError(f"The Gradient Tree Boosting Number of Trees min you selected: {params.gb_regression_n_estimators_min} is greater than Number of Trees max: {params.gb_regression_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
+        if params.gb_regression_max_depth_min > params.gb_regression_max_depth_max:
+            raise PluginParamValidationError(f"The Gradient Tree Boosting Max Depth min you selected: {params.gb_regression_max_depth_min} is greater than Max Depth max: {params.gb_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
+        if params.gb_regression_min_samples_leaf_min > params.gb_regression_min_samples_leaf_max:
+            raise PluginParamValidationError(f"The Gradient Tree Boosting Min Samples per Leaf min you selected: {params.gb_regression_min_samples_leaf_min} is greater than Min Samples per Leaf max: {params.gb_regression_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
+        if params.gb_regression_learning_rate_min > params.gb_regression_learning_rate_max:
+            raise PluginParamValidationError(f"The Gradient Tree Boosting Learning Rate min you selected: {params.gb_regression_learning_rate_min} is greater than Learning Rate max: {params.gb_regression_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
 
-        params.gb_regression_n_estimators_min = gb_regression_n_estimators_min
-        params.gb_regression_n_estimators_max = lgbm_regression_n_estimators_max
-        params.gb_regression_max_depth_min = lgbm_regression_max_depth_min
-        params.gb_regression_max_depth_max = lgbm_regression_max_depth_max
-        params.gb_regression_min_samples_leaf_min = gb_regression_min_samples_leaf_min
-        params.gb_regression_min_samples_leaf_max = gb_regression_min_samples_leaf_max
-        params.gb_regression_learning_rate_min = gb_regression_learning_rate_min
-        params.gb_regression_learning_rate_max = gb_regression_learning_rate_max
+    params.decision_tree_regression = recipe_config.get('decision_tree_regression', None)
+    params.decision_tree_regression_max_depth_min = recipe_config.get('decision_tree_regression_max_depth_min', None)
+    params.decision_tree_regression_max_depth_max = recipe_config.get('decision_tree_regression_max_depth_max', None)
+    params.decision_tree_regression_min_samples_leaf_min = recipe_config.get('decision_tree_regression_min_samples_leaf_min', None)
+    params.decision_tree_regression_min_samples_leaf_max = recipe_config.get('decision_tree_regression_min_samples_leaf_max', None)
 
-    decision_tree_regression = recipe_config.get('decision_tree_regression', None)
-    decision_tree_regression_max_depth_min = recipe_config.get('decision_tree_regression_max_depth_min', None)
-    decision_tree_regression_max_depth_max = recipe_config.get('decision_tree_regression_max_depth_max', None)
-    decision_tree_regression_min_samples_leaf_min = recipe_config.get('decision_tree_regression_min_samples_leaf_min', None)
-    decision_tree_regression_min_samples_leaf_max = recipe_config.get('decision_tree_regression_min_samples_leaf_max', None)
-
-    if decision_tree_regression:
-        params.decision_tree_regression = decision_tree_regression
-        if not decision_tree_regression_max_depth_min or not decision_tree_regression_max_depth_max or not decision_tree_regression_min_samples_leaf_min or not decision_tree_regression_min_samples_leaf_max:
+    if params.decision_tree_regression:
+        if not params.decision_tree_regression_max_depth_min or not params.decision_tree_regression_max_depth_max or not params.decision_tree_regression_min_samples_leaf_min or not params.decision_tree_regression_min_samples_leaf_max:
             raise PluginParamValidationError("For the Decision Tree algorithm, please choose a min and max value for all hyperparameters")
-        if decision_tree_regression_max_depth_min > decision_tree_regression_max_depth_max:
-            raise PluginParamValidationError(f"The Decision Tree Max Depth min you selected: {decision_tree_regression_max_depth_min} is greater than Max Depth max: {decision_tree_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
-        if decision_tree_regression_min_samples_leaf_min > decision_tree_regression_min_samples_leaf_max:
-            raise PluginParamValidationError(f"The Decision Tree Min Samples per Leaf min you selected: {decision_tree_regression_min_samples_leaf_min} is greater than Min Samples per Leaf max: {decision_tree_regression_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
+        if params.decision_tree_regression_max_depth_min > params.decision_tree_regression_max_depth_max:
+            raise PluginParamValidationError(f"The Decision Tree Max Depth min you selected: {params.decision_tree_regression_max_depth_min} is greater than Max Depth max: {params.decision_tree_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
+        if params.decision_tree_regression_min_samples_leaf_min > params.decision_tree_regression_min_samples_leaf_max:
+            raise PluginParamValidationError(f"The Decision Tree Min Samples per Leaf min you selected: {params.decision_tree_regression_min_samples_leaf_min} is greater than Min Samples per Leaf max: {params.decision_tree_regression_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
         
-        params.decision_tree_regression_max_depth_min = decision_tree_regression_max_depth_min
-        params.decision_tree_regression_max_depth_max = decision_tree_regression_max_depth_max
-        params.decision_tree_regression_min_samples_leaf_min = decision_tree_regression_min_samples_leaf_min
-        params.decision_tree_regression_min_samples_leaf_max = decision_tree_regression_min_samples_leaf_max
-
     # Search Space Limit
     n_iter = recipe_config.get('n_iter', None)
     if not n_iter:
@@ -558,7 +543,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
         raise CodeEnvSetupError(f"You must create a python 3.8 code env named 'py_38_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
 
     # Check that if user selected two-class classification and XGBoost algorithm, that they converted the target column to numeric (0,1) - an XGBoost requirement
-    if prediction_type == "two-class classification" and xgb_classification:
+    if prediction_type == "two-class classification" and params.xgb_classification:
         if input_dataset_column_types[col_label] not in ['int', 'bigint', 'smallint', 'tinyint', 'float', 'double']:
             raise InputTrainDatasetSetupError(f"Target column: {col_label} is of type: {input_dataset_column_types[col_label]}. When choosing two-class classification and the XGBoost algorithm, you must first convert the target column to one of type: int, bigint, smallint, tinyint, float, or double (e.g. (0, 1) or (0.0, 1.0))")
 
