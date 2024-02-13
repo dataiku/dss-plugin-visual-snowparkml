@@ -293,23 +293,23 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
     params.selectedOption2 = recipe_config.get('selectedOption2', None)
     params.selectedConstantImpute = recipe_config.get('selectedConstantImpute', None)
 
-    if not selectedInputColumns:
+    if not params.selectedInputColumns:
         raise PluginParamValidationError("No input features selected. Choose some features to include in the model")    
     else:
         # If the recipe runs with some features selected, then they are unchecked, selectedInputColumns will exist, but the column values will be False
-        if not any(selectedInputColumns.values()):
+        if not any(params.selectedInputColumns.values()):
             raise PluginParamValidationError("No input features selected. Choose some features to include in the model")    
 
         # Iterate through all selected input columns and check that an encoding/rescaling and missingness imputation method is chosen
-        for selected_input_col in selectedInputColumns.keys():
-            if selected_input_col not in selectedOption1.keys():
+        for selected_input_col in params.selectedInputColumns.keys():
+            if selected_input_col not in params.selectedOption1.keys():
                 raise PluginParamValidationError(f"No Encoding / Rescaling option selected for input feature: {selected_input_col}. Choose an Encoding / Rescaling method")
-            if selected_input_col not in selectedOption2.keys():
+            if selected_input_col not in params.selectedOption2.keys():
                 raise PluginParamValidationError(f"No 'Impute Missing Values With' option selected for input feature: {selected_input_col}. Choose an 'Impute Missing Values With' method")
             # If constant imputation selected, make sure a constant value was given
-            if selectedOption2[selected_input_col] == 'Constant' and not selectedConstantImpute:
+            if params.selectedOption2[selected_input_col] == 'Constant' and not params.selectedConstantImpute:
                 raise PluginParamValidationError(f"Constant imputation selected for input feature: {selected_input_col}, but no value chosen. Choose a value")                
-            elif selectedOption2[selected_input_col] == 'Constant' and selected_input_col not in selectedConstantImpute.keys():
+            elif params.selectedOption2[selected_input_col] == 'Constant' and selected_input_col not in params.selectedConstantImpute.keys():
                 raise PluginParamValidationError(f"Constant imputation selected for input feature: {selected_input_col}, but no value chosen. Choose a value")                
 
     # Check that all algorithms have hyperparameter ranges chosen
