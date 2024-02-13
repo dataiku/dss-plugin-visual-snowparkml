@@ -281,6 +281,9 @@ for snowflake_column in input_snowpark_df.columns:
 def sf_col_name(col_name):
     return features_quotes_lookup[col_name]
 
+print("HIHIHI")
+print(params.col_label)
+
 col_label_sf = sf_col_name(params.col_label)
 
 if params.time_ordering_variable:
