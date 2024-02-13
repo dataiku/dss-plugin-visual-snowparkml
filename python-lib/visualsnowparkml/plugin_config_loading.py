@@ -263,7 +263,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
     session = dku_snowpark.get_session(snowflake_connection_name)
 
     params.warehouse = recipe_config.get('warehouse', None)
-    if warehouse:
+    if params.warehouse:
         warehouse = f'"{warehouse}"'
         try:
             session.use_warehouse(warehouse)
