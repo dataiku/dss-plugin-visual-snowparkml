@@ -79,8 +79,9 @@ print("-----------------------------")
 print("Recipe Input Params")
 
 attrs = dir(params)
-for key, value in attrs.items():
-    print (str(key) + ' value= ' +str(value))
+for attr in attrs:
+    if not attr.startswith('__'):
+        print(str(attr) + ' value= ' + params.attr)
 
 #attrs = dir(params)
 # {'kids': 0, 'name': 'Dog', 'color': 'Spotted', 'age': 10, 'legs': 2, 'smell': 'Alot'}
