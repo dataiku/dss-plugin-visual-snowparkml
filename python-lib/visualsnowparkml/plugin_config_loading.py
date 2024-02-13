@@ -264,7 +264,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
 
     params.warehouse = recipe_config.get('warehouse', None)
     if params.warehouse:
-        warehouse = f'"{warehouse}"'
+        warehouse = f'"{params.warehouse}"'
         try:
             session.use_warehouse(warehouse)
             params.warehouse = warehouse
