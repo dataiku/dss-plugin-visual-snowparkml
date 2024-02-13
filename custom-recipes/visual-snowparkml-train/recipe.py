@@ -77,7 +77,7 @@ params, session, input_snowpark_df = load_train_config_snowpark_session_and_inpu
 #recipe_config = get_recipe_config()
 print("-----------------------------")
 print("Recipe Input Params")
-attrs = vars(params)
+attrs = dir(params)
 # {'kids': 0, 'name': 'Dog', 'color': 'Spotted', 'age': 10, 'legs': 2, 'smell': 'Alot'}
 # now dump this in some way or another
 print(', '.join("%s: %s" % item for item in attrs.items()))
