@@ -54,9 +54,9 @@ from snowflake.ml.registry import model_registry
 
 ### SECTION 2 - Recipe Inputs, Outputs, and User-Inputted Parameters
 # Get input and output datasets
-input_dataset_names = get_input_names_for_role('input_dataset_name')
-input_dataset_name = input_dataset_names[0]
-input_dataset = dataiku.Dataset(input_dataset_name) 
+#input_dataset_names = get_input_names_for_role('input_dataset_name')
+#input_dataset_name = input_dataset_names[0]
+#input_dataset = dataiku.Dataset(input_dataset_name) 
 
 output_train_dataset_names = get_output_names_for_role('output_train_dataset_name')
 output_train_dataset = dataiku.Dataset(output_train_dataset_names[0])
@@ -247,7 +247,7 @@ if not connection_schema:
 
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
 # Convert the input dataset into a Snowpark dataframe
-input_snowpark_df = dku_snowpark.get_dataframe(input_dataset)
+input_snowpark_df = dku_snowpark.get_dataframe(input_dataset, session = session)
 
 # Create a dictionary to store all dataset columns as read in by pandas vs. how they're stored on Snowflake. 
 # E.g. {'feat_1':'"feat_1"', 'feat_2':'"feat_2"', 'FEAT_1':'FEAT_1'}
