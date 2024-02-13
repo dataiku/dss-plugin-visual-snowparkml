@@ -77,7 +77,7 @@ params, session, input_snowpark_df = load_train_config_snowpark_session_and_inpu
 #recipe_config = get_recipe_config()
 print("-----------------------------")
 print("Recipe Input Params")
-classobject = test()
+
 attrs = vars(params)
 for key, value in attrs.items():
     print (str(key) + ' value= ' +str(value))
