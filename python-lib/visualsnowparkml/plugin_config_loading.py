@@ -225,14 +225,12 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
     params.time_ordering = recipe_config.get('time_ordering', False)
 
     # Time Ordering Column
-    time_ordering_variable = recipe_config.get('time_ordering_variable', None)
+    params.time_ordering_variable = recipe_config.get('time_ordering_variable', None)
     if params.time_ordering:
-        if not time_ordering_variable:
+        if not params.time_ordering_variable:
             raise PluginParamValidationError("Selected time ordering but no time ordering column chosen. Choose a time ordering column")
-        elif input_dataset_column_types[time_ordering_variable] != "date":
+        if input_dataset_column_types[params.time_ordering_variable] != "date":
             raise PluginParamValidationError(f"Time ordering column: {time_ordering_variable} is not a parsed date. Choose a parsed date")
-        else:
-            params.time_ordering_variable = time_ordering_variable
 
     # Train Ratio
     train_ratio = recipe_config.get('train_ratio', None)
