@@ -50,12 +50,10 @@ class PluginParams:
 
 def load_config_and_data_wordcloud() -> Tuple[PluginParams, pd.DataFrame]:
     """Utility function to:
-        - Validate and load wordcloud parameters into a clean class
-        - Validate input data, keep only necessary columns and drop invalid rows
+        - Validate and load ml training parameters into a clean class
 
     Returns:
         - Class instance with parameter names as attributes and associated values
-        - Pandas DataFrame with necessary input data
     """
 
     params = PluginParams()
