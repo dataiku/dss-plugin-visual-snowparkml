@@ -11,7 +11,7 @@ from dataikuapi.dss.ml import DSSPredictionMLTaskSettings
 from dataiku.core.flow import FLOW
 from dataiku import customrecipe
 
-from plugin_config_loading import load_train_config_snowpark_session_and_input_train_snowpark_df
+from visualsnowparkml.plugin_config_loading import load_train_config_snowpark_session_and_input_train_snowpark_df
 
 # Other ML Imports
 import pandas as pd, numpy as np
