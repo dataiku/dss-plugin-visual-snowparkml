@@ -77,11 +77,16 @@ params, session, input_snowpark_df = load_train_config_snowpark_session_and_inpu
 #recipe_config = get_recipe_config()
 print("-----------------------------")
 print("Recipe Input Params")
-attrs = dir(params)
+classobject = test()
+attrs = vars(params)
+for key, value in attrs.items():
+    print (str(key) + ' value= ' +str(value))
+
+#attrs = dir(params)
 # {'kids': 0, 'name': 'Dog', 'color': 'Spotted', 'age': 10, 'legs': 2, 'smell': 'Alot'}
 # now dump this in some way or another
-print(attrs)
-pprint.pprint(params)
+#print(attrs)
+#pprint.pprint(params)
 print("-----------------------------")
 
 #model_name = recipe_config.get('model_name', None)
