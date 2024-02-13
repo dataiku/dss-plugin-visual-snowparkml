@@ -316,10 +316,10 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
     params.logistic_regression_c_max = recipe_config.get('logistic_regression_c_max', None)
 
     if params.logistic_regression:
-        if not logistic_regression_c_min or not logistic_regression_c_max:
+        if not params.logistic_regression_c_min or not params.logistic_regression_c_max:
             raise PluginParamValidationError("For the Logistic Regression algorithm, please choose a min and max value for C")
-        if logistic_regression_c_min > logistic_regression_c_max:
-            raise PluginParamValidationError(f"The Logistic Regression C min you selected: {logistic_regression_c_min} is greater than C max: {logistic_regression_c_max}. Choose a C min that is lesser than C max")
+        if params.logistic_regression_c_min > params.logistic_regression_c_max:
+            raise PluginParamValidationError(f"The Logistic Regression C min you selected: {params.logistic_regression_c_min} is greater than C max: {params.logistic_regression_c_max}. Choose a C min that is lesser than C max")
 
     params.random_forest_classification = recipe_config.get('random_forest_classification', None)
     params.random_forest_classification_n_estimators_min = recipe_config.get('random_forest_classification_n_estimators_min', None)
