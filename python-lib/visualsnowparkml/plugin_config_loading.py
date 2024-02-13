@@ -405,97 +405,69 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
         if params.gb_classification_learning_rate_min > params.gb_classification_learning_rate_max:
             raise PluginParamValidationError(f"The Gradient Tree Boosting Learning Rate min you selected: {params.gb_classification_learning_rate_min} is greater than Learning Rate max: {params.gb_classification_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
 
-    decision_tree_classification = recipe_config.get('decision_tree_classification', None)
-    decision_tree_classification_max_depth_min = recipe_config.get('decision_tree_classification_max_depth_min', None)
-    decision_tree_classification_max_depth_max = recipe_config.get('decision_tree_classification_max_depth_max', None)
-    decision_tree_classification_min_samples_leaf_min = recipe_config.get('decision_tree_classification_min_samples_leaf_min', None)
-    decision_tree_classification_min_samples_leaf_max = recipe_config.get('decision_tree_classification_min_samples_leaf_max', None)
+    params.decision_tree_classification = recipe_config.get('decision_tree_classification', None)
+    params.decision_tree_classification_max_depth_min = recipe_config.get('decision_tree_classification_max_depth_min', None)
+    params.decision_tree_classification_max_depth_max = recipe_config.get('decision_tree_classification_max_depth_max', None)
+    params.decision_tree_classification_min_samples_leaf_min = recipe_config.get('decision_tree_classification_min_samples_leaf_min', None)
+    params.decision_tree_classification_min_samples_leaf_max = recipe_config.get('decision_tree_classification_min_samples_leaf_max', None)
 
-    if decision_tree_classification:
-        params.decision_tree_classification = decision_tree_classification
-        if not decision_tree_classification_max_depth_min or not decision_tree_classification_max_depth_max or not decision_tree_classification_min_samples_leaf_min or not decision_tree_classification_min_samples_leaf_max:
+    if params.decision_tree_classification:
+        if not params.decision_tree_classification_max_depth_min or not params.decision_tree_classification_max_depth_max or not params.decision_tree_classification_min_samples_leaf_min or not params.decision_tree_classification_min_samples_leaf_max:
             raise PluginParamValidationError("For the Decision Tree algorithm, please choose a min and max value for all hyperparameters")
-        if decision_tree_classification_max_depth_min > decision_tree_classification_max_depth_max:
-            raise PluginParamValidationError(f"The Decision Tree Max Depth min you selected: {decision_tree_classification_max_depth_min} is greater than Max Depth max: {decision_tree_classification_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
-        if decision_tree_classification_min_samples_leaf_min > decision_tree_classification_min_samples_leaf_max:
-            raise PluginParamValidationError(f"The Decision Tree Min Samples per Leaf min you selected: {decision_tree_classification_min_samples_leaf_min} is greater than Min Samples per Leaf max: {decision_tree_classification_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
-        
-        params.decision_tree_classification_max_depth_min = decision_tree_classification_max_depth_min
-        params.decision_tree_classification_max_depth_max = decision_tree_classification_max_depth_max
-        params.decision_tree_classification_min_samples_leaf_min = decision_tree_classification_min_samples_leaf_min
-        params.decision_tree_classification_min_samples_leaf_max = decision_tree_classification_min_samples_leaf_max
+        if params.decision_tree_classification_max_depth_min > params.decision_tree_classification_max_depth_max:
+            raise PluginParamValidationError(f"The Decision Tree Max Depth min you selected: {params.decision_tree_classification_max_depth_min} is greater than Max Depth max: {params.decision_tree_classification_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
+        if params.decision_tree_classification_min_samples_leaf_min > params.decision_tree_classification_min_samples_leaf_max:
+            raise PluginParamValidationError(f"The Decision Tree Min Samples per Leaf min you selected: {params.decision_tree_classification_min_samples_leaf_min} is greater than Min Samples per Leaf max: {params.decision_tree_classification_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
 
-    lasso_regression = recipe_config.get('lasso_regression', None)
-    lasso_regression_alpha_min = recipe_config.get('lasso_regression_alpha_min', None)
-    lasso_regression_alpha_max = recipe_config.get('lasso_regression_alpha_max', None)
+    params.lasso_regression = recipe_config.get('lasso_regression', None)
+    params.lasso_regression_alpha_min = recipe_config.get('lasso_regression_alpha_min', None)
+    params.lasso_regression_alpha_max = recipe_config.get('lasso_regression_alpha_max', None)
 
-    if lasso_regression:
-        params.lasso_regression = lasso_regression
-        if not lasso_regression_alpha_min or not lasso_regression_alpha_max:
+    if params.lasso_regression:
+        if not params.lasso_regression_alpha_min or not params.lasso_regression_alpha_max:
             raise PluginParamValidationError("For the Lasso Regression algorithm, please choose a min and max value for alpha")
-        else:
-            params.lasso_regression_alpha_min = lasso_regression_alpha_min
-            params.lasso_regression_alpha_max = lasso_regression_alpha_max
-        if lasso_regression_alpha_min > lasso_regression_alpha_max:
-            raise PluginParamValidationError(f"The Lasso Regression alpha min you selected: {lasso_regression_alpha_min} is greater than alpha max: {lasso_regression_alpha_max}. Choose an alpha min that is lesser than alpha max")
+        if params.lasso_regression_alpha_min > params.lasso_regression_alpha_max:
+            raise PluginParamValidationError(f"The Lasso Regression alpha min you selected: {params.lasso_regression_alpha_min} is greater than alpha max: {params.lasso_regression_alpha_max}. Choose an alpha min that is lesser than alpha max")
 
-    random_forest_regression = recipe_config.get('random_forest_regression', None)
-    random_forest_regression_n_estimators_min = recipe_config.get('random_forest_regression_n_estimators_min', None)
-    random_forest_regression_n_estimators_max = recipe_config.get('random_forest_regression_n_estimators_max', None)
-    random_forest_regression_max_depth_min = recipe_config.get('random_forest_regression_max_depth_min', None)
-    random_forest_regression_max_depth_max = recipe_config.get('random_forest_regression_max_depth_max', None)
-    random_forest_regression_min_samples_leaf_min = recipe_config.get('random_forest_regression_min_samples_leaf_min', None)
-    random_forest_regression_min_samples_leaf_max = recipe_config.get('random_forest_regression_min_samples_leaf_max', None)
+    params.random_forest_regression = recipe_config.get('random_forest_regression', None)
+    params.random_forest_regression_n_estimators_min = recipe_config.get('random_forest_regression_n_estimators_min', None)
+    params.random_forest_regression_n_estimators_max = recipe_config.get('random_forest_regression_n_estimators_max', None)
+    params.random_forest_regression_max_depth_min = recipe_config.get('random_forest_regression_max_depth_min', None)
+    params.random_forest_regression_max_depth_max = recipe_config.get('random_forest_regression_max_depth_max', None)
+    params.random_forest_regression_min_samples_leaf_min = recipe_config.get('random_forest_regression_min_samples_leaf_min', None)
+    params.random_forest_regression_min_samples_leaf_max = recipe_config.get('random_forest_regression_min_samples_leaf_max', None)
     
-    if random_forest_regression:
-        params.random_forest_regression = random_forest_regression
-        if not random_forest_regression_n_estimators_min or not random_forest_regression_n_estimators_max or not random_forest_regression_max_depth_min or not random_forest_regression_max_depth_max or not random_forest_regression_min_samples_leaf_min or not random_forest_regression_min_samples_leaf_max:
+    if params.random_forest_regression:
+        if not params.random_forest_regression_n_estimators_min or not params.random_forest_regression_n_estimators_max or not params.random_forest_regression_max_depth_min or not params.random_forest_regression_max_depth_max or not params.random_forest_regression_min_samples_leaf_min or not params.random_forest_regression_min_samples_leaf_max:
             raise PluginParamValidationError("For the Random Forest algorithm, please choose a min and max value for all hyperparameters")
-        if random_forest_regression_n_estimators_min > random_forest_regression_n_estimators_max:
-            raise PluginParamValidationError(f"The Random Forest Number of Trees min you selected: {random_forest_regression_n_estimators_min} is greater than Number of Trees max: {random_forest_regression_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
-        if random_forest_regression_max_depth_min > random_forest_regression_max_depth_max:
-            raise PluginParamValidationError(f"The Random Forest Max Depth min you selected: {random_forest_regression_max_depth_min} is greater than Max Depth max: {random_forest_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
-        if random_forest_regression_min_samples_leaf_min > random_forest_regression_min_samples_leaf_max:
-            raise PluginParamValidationError(f"The Random Forest Min Samples per Leaf min you selected: {random_forest_regression_min_samples_leaf_min} is greater than Min Samples per Leaf max: {random_forest_regression_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
-
-        params.random_forest_regression_n_estimators_min = random_forest_regression_n_estimators_min
-        params.random_forest_regression_n_estimators_max = random_forest_regression_n_estimators_max
-        params.random_forest_regression_max_depth_min = random_forest_regression_max_depth_min
-        params.random_forest_regression_max_depth_max = random_forest_regression_max_depth_max
-        params.random_forest_regression_min_samples_leaf_min = random_forest_regression_min_samples_leaf_min
-        params.random_forest_regression_min_samples_leaf_max = random_forest_regression_min_samples_leaf_max
+        if params.random_forest_regression_n_estimators_min > params.random_forest_regression_n_estimators_max:
+            raise PluginParamValidationError(f"The Random Forest Number of Trees min you selected: {params.random_forest_regression_n_estimators_min} is greater than Number of Trees max: {params.random_forest_regression_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
+        if params.random_forest_regression_max_depth_min > params.random_forest_regression_max_depth_max:
+            raise PluginParamValidationError(f"The Random Forest Max Depth min you selected: {params.random_forest_regression_max_depth_min} is greater than Max Depth max: {params.random_forest_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
+        if params.random_forest_regression_min_samples_leaf_min > params.random_forest_regression_min_samples_leaf_max:
+            raise PluginParamValidationError(f"The Random Forest Min Samples per Leaf min you selected: {params.random_forest_regression_min_samples_leaf_min} is greater than Min Samples per Leaf max: {params.random_forest_regression_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
         
-    xgb_regression = recipe_config.get('xgb_regression', None)
-    xgb_regression_n_estimators_min = recipe_config.get('xgb_regression_n_estimators_min', None)
-    xgb_regression_n_estimators_max = recipe_config.get('xgb_regression_n_estimators_max', None)
-    xgb_regression_max_depth_min = recipe_config.get('xgb_regression_max_depth_min', None)
-    xgb_regression_max_depth_max = recipe_config.get('xgb_regression_max_depth_max', None)
-    xgb_regression_min_child_weight_min = recipe_config.get('xgb_regression_min_child_weight_min', None)
-    xgb_regression_min_child_weight_max = recipe_config.get('xgb_regression_min_child_weight_max', None)
-    xgb_regression_learning_rate_min = recipe_config.get('xgb_regression_learning_rate_min', None)
-    xgb_regression_learning_rate_max = recipe_config.get('xgb_regression_learning_rate_max', None)
+    params.xgb_regression = recipe_config.get('xgb_regression', None)
+    params.xgb_regression_n_estimators_min = recipe_config.get('xgb_regression_n_estimators_min', None)
+    params.xgb_regression_n_estimators_max = recipe_config.get('xgb_regression_n_estimators_max', None)
+    params.xgb_regression_max_depth_min = recipe_config.get('xgb_regression_max_depth_min', None)
+    params.xgb_regression_max_depth_max = recipe_config.get('xgb_regression_max_depth_max', None)
+    params.xgb_regression_min_child_weight_min = recipe_config.get('xgb_regression_min_child_weight_min', None)
+    params.xgb_regression_min_child_weight_max = recipe_config.get('xgb_regression_min_child_weight_max', None)
+    params.xgb_regression_learning_rate_min = recipe_config.get('xgb_regression_learning_rate_min', None)
+    params.xgb_regression_learning_rate_max = recipe_config.get('xgb_regression_learning_rate_max', None)
 
-    if xgb_regression:
-        params.xgb_regression = xgb_regression
-        if not xgb_regression_n_estimators_min or not xgb_regression_n_estimators_max or not xgb_regression_max_depth_min or not xgb_regression_max_depth_max or not xgb_regression_min_child_weight_min or not xgb_regression_min_child_weight_max or not xgb_regression_learning_rate_min or not xgb_regression_learning_rate_max:
+    if params.xgb_regression:
+        if not params.xgb_regression_n_estimators_min or not params.xgb_regression_n_estimators_max or not params.xgb_regression_max_depth_min or not params.xgb_regression_max_depth_max or not params.xgb_regression_min_child_weight_min or not params.xgb_regression_min_child_weight_max or not params.xgb_regression_learning_rate_min or not params.xgb_regression_learning_rate_max:
             raise PluginParamValidationError("For the XGBoost algorithm, please choose a min and max value for all hyperparameters")
-        if xgb_regression_n_estimators_min > xgb_regression_n_estimators_max:
-            raise PluginParamValidationError(f"The XGBoost Number of Trees min you selected: {xgb_regression_n_estimators_min} is greater than Number of Trees max: {xgb_regression_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
-        if xgb_regression_max_depth_min > xgb_regression_max_depth_max:
-            raise PluginParamValidationError(f"The XGBoost Max Depth min you selected: {xgb_regression_max_depth_min} is greater than Max Depth max: {xgb_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
-        if xgb_regression_min_child_weight_min > xgb_regression_min_child_weight_min:
-            raise PluginParamValidationError(f"The XGBoost Min Child Weight min you selected: {xgb_regression_min_child_weight_min} is greater than Min Child Weight max: {xgb_regression_min_child_weight_min}. Choose a Min Child Weight min that is lesser than Min Child Weight max")
-        if xgb_regression_learning_rate_min > xgb_regression_learning_rate_max:
-            raise PluginParamValidationError(f"The XGBoost Learning Rate min you selected: {xgb_regression_learning_rate_min} is greater than Learning Rate max: {xgb_regression_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
-
-        params.xgb_regression_n_estimators_min = xgb_regression_n_estimators_min
-        params.xgb_regression_n_estimators_max = xgb_regression_n_estimators_max
-        params.xgb_regression_max_depth_min = xgb_regression_max_depth_min
-        params.xgb_regression_max_depth_max = xgb_regression_max_depth_max
-        params.xgb_regression_min_child_weight_min = xgb_regression_min_child_weight_min
-        params.xgb_regression_min_child_weight_max = xgb_regression_min_child_weight_max
-        params.xgb_regression_learning_rate_min = xgb_regression_learning_rate_min
-        params.xgb_regression_learning_rate_max = xgb_regression_learning_rate_max
+        if params.xgb_regression_n_estimators_min > params.xgb_regression_n_estimators_max:
+            raise PluginParamValidationError(f"The XGBoost Number of Trees min you selected: {params.xgb_regression_n_estimators_min} is greater than Number of Trees max: {params.xgb_regression_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
+        if params.xgb_regression_max_depth_min > params.xgb_regression_max_depth_max:
+            raise PluginParamValidationError(f"The XGBoost Max Depth min you selected: {params.xgb_regression_max_depth_min} is greater than Max Depth max: {params.xgb_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
+        if params.xgb_regression_min_child_weight_min > params.xgb_regression_min_child_weight_min:
+            raise PluginParamValidationError(f"The XGBoost Min Child Weight min you selected: {params.xgb_regression_min_child_weight_min} is greater than Min Child Weight max: {params.xgb_regression_min_child_weight_min}. Choose a Min Child Weight min that is lesser than Min Child Weight max")
+        if params.xgb_regression_learning_rate_min > params.xgb_regression_learning_rate_max:
+            raise PluginParamValidationError(f"The XGBoost Learning Rate min you selected: {params.xgb_regression_learning_rate_min} is greater than Learning Rate max: {params.xgb_regression_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
 
     lgbm_regression = recipe_config.get('lgbm_regression', None)
     lgbm_regression_n_estimators_min = recipe_config.get('lgbm_regression_n_estimators_min', None)
