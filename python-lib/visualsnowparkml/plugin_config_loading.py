@@ -469,51 +469,40 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
         if params.xgb_regression_learning_rate_min > params.xgb_regression_learning_rate_max:
             raise PluginParamValidationError(f"The XGBoost Learning Rate min you selected: {params.xgb_regression_learning_rate_min} is greater than Learning Rate max: {params.xgb_regression_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
 
-    lgbm_regression = recipe_config.get('lgbm_regression', None)
-    lgbm_regression_n_estimators_min = recipe_config.get('lgbm_regression_n_estimators_min', None)
-    lgbm_regression_n_estimators_max = recipe_config.get('lgbm_regression_n_estimators_max', None)
-    lgbm_regression_max_depth_min = recipe_config.get('lgbm_regression_max_depth_min', None)
-    lgbm_regression_max_depth_max = recipe_config.get('lgbm_regression_max_depth_max', None)
-    lgbm_regression_min_child_weight_min = recipe_config.get('lgbm_regression_min_child_weight_min', None)
-    lgbm_regression_min_child_weight_max = recipe_config.get('lgbm_regression_min_child_weight_max', None)
-    lgbm_regression_learning_rate_min = recipe_config.get('lgbm_regression_learning_rate_min', None)
-    lgbm_regression_learning_rate_max = recipe_config.get('lgbm_regression_learning_rate_max', None)
+    params.lgbm_regression = recipe_config.get('lgbm_regression', None)
+    params.lgbm_regression_n_estimators_min = recipe_config.get('lgbm_regression_n_estimators_min', None)
+    params.lgbm_regression_n_estimators_max = recipe_config.get('lgbm_regression_n_estimators_max', None)
+    params.lgbm_regression_max_depth_min = recipe_config.get('lgbm_regression_max_depth_min', None)
+    params.lgbm_regression_max_depth_max = recipe_config.get('lgbm_regression_max_depth_max', None)
+    params.lgbm_regression_min_child_weight_min = recipe_config.get('lgbm_regression_min_child_weight_min', None)
+    params.lgbm_regression_min_child_weight_max = recipe_config.get('lgbm_regression_min_child_weight_max', None)
+    params.lgbm_regression_learning_rate_min = recipe_config.get('lgbm_regression_learning_rate_min', None)
+    params.lgbm_regression_learning_rate_max = recipe_config.get('lgbm_regression_learning_rate_max', None)
 
-    if lgbm_regression:
-        params.lgbm_regression = lgbm_regression
-        if not lgbm_regression_n_estimators_min or not lgbm_regression_n_estimators_max or not lgbm_regression_max_depth_min or not lgbm_regression_max_depth_max or not lgbm_regression_min_child_weight_min or not lgbm_regression_min_child_weight_max or not lgbm_regression_learning_rate_min or not lgbm_regression_learning_rate_max:
+    if params.lgbm_regression:
+        if not params.lgbm_regression_n_estimators_min or not params.lgbm_regression_n_estimators_max or not params.lgbm_regression_max_depth_min or not params.lgbm_regression_max_depth_max or not params.lgbm_regression_min_child_weight_min or not params.lgbm_regression_min_child_weight_max or not params.lgbm_regression_learning_rate_min or not params.lgbm_regression_learning_rate_max:
             raise PluginParamValidationError("For the LightGBM algorithm, please choose a min and max value for all hyperparameters")
-        if lgbm_regression_n_estimators_min > lgbm_regression_n_estimators_max:
-            raise PluginParamValidationError(f"The LightGBM Number of Trees min you selected: {lgbm_regression_n_estimators_min} is greater than Number of Trees max: {lgbm_regression_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
-        if lgbm_regression_max_depth_min > lgbm_regression_max_depth_max:
-            raise PluginParamValidationError(f"The LightGBM Max Depth min you selected: {lgbm_regression_max_depth_min} is greater than Max Depth max: {lgbm_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
-        if lgbm_regression_min_child_weight_min > lgbm_regression_min_child_weight_min:
-            raise PluginParamValidationError(f"The LightGBM Min Child Weight min you selected: {lgbm_regression_min_child_weight_min} is greater than Min Child Weight max: {lgbm_regression_min_child_weight_min}. Choose a Min Child Weight min that is lesser than Min Child Weight max")
-        if lgbm_regression_learning_rate_min > lgbm_regression_learning_rate_max:
-            raise PluginParamValidationError(f"The LightGBM Learning Rate min you selected: {lgbm_regression_learning_rate_min} is greater than Learning Rate max: {lgbm_regression_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
+        if params.lgbm_regression_n_estimators_min > params.lgbm_regression_n_estimators_max:
+            raise PluginParamValidationError(f"The LightGBM Number of Trees min you selected: {params.lgbm_regression_n_estimators_min} is greater than Number of Trees max: {params.lgbm_regression_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
+        if params.lgbm_regression_max_depth_min > params.lgbm_regression_max_depth_max:
+            raise PluginParamValidationError(f"The LightGBM Max Depth min you selected: {params.lgbm_regression_max_depth_min} is greater than Max Depth max: {params.lgbm_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
+        if params.lgbm_regression_min_child_weight_min > params.lgbm_regression_min_child_weight_min:
+            raise PluginParamValidationError(f"The LightGBM Min Child Weight min you selected: {params.lgbm_regression_min_child_weight_min} is greater than Min Child Weight max: {params.lgbm_regression_min_child_weight_min}. Choose a Min Child Weight min that is lesser than Min Child Weight max")
+        if params.lgbm_regression_learning_rate_min > params.lgbm_regression_learning_rate_max:
+            raise PluginParamValidationError(f"The LightGBM Learning Rate min you selected: {params.lgbm_regression_learning_rate_min} is greater than Learning Rate max: {params.lgbm_regression_learning_rate_max}. Choose a Learning Rate min that is lesser than Learning Rate max")
 
-        params.lgbm_regression_n_estimators_min = lgbm_regression_n_estimators_min
-        params.lgbm_regression_n_estimators_max = lgbm_regression_n_estimators_max
-        params.lgbm_regression_max_depth_min = lgbm_regression_max_depth_min
-        params.lgbm_regression_max_depth_max = lgbm_regression_max_depth_max
-        params.lgbm_regression_min_child_weight_min = lgbm_regression_min_child_weight_min
-        params.lgbm_regression_min_child_weight_max = lgbm_regression_min_child_weight_max
-        params.lgbm_regression_learning_rate_min = lgbm_regression_learning_rate_min
-        params.lgbm_regression_learning_rate_max = lgbm_regression_learning_rate_max
+    params.gb_regression = recipe_config.get('gb_regression', None)
+    params.gb_regression_n_estimators_min = recipe_config.get('gb_regression_n_estimators_min', None)
+    params.gb_regression_n_estimators_max = recipe_config.get('gb_regression_n_estimators_max', None)
+    params.gb_regression_max_depth_min = recipe_config.get('gb_regression_max_depth_min', None)
+    params.gb_regression_max_depth_max = recipe_config.get('gb_regression_max_depth_max', None)
+    params.gb_regression_min_samples_leaf_min = recipe_config.get('gb_regression_min_samples_leaf_min', None)
+    params.gb_regression_min_samples_leaf_max = recipe_config.get('gb_regression_min_samples_leaf_max', None)
+    params.gb_regression_learning_rate_min = recipe_config.get('gb_regression_learning_rate_min', None)
+    params.gb_regression_learning_rate_max = recipe_config.get('gb_regression_learning_rate_max', None)
 
-    gb_regression = recipe_config.get('gb_regression', None)
-    gb_regression_n_estimators_min = recipe_config.get('gb_regression_n_estimators_min', None)
-    gb_regression_n_estimators_max = recipe_config.get('gb_regression_n_estimators_max', None)
-    gb_regression_max_depth_min = recipe_config.get('gb_regression_max_depth_min', None)
-    gb_regression_max_depth_max = recipe_config.get('gb_regression_max_depth_max', None)
-    gb_regression_min_samples_leaf_min = recipe_config.get('gb_regression_min_samples_leaf_min', None)
-    gb_regression_min_samples_leaf_max = recipe_config.get('gb_regression_min_samples_leaf_max', None)
-    gb_regression_learning_rate_min = recipe_config.get('gb_regression_learning_rate_min', None)
-    gb_regression_learning_rate_max = recipe_config.get('gb_regression_learning_rate_max', None)
-
-    if gb_regression:
-        params.gb_regression = gb_regression
-        if not gb_regression_n_estimators_min or not gb_regression_n_estimators_max or not gb_regression_max_depth_min or not gb_regression_max_depth_max or not gb_regression_min_samples_leaf_min or not gb_regression_min_samples_leaf_max or not gb_regression_learning_rate_min or not gb_regression_learning_rate_max:
+    if params.gb_regression:
+        if not params.gb_regression_n_estimators_min or not params.gb_regression_n_estimators_max or not params.gb_regression_max_depth_min or not params.gb_regression_max_depth_max or not params.gb_regression_min_samples_leaf_min or not params.gb_regression_min_samples_leaf_max or not params.gb_regression_learning_rate_min or not params.gb_regression_learning_rate_max:
             raise PluginParamValidationError("For the Gradient Tree Boosting algorithm, please choose a min and max value for all hyperparameters")
         if gb_regression_n_estimators_min > gb_regression_n_estimators_max:
             raise PluginParamValidationError(f"The Gradient Tree Boosting Number of Trees min you selected: {gb_regression_n_estimators_min} is greater than Number of Trees max: {gb_regression_n_estimators_max}. Choose a Number of Trees min that is lesser than Number of Trees max")
