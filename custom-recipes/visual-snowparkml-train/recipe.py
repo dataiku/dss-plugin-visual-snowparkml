@@ -80,7 +80,7 @@ print("Recipe Input Params")
 attrs = dir(params)
 # {'kids': 0, 'name': 'Dog', 'color': 'Spotted', 'age': 10, 'legs': 2, 'smell': 'Alot'}
 # now dump this in some way or another
-print(', '.join("%s: %s" % item for item in attrs.items()))
+print(attrs)
 pprint.pprint(params)
 print("-----------------------------")
 
