@@ -393,7 +393,8 @@ categorical_dtypes_list = ['varchar','char','character','string','text','binary'
 
 # Create list of input features and the encoding/rescaling and missingness imputation method chosen
 included_features_handling_list = []
-
+print("HIHIHI")
+print(params.inputDatasetColumns)
 for feature_column in params.inputDatasetColumns:
     col_name = feature_column['name']
     col_name_sf = sf_col_name(col_name)
