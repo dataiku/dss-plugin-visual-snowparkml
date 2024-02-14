@@ -43,15 +43,6 @@
             "required": true,
             "acceptsDataset": false,
             "acceptsManagedFolder": true
-        },
-        {
-            "name": "saved_model_name",
-            "label": "Saved Model (LEAVE EMPTY)",
-            "description": "The final, best trained model",
-            "arity": "UNARY",
-            "required": false,
-            "acceptsDataset": false,
-            "acceptsSavedModel": true
         }
     ],
 
