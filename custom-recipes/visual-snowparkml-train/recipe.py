@@ -36,6 +36,7 @@ from snowflake.snowpark.version import VERSION
 from snowflake.snowpark.session import Session
 import snowflake.snowpark.types as T
 from snowflake.snowpark.functions import sproc, udf, when, col
+from snowflake.snowpark.types import DoubleType
 
 # Snowpark-ML Imports
 from snowflake.ml.utils import connection_params
