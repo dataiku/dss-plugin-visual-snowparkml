@@ -521,6 +521,8 @@ for model in trained_models:
     mlflow.log_param("algorithm", model_algo)
 
     test_predictions_df = rs_clf.predict(test_snowpark_df)
+    test_predictions_df = test_predictions_df.withColumn('"PREDICTION"', test_predictions_df['"PREDICTION"'].cast(DoubleType()))
+
     print("PAT")
     print(test_predictions_df.dtypes)
     test_predictions_df.show(10)
