@@ -50,7 +50,8 @@ from snowflake.ml.modeling.tree import DecisionTreeClassifier, DecisionTreeRegre
 from snowflake.ml.modeling.linear_model import LogisticRegression, Lasso, PoissonRegressor, GammaRegressor, TweedieRegressor
 from snowflake.ml.modeling.preprocessing import StandardScaler, OneHotEncoder, MinMaxScaler, OrdinalEncoder
 from snowflake.ml.modeling.impute import SimpleImputer
-from snowflake.ml.modeling.metrics import accuracy_score, recall_score, f1_score, roc_auc_score, precision_score, r2_score, mean_absolute_error, mean_squared_error
+from snowflake.ml.modeling.metrics import accuracy_score, recall_score, roc_auc_score, precision_score, r2_score, mean_absolute_error, mean_squared_error
+from sklearn.metrics import f1_score
 import snowflake.snowpark.functions as F
 from snowflake.ml.registry import model_registry
 
@@ -520,7 +521,8 @@ for model in trained_models:
     mlflow.log_param("algorithm", model_algo)
 
     test_predictions_df = rs_clf.predict(test_snowpark_df)
-
+    test_predictions_pandas_df = test_predictions_df.to_pandas()
+    
     test_metrics = {}
     
     if params.prediction_type == "two-class classification":
@@ -529,8 +531,10 @@ for model in trained_models:
         test_prediction_probas_df = rs_clf.predict_proba(test_snowpark_df)
 
         target_col_value_cols = [col for col in test_prediction_probas_df.columns if "PREDICT_PROBA" in col]
-
-        test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
+        print("HIHI")
+        #test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
+        test_f1 = f1_score(test_predictions_pandas_df[col_label_sf], test_predictions_pandas_df['"PREDICTION"'])
+        print("GOT PAST F1")
         mlflow.log_metric("test_f1_score", test_f1)
         test_roc_auc = roc_auc_score(df = test_prediction_probas_df, y_true_col_names = col_label_sf, y_score_col_names = test_prediction_probas_df.columns[-1])
         mlflow.log_metric("test_roc_auc", test_roc_auc)
