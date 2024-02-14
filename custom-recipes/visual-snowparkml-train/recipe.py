@@ -521,8 +521,10 @@ for model in trained_models:
     mlflow.log_param("algorithm", model_algo)
 
     test_predictions_df = rs_clf.predict(test_snowpark_df)
-    test_predictions_pandas_df = test_predictions_df.to_pandas()
     print("PAT")
+    test_predictions_df.show(10)
+    test_predictions_pandas_df = test_predictions_df.to_pandas()
+    
     print(test_predictions_pandas_df.columns)
     test_metrics = {}
     
@@ -533,7 +535,7 @@ for model in trained_models:
 
         target_col_value_cols = [col for col in test_prediction_probas_df.columns if "PREDICT_PROBA" in col]
         print("HIHI")
-        test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label=col_label_values[0])
+        test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label = col_label_values[0])
         #test_f1 = f1_score(test_predictions_pandas_df[params.col_label], test_predictions_pandas_df['PREDICTION'])
         print("GOT PAST F1")
         mlflow.log_metric("test_f1_score", test_f1)
