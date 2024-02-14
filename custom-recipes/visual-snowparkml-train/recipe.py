@@ -50,8 +50,8 @@ from snowflake.ml.modeling.tree import DecisionTreeClassifier, DecisionTreeRegre
 from snowflake.ml.modeling.linear_model import LogisticRegression, Lasso, PoissonRegressor, GammaRegressor, TweedieRegressor
 from snowflake.ml.modeling.preprocessing import StandardScaler, OneHotEncoder, MinMaxScaler, OrdinalEncoder
 from snowflake.ml.modeling.impute import SimpleImputer
-from snowflake.ml.modeling.metrics import accuracy_score, recall_score, roc_auc_score, precision_score, r2_score, mean_absolute_error, mean_squared_error
-from sklearn.metrics import f1_score
+from snowflake.ml.modeling.metrics import accuracy_score, recall_score, roc_auc_score, f1_score, precision_score, r2_score, mean_absolute_error, mean_squared_error
+#from sklearn.metrics import f1_score
 import snowflake.snowpark.functions as F
 from snowflake.ml.registry import model_registry
 
