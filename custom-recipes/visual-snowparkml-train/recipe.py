@@ -526,13 +526,7 @@ for model in trained_models:
     # Sometimes, the PREDICTION column will be a string. Need to change it to be consistent with the target column
     col_label_dtype = convert_snowpark_df_col_dtype(test_predictions_df, col_label_sf)
     test_predictions_df = test_predictions_df.withColumn('"PREDICTION"', test_predictions_df['"PREDICTION"'].cast(col_label_dtype))
-
-    print("PAT")
-    print(test_predictions_df.dtypes)
-    test_predictions_df.show(10)
-    test_predictions_pandas_df = test_predictions_df.to_pandas()
     
-    print(test_predictions_pandas_df.columns)
     test_metrics = {}
     
     if params.prediction_type == "two-class classification":
@@ -541,10 +535,7 @@ for model in trained_models:
         test_prediction_probas_df = rs_clf.predict_proba(test_snowpark_df)
 
         target_col_value_cols = [col for col in test_prediction_probas_df.columns if "PREDICT_PROBA" in col]
-        print("HIHI")
         test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label = col_label_values[0])
-        #test_f1 = f1_score(test_predictions_pandas_df[params.col_label], test_predictions_pandas_df['PREDICTION'])
-        print("GOT PAST F1")
         mlflow.log_metric("test_f1_score", test_f1)
         test_roc_auc = roc_auc_score(df = test_prediction_probas_df, y_true_col_names = col_label_sf, y_score_col_names = test_prediction_probas_df.columns[-1])
         mlflow.log_metric("test_roc_auc", test_roc_auc)
