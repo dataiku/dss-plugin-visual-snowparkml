@@ -56,53 +56,18 @@ from snowflake.ml.registry import model_registry
 
 ### SECTION 2 - Load User-Inputted Config, Inputs, and Outputs
 params, session, input_snowpark_df = load_train_config_snowpark_session_and_input_train_snowpark_df()
-
-#Recipe Inputs, Outputs, and User-Inputted Parameters
-# Get input and output datasets
-#input_dataset_names = get_input_names_for_role('input_dataset_name')
-#input_dataset_name = input_dataset_names[0]
-#input_dataset = dataiku.Dataset(input_dataset_name) 
-
-#output_train_dataset_names = get_output_names_for_role('output_train_dataset_name')
-#output_train_dataset = dataiku.Dataset(output_train_dataset_names[0])
-
-#output_test_dataset_names = get_output_names_for_role('output_test_dataset_name')
-#output_test_dataset = dataiku.Dataset(output_test_dataset_names[0])
-
-#model_experiment_tracking_folder_names = get_output_names_for_role('model_experiment_tracking_folder_name')
-#model_experiment_tracking_folder = dataiku.Folder(model_experiment_tracking_folder_names[0])
-#model_experiment_tracking_folder_id = model_experiment_tracking_folder.get_id()
     
 # Get recipe user-inputted parameters and print to the logs
-#recipe_config = get_recipe_config()
 print("-----------------------------")
 print("Recipe Input Params")
-
 attrs = dir(params)
 for attr in attrs:
     if not attr.startswith('__'):
         print(str(attr) + ': ' + str(getattr(params, attr)))
-
-#attrs = dir(params)
-# {'kids': 0, 'name': 'Dog', 'color': 'Spotted', 'age': 10, 'legs': 2, 'smell': 'Alot'}
-# now dump this in some way or another
-#print(attrs)
-#pprint.pprint(params)
 print("-----------------------------")
 
-#model_name = recipe_config.get('model_name', None)
-#col_label = recipe_config.get('col_label', None)
-#prediction_type = recipe_config.get('prediction_type', None)
-#disable_class_weights = recipe_config.get('disable_class_weights', None)
-#time_ordering = recipe_config.get('time_ordering', False)
-#time_ordering_variable = recipe_config.get('time_ordering_variable', None)
-
-#train_ratio = recipe_config.get('train_ratio', None)
-#random_seed = recipe_config.get('random_seed', None)
-#model_metric = recipe_config.get('model_metric', None)
-#warehouse = recipe_config.get('warehouse', None)
-#deploy_to_snowflake_model_registry = recipe_config.get('deploy_to_snowflake_model_registry', False)
 SNOWFLAKE_MODEL_REGISTRY = 'MODEL_REGISTRY'
+DEFAULT_CROSS_VAL_FOLDS = 3
 
 # Map metric name from dropdown to sklearn-compatible name
 metric_to_sklearn_mapping = {
@@ -118,119 +83,10 @@ metric_to_sklearn_mapping = {
 
 scoring_metric = metric_to_sklearn_mapping[params.model_metric]
 
-#inputDatasetColumns = recipe_config.get('inputDatasetColumns', None)
-#selectedInputColumns = recipe_config.get('selectedInputColumns', None)
-#selectedOption1 = recipe_config.get('selectedOption1', None)
-#selectedOption2 = recipe_config.get('selectedOption2', None)
-#selectedConstantImpute = recipe_config.get('selectedConstantImpute', None)
-
-"""
-logistic_regression = recipe_config.get('logistic_regression', None)
-logistic_regression_c_min = recipe_config.get('logistic_regression_c_min', None)
-logistic_regression_c_max = recipe_config.get('logistic_regression_c_max', None)
-
-random_forest_classification = recipe_config.get('random_forest_classification', None)
-random_forest_classification_n_estimators_min = recipe_config.get('random_forest_classification_n_estimators_min', None)
-random_forest_classification_n_estimators_max = recipe_config.get('random_forest_classification_n_estimators_max', None)
-random_forest_classification_max_depth_min = recipe_config.get('random_forest_classification_max_depth_min', None)
-random_forest_classification_max_depth_max = recipe_config.get('random_forest_classification_max_depth_max', None)
-random_forest_classification_min_samples_leaf_min = recipe_config.get('random_forest_classification_min_samples_leaf_min', None)
-random_forest_classification_min_samples_leaf_max = recipe_config.get('random_forest_classification_min_samples_leaf_max', None)
-
-xgb_classification = recipe_config.get('xgb_classification', None)
-xgb_classification_n_estimators_min = recipe_config.get('xgb_classification_n_estimators_min', None)
-xgb_classification_n_estimators_max = recipe_config.get('xgb_classification_n_estimators_max', None)
-xgb_classification_max_depth_min = recipe_config.get('xgb_classification_max_depth_min', None)
-xgb_classification_max_depth_max = recipe_config.get('xgb_classification_max_depth_max', None)
-xgb_classification_min_child_weight_min = recipe_config.get('xgb_classification_min_child_weight_min', None)
-xgb_classification_min_child_weight_max = recipe_config.get('xgb_classification_min_child_weight_max', None)
-xgb_classification_learning_rate_min = recipe_config.get('xgb_classification_learning_rate_min', None)
-xgb_classification_learning_rate_max = recipe_config.get('xgb_classification_learning_rate_max', None)
-
-lgbm_classification = recipe_config.get('lgbm_classification', None)
-lgbm_classification_n_estimators_min = recipe_config.get('lgbm_classification_n_estimators_min', None)
-lgbm_classification_n_estimators_max = recipe_config.get('lgbm_classification_n_estimators_max', None)
-lgbm_classification_max_depth_min = recipe_config.get('lgbm_classification_max_depth_min', None)
-lgbm_classification_max_depth_max = recipe_config.get('lgbm_classification_max_depth_max', None)
-lgbm_classification_min_child_weight_min = recipe_config.get('lgbm_classification_min_child_weight_min', None)
-lgbm_classification_min_child_weight_max = recipe_config.get('lgbm_classification_min_child_weight_max', None)
-lgbm_classification_learning_rate_min = recipe_config.get('lgbm_classification_learning_rate_min', None)
-lgbm_classification_learning_rate_max = recipe_config.get('lgbm_classification_learning_rate_max', None)
-
-gb_classification = recipe_config.get('gb_classification', None)
-gb_classification_n_estimators_min = recipe_config.get('gb_classification_n_estimators_min', None)
-gb_classification_n_estimators_max = recipe_config.get('gb_classification_n_estimators_max', None)
-gb_classification_max_depth_min = recipe_config.get('gb_classification_max_depth_min', None)
-gb_classification_max_depth_max = recipe_config.get('gb_classification_max_depth_max', None)
-gb_classification_min_samples_leaf_min = recipe_config.get('gb_classification_min_samples_leaf_min', None)
-gb_classification_min_samples_leaf_max = recipe_config.get('gb_classification_min_samples_leaf_max', None)
-gb_classification_learning_rate_min = recipe_config.get('gb_classification_learning_rate_min', None)
-gb_classification_learning_rate_max = recipe_config.get('gb_classification_learning_rate_max', None)
-
-decision_tree_classification = recipe_config.get('decision_tree_classification', None)
-decision_tree_classification_max_depth_min = recipe_config.get('decision_tree_classification_max_depth_min', None)
-decision_tree_classification_max_depth_max = recipe_config.get('decision_tree_classification_max_depth_max', None)
-decision_tree_classification_min_samples_leaf_min = recipe_config.get('decision_tree_classification_min_samples_leaf_min', None)
-decision_tree_classification_min_samples_leaf_max = recipe_config.get('decision_tree_classification_min_samples_leaf_max', None)
-
-lasso_regression = recipe_config.get('lasso_regression', None)
-lasso_regression_alpha_min = recipe_config.get('lasso_regression_alpha_min', None)
-lasso_regression_alpha_max = recipe_config.get('lasso_regression_alpha_max', None)
-
-random_forest_regression = recipe_config.get('random_forest_regression', None)
-random_forest_regression_n_estimators_min = recipe_config.get('random_forest_regression_n_estimators_min', None)
-random_forest_regression_n_estimators_max = recipe_config.get('random_forest_regression_n_estimators_max', None)
-random_forest_regression_max_depth_min = recipe_config.get('random_forest_regression_max_depth_min', None)
-random_forest_regression_max_depth_max = recipe_config.get('random_forest_regression_max_depth_max', None)
-random_forest_regression_min_samples_leaf_min = recipe_config.get('random_forest_regression_min_samples_leaf_min', None)
-random_forest_regression_min_samples_leaf_max = recipe_config.get('random_forest_regression_min_samples_leaf_max', None)
-
-xgb_regression = recipe_config.get('xgb_regression', None)
-xgb_regression_n_estimators_min = recipe_config.get('xgb_regression_n_estimators_min', None)
-xgb_regression_n_estimators_max = recipe_config.get('xgb_regression_n_estimators_max', None)
-xgb_regression_max_depth_min = recipe_config.get('xgb_regression_max_depth_min', None)
-xgb_regression_max_depth_max = recipe_config.get('xgb_regression_max_depth_max', None)
-xgb_regression_min_child_weight_min = recipe_config.get('xgb_regression_min_child_weight_min', None)
-xgb_regression_min_child_weight_max = recipe_config.get('xgb_regression_min_child_weight_max', None)
-xgb_regression_learning_rate_min = recipe_config.get('xgb_regression_learning_rate_min', None)
-xgb_regression_learning_rate_max = recipe_config.get('xgb_regression_learning_rate_max', None)
-
-lgbm_regression = recipe_config.get('lgbm_regression', None)
-lgbm_regression_n_estimators_min = recipe_config.get('lgbm_regression_n_estimators_min', None)
-lgbm_regression_n_estimators_max = recipe_config.get('lgbm_regression_n_estimators_max', None)
-lgbm_regression_max_depth_min = recipe_config.get('lgbm_regression_max_depth_min', None)
-lgbm_regression_max_depth_max = recipe_config.get('lgbm_regression_max_depth_max', None)
-lgbm_regression_min_child_weight_min = recipe_config.get('lgbm_regression_min_child_weight_min', None)
-lgbm_regression_min_child_weight_max = recipe_config.get('lgbm_regression_min_child_weight_max', None)
-lgbm_regression_learning_rate_min = recipe_config.get('lgbm_regression_learning_rate_min', None)
-lgbm_regression_learning_rate_max = recipe_config.get('lgbm_regression_learning_rate_max', None)
-
-gb_regression = recipe_config.get('gb_regression', None)
-gb_regression_n_estimators_min = recipe_config.get('gb_regression_n_estimators_min', None)
-gb_regression_n_estimators_max = recipe_config.get('gb_regression_n_estimators_max', None)
-gb_regression_max_depth_min = recipe_config.get('gb_regression_max_depth_min', None)
-gb_regression_max_depth_max = recipe_config.get('gb_regression_max_depth_max', None)
-gb_regression_min_samples_leaf_min = recipe_config.get('gb_regression_min_samples_leaf_min', None)
-gb_regression_min_samples_leaf_max = recipe_config.get('gb_regression_min_samples_leaf_max', None)
-gb_regression_learning_rate_min = recipe_config.get('gb_regression_learning_rate_min', None)
-gb_regression_learning_rate_max = recipe_config.get('gb_regression_learning_rate_max', None)
-
-decision_tree_regression = recipe_config.get('decision_tree_regression', None)
-decision_tree_regression_max_depth_min = recipe_config.get('decision_tree_regression_max_depth_min', None)
-decision_tree_regression_max_depth_max = recipe_config.get('decision_tree_regression_max_depth_max', None)
-decision_tree_regression_min_samples_leaf_min = recipe_config.get('decision_tree_regression_min_samples_leaf_min', None)
-decision_tree_regression_min_samples_leaf_max = recipe_config.get('decision_tree_regression_min_samples_leaf_max', None)
-"""
-
-#n_iter = recipe_config.get('n_iter', None)
-DEFAULT_CROSS_VAL_FOLDS = 3
-
 ### SECTION 3 - Set up MLflow Experiment Tracking
 # MLFLOW Variables
 MLFLOW_CODE_ENV_NAME = "py_38_snowpark"
 MLFLOW_EXPERIMENT_NAME = f"{params.model_name}_exp"
-#SAVED_MODEL_NAME = model_name
-#MODEL_NAME = model_name
 
 # Get a Dataiku API client and the current project
 client = dataiku.api_client()
@@ -246,25 +102,7 @@ mlflow_experiment = mlflow.get_experiment_by_name(MLFLOW_EXPERIMENT_NAME)
 # Get a Snowpark session using the input dataset Snowflake connection
 dku_snowpark = DkuSnowpark()
 
-#snowflake_connection_name = input_dataset.get_config()['params']['connection']
-
-#session = dku_snowpark.get_session(snowflake_connection_name)
-
-# Change the Snowflake warehouse if user chose to override the connection's default warehouse
-#if params.warehouse:
-#    warehouse = f'"{warehouse}"'
-#    session.use_warehouse(warehouse)
-
-# If the Snowflake connection doesn't have a default schema, pull the schema name from the input dataset settings
-#connection_schema = session.get_current_schema()
-#if not connection_schema:    
-#    input_dataset_info = input_dataset.get_location_info()
-#    input_dataset_schema = input_dataset_info['info']['schema']
-#    session.use_schema(input_dataset_schema)
-
 ### SECTION 5 - Add a Target Class Weights Column if Two-Class Classification and do Train/Test Split
-# Convert the input dataset into a Snowpark dataframe
-#input_snowpark_df = dku_snowpark.get_dataframe(input_dataset, session = session)
 
 # Create a dictionary to store all dataset columns as read in by pandas vs. how they're stored on Snowflake. 
 # E.g. {'feat_1':'"feat_1"', 'feat_2':'"feat_2"', 'FEAT_1':'FEAT_1'}
