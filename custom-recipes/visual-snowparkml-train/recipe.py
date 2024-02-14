@@ -522,6 +522,7 @@ for model in trained_models:
 
     test_predictions_df = rs_clf.predict(test_snowpark_df)
     print("PAT")
+    print(test_predictions_df.dtypes)
     test_predictions_df.show(10)
     test_predictions_pandas_df = test_predictions_df.to_pandas()
     
