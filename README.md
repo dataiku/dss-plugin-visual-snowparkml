@@ -1,5 +1,7 @@
 # Visual Snowpark ML Plugin
 
+![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/4227975a-08aa-44af-8b3f-671dd29e4e5d)
+
 With this plugin, you can train machine learning models and then use them to score new records, all within your Snowflake environment. This no-code UI allows data scientists and domain experts to quickly train models, track experiments, and visualize model performance.
 
 # Capabilities
