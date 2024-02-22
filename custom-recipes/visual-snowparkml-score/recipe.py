@@ -29,23 +29,6 @@ from snowflake.snowpark.functions import sproc, udf, when, col
 import snowflake.snowpark.functions as F
 from snowflake.ml.registry import model_registry
 
-### SECTION 2 - Recipe Inputs, Outputs, and User-Inputted Parameters
-# Get input and output datasets
-input_dataset_names = get_input_names_for_role('input_dataset_name')
-input_dataset_name = input_dataset_names[0]
-input_dataset = dataiku.Dataset(input_dataset_name) 
-
-output_score_dataset_names = get_output_names_for_role('output_score_dataset_name')
-output_score_dataset_name = output_score_dataset_names[0]
-output_score_dataset = dataiku.Dataset(output_score_dataset_name)
-
-# Get the input Dataiku Saved Model name
-saved_model_names = get_input_names_for_role('saved_model_name')
-saved_model_name = saved_model_names[0]
-saved_model_id = saved_model_name.split(".")[1]
-
-# Models trained using the plugin will be deployed to the Snowflake MODEL_REGISTRY database
-snowflake_model_registry = "MODEL_REGISTRY"
 
 ### SECTION 2 - Load User-Inputted Config, Inputs, and Outputs
 params, session, input_dataset, saved_model_id, output_score_dataset = load_score_config_snowpark_session()
@@ -59,7 +42,8 @@ for attr in attrs:
         print(str(attr) + ': ' + str(getattr(params, attr)))
 print("-----------------------------")
 
-warehouse = recipe_config.get('warehouse', None)
+# Models trained using the plugin will be deployed to the Snowflake MODEL_REGISTRY database
+snowflake_model_registry = "MODEL_REGISTRY"
 
 client = dataiku.api_client()
 project = client.get_default_project()
@@ -80,10 +64,6 @@ snowflake_model_name = project.project_key + "_" + saved_model_name
 
 ### SECTION 4 - Set up Snowpark
 dku_snowpark = DkuSnowpark()
-
-snowflake_connection_name = input_dataset.get_config()['params']['connection']
-
-session = dku_snowpark.get_session(snowflake_connection_name)
 
 # Get the Snowflake Model Registry
 registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
