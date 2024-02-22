@@ -15,6 +15,7 @@ import pandas as pd, numpy as np
 import json
 import os
 import pprint
+from traceback import format_tb
 
 # Snowpark Imports
 import snowflake.connector
@@ -68,15 +69,13 @@ dku_snowpark = DkuSnowpark()
 # Get the Snowflake Model Registry
 registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
 
-from traceback import format_tb
-
 # Get the Snowflake Model Registry model that matches the input Dataiku Saved Model active version
 try:
     model = model_registry.ModelReference(registry = registry, 
                                           model_name = snowflake_model_name, 
                                           model_version = active_model_version_id)
 except KeyError as err:
-    raise KeyError("heyheyhey\n" + format_tb(err.__traceback__)[0] + err.args[0] + "\nEnd of error message.") from None
+    raise KeyError(format_tb(err.__traceback__)[0] + err.args[0] + "\nMake sure that your input model was trained using the Visual Snowpark ML train plugin recipe, and that the model was successfully deployed the model to the Snowpark ML registry.") from None
     
 loaded_model = model.load_model()
 
