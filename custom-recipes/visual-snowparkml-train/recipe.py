@@ -129,8 +129,7 @@ def sf_col_name(col_name):
 col_label_sf = sf_col_name(params.col_label)
 
 if params.time_ordering_variable:
-    time_ordering_variable = params.time_ordering_variable['name']
-    time_ordering_variable_sf = sf_col_name(time_ordering_variable)
+    time_ordering_variable_sf = sf_col_name(params.time_ordering_variable)
 
 # Get a list of Target column values if two-class classification
 if params.prediction_type == "two-class classification":
