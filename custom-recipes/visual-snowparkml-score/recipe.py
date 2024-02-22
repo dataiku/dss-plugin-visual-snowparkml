@@ -68,10 +68,16 @@ dku_snowpark = DkuSnowpark()
 # Get the Snowflake Model Registry
 registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
 
+from traceback import format_tb
+
 # Get the Snowflake Model Registry model that matches the input Dataiku Saved Model active version
-model = model_registry.ModelReference(registry = registry, 
-                                      model_name = snowflake_model_name, 
-                                      model_version = active_model_version_id)
+try:
+    model = model_registry.ModelReference(registry = registry, 
+                                          model_name = snowflake_model_name, 
+                                          model_version = active_model_version_id)
+except KeyError as err:
+    raise KeyError("heyheyhey\n" + format_tb(err.__traceback__)[0] + err.args[0] + "\nEnd of error message.") from None
+    
 loaded_model = model.load_model()
 
 # Get the input Snowpark dataframe to score
