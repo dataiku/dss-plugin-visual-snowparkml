@@ -214,9 +214,7 @@ if params.time_ordering:
 
     print(f"train set nrecords: {train_snowpark_df.count()}")
     print(f"test set nrecords: {test_snowpark_df.count()}")
-    
-    #cv = TimeSeriesSplit(n_splits=DEFAULT_CROSS_VAL_FOLDS)
-    
+        
 # Regular train/test split
 else:
     test_ratio = 1 - params.train_ratio
