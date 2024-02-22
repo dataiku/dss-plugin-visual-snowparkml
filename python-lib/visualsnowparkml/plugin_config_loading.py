@@ -33,8 +33,8 @@ class InputTrainDatasetSetupError(ValueError):
 
     pass
 
-class PluginParams:
-    """Class to store recipe parameters"""
+class TrainPluginParams:
+    """Class to store train recipe parameters"""
 
     def __init__(self):
         pass
@@ -147,8 +147,17 @@ class PluginParams:
         "n_iter"
     ]
 
+class ScorePluginParams:
+    """Class to store train recipe parameters"""
 
-def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[PluginParams, Session, Table]:
+    def __init__(self):
+        pass
+
+    __slots__ = [
+        "warehouse"
+    ]
+
+def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[TrainPluginParams, Session, Table]:
     """Utility function to:
         - Validate and load ml training parameters into a clean class
 
@@ -158,7 +167,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
         - Input training dataset as a Snowpark dataframe
     """
 
-    params = PluginParams()
+    params = TrainPluginParams()
     # Input dataset
     input_dataset_names = get_input_names_for_role("input_dataset_name")
     if len(input_dataset_names) != 1:
@@ -549,4 +558,88 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Pl
 
     return params, session, input_snowpark_df
 
+def load_score_config_snowpark_session() -> Tuple[ScorePluginParams, Session]:
+    """Utility function to:
+        - Validate and load ml training parameters into a clean class
+
+    Returns:
+        - Class instance with parameter names as attributes and associated values
+        - Snowpark session
+        - Input training dataset as a Snowpark dataframe
+    """
+
+    params = ScorePluginParams()
+    # Input dataset
+    input_dataset_names = get_input_names_for_role("input_dataset_name")
+    if len(input_dataset_names) != 1:
+        raise PluginParamValidationError("Please specify one input dataset")
+    input_dataset = dataiku.Dataset(input_dataset_names[0])
+    input_dataset_columns = [p for p in input_dataset.read_schema()]
+    input_dataset_column_types = {}
+    for col in input_dataset.read_schema():
+        input_dataset_column_types[col["name"]] = col["type"]
+
+    # Output generated train and test sets
+    output_train_dataset_names = get_output_names_for_role('output_train_dataset_name')
+    if len(output_train_dataset_names) != 1:
+        raise PluginParamValidationError("Please specify one output generated train dataset")
+    else:
+        output_train_dataset = dataiku.Dataset(output_train_dataset_names[0])
+        params.output_train_dataset = output_train_dataset
+
+    output_test_dataset_names = get_output_names_for_role('output_test_dataset_name')
+    if len(output_test_dataset_names) != 1:
+        raise PluginParamValidationError("Please specify one output generated test dataset")
+    else:
+        output_test_dataset = dataiku.Dataset(output_test_dataset_names[0])
+        params.output_test_dataset = output_test_dataset
+
+    # Output folder
+    model_experiment_tracking_folder_names = get_output_names_for_role('model_experiment_tracking_folder_name')
+    if len(model_experiment_tracking_folder_names) != 1:
+        raise PluginParamValidationError("Please specify one output model folder")
+    else:
+        params.model_experiment_tracking_folder = dataiku.Folder(model_experiment_tracking_folder_names[0])
+        params.model_experiment_tracking_folder_id = params.model_experiment_tracking_folder.get_id()
+
+    # Recipe parameters
+    recipe_config = get_recipe_config()
+
+    # Model Name
+    model_name = recipe_config.get('model_name', None)
+    if not model_name:
+        raise PluginParamValidationError("Empty model name")
+    elif re.match(r'^[A-Za-z0-9_]+$', model_name):
+        params.model_name = model_name
+    else:
+        raise PluginParamValidationError(f"Invalid model name: {model_name}. Alphanumeric and underscores only. No spaces, special characters (, . / \ : ! @ # $ %, etc.)")
+
+    # Snowflake Warehouse
+    dku_snowpark = DkuSnowpark()
+    snowflake_connection_name = input_dataset.get_config()['params']['connection']
+    session = dku_snowpark.get_session(snowflake_connection_name)
+
+    params.warehouse = recipe_config.get('warehouse', None)
+    if params.warehouse:
+        warehouse = f'"{params.warehouse}"'
+        try:
+            session.use_warehouse(warehouse)
+            params.warehouse = warehouse
+        except:
+            raise PluginParamValidationError(f"Snowflake Warehouse: {warehouse} does not exist or you do not have permission to use it")
+
+    # If the input dataset Snowflake connection doesn't have a default schema, pull the schema name from the input dataset settings
+    connection_schema = session.get_current_schema()
+    if not connection_schema:    
+        input_dataset_info = input_dataset.get_location_info()
+        input_dataset_schema = input_dataset_info['info']['schema']
+        session.use_schema(input_dataset_schema)
+
+    # Check that a code env named "py_38_snowpark" exists
+    client = dataiku.api_client()
+    code_envs = [env["envName"] for env in client.list_code_envs()]
+    if "py_38_snowpark" not in code_envs:
+        raise CodeEnvSetupError(f"You must create a python 3.8 code env named 'py_38_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
+
+    return params, session, input_snowpark_df
 
