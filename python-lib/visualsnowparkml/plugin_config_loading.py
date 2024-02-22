@@ -569,50 +569,27 @@ def load_score_config_snowpark_session() -> Tuple[ScorePluginParams, Session]:
     """
 
     params = ScorePluginParams()
-    # Input dataset
+    # Get input and output datasets
     input_dataset_names = get_input_names_for_role("input_dataset_name")
     if len(input_dataset_names) != 1:
         raise PluginParamValidationError("Please specify one input dataset")
     input_dataset = dataiku.Dataset(input_dataset_names[0])
-    input_dataset_columns = [p for p in input_dataset.read_schema()]
-    input_dataset_column_types = {}
-    for col in input_dataset.read_schema():
-        input_dataset_column_types[col["name"]] = col["type"]
 
-    # Output generated train and test sets
-    output_train_dataset_names = get_output_names_for_role('output_train_dataset_name')
-    if len(output_train_dataset_names) != 1:
-        raise PluginParamValidationError("Please specify one output generated train dataset")
+    output_score_dataset_names = get_output_names_for_role('output_score_dataset_name')
+    if len(output_score_dataset_names) != 1:
+        raise PluginParamValidationError("Please specify one output scored dataset")
     else:
-        output_train_dataset = dataiku.Dataset(output_train_dataset_names[0])
-        params.output_train_dataset = output_train_dataset
+        output_score_dataset = dataiku.Dataset(output_score_dataset_names[0])
 
-    output_test_dataset_names = get_output_names_for_role('output_test_dataset_name')
-    if len(output_test_dataset_names) != 1:
-        raise PluginParamValidationError("Please specify one output generated test dataset")
+    # Get the input Dataiku Saved Model name
+    saved_model_names = get_input_names_for_role('saved_model_name')
+    if len(saved_model_names) != 1:
+        raise PluginParamValidationError("Please specify one input saved model (that has been trained with the Visual Snowpark ML train plugin recipe)")
     else:
-        output_test_dataset = dataiku.Dataset(output_test_dataset_names[0])
-        params.output_test_dataset = output_test_dataset
-
-    # Output folder
-    model_experiment_tracking_folder_names = get_output_names_for_role('model_experiment_tracking_folder_name')
-    if len(model_experiment_tracking_folder_names) != 1:
-        raise PluginParamValidationError("Please specify one output model folder")
-    else:
-        params.model_experiment_tracking_folder = dataiku.Folder(model_experiment_tracking_folder_names[0])
-        params.model_experiment_tracking_folder_id = params.model_experiment_tracking_folder.get_id()
+        saved_model_id = saved_model_names[0].split(".")[1]
 
     # Recipe parameters
     recipe_config = get_recipe_config()
-
-    # Model Name
-    model_name = recipe_config.get('model_name', None)
-    if not model_name:
-        raise PluginParamValidationError("Empty model name")
-    elif re.match(r'^[A-Za-z0-9_]+$', model_name):
-        params.model_name = model_name
-    else:
-        raise PluginParamValidationError(f"Invalid model name: {model_name}. Alphanumeric and underscores only. No spaces, special characters (, . / \ : ! @ # $ %, etc.)")
 
     # Snowflake Warehouse
     dku_snowpark = DkuSnowpark()
@@ -640,6 +617,6 @@ def load_score_config_snowpark_session() -> Tuple[ScorePluginParams, Session]:
     code_envs = [env["envName"] for env in client.list_code_envs()]
     if "py_38_snowpark" not in code_envs:
         raise CodeEnvSetupError(f"You must create a python 3.8 code env named 'py_38_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
-
-    return params, session, input_snowpark_df
+    
+    return params, session, input_dataset, saved_model_id, output_score_dataset
 

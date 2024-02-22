@@ -8,6 +8,8 @@ from dataiku import pandasutils as pdu
 from dataiku.snowpark import DkuSnowpark
 from dataiku import customrecipe
 
+from visualsnowparkml.plugin_config_loading import load_score_config_snowpark_session
+
 # Other ML Imports
 import pandas as pd, numpy as np
 import json
@@ -45,11 +47,16 @@ saved_model_id = saved_model_name.split(".")[1]
 # Models trained using the plugin will be deployed to the Snowflake MODEL_REGISTRY database
 snowflake_model_registry = "MODEL_REGISTRY"
 
+### SECTION 2 - Load User-Inputted Config, Inputs, and Outputs
+params, session, input_dataset, saved_model_id, output_score_dataset = load_score_config_snowpark_session()
+
 # Get recipe user-inputted parameters and print to the logs
-recipe_config = get_recipe_config()
 print("-----------------------------")
-print("Recipe Input Config")
-pprint.pprint(recipe_config)
+print("Recipe Input Params")
+attrs = dir(params)
+for attr in attrs:
+    if not attr.startswith('__'):
+        print(str(attr) + ': ' + str(getattr(params, attr)))
 print("-----------------------------")
 
 warehouse = recipe_config.get('warehouse', None)
@@ -77,18 +84,6 @@ dku_snowpark = DkuSnowpark()
 snowflake_connection_name = input_dataset.get_config()['params']['connection']
 
 session = dku_snowpark.get_session(snowflake_connection_name)
-
-# Change the Snowflake warehouse if user chose to override the connection's default warehouse
-if warehouse:
-    warehouse = f'"{warehouse}"'
-    session.use_warehouse(warehouse)
-
-# If the Snowflake connection doesn't have a default schema, pull the schema name from the input dataset settings
-connection_schema = session.get_current_schema()
-if not connection_schema:    
-    input_dataset_info = input_dataset.get_location_info()
-    input_dataset_schema = input_dataset_info['info']['schema']
-    session.use_schema(input_dataset_schema)
 
 # Get the Snowflake Model Registry
 registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
