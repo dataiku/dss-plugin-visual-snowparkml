@@ -465,9 +465,6 @@ for alg in algorithms:
     trained_models.append(trained_model)
 
 ### SECTION 11 - Log all trained model hyperparameters and performance metrics to MLflow
-# Function to get the current time
-def now_str() -> str:
-    return datetime.now().strftime("%Y_%m_%d_%H_%M")
 
 # Loop through all trained models, log all hyperparameter tuning cross validation metrics, calculate holdout test set metrics on the best 
 # model from each algorithm, then add these best models to a final_models list
@@ -482,7 +479,7 @@ for model in trained_models:
     grid_pipe_sklearn_cv_results = pd.DataFrame(grid_pipe_sklearn.cv_results_)
     grid_pipe_sklearn_cv_results['algorithm'] = model_algo
     
-    now = now_str()
+    now = datetime.now().strftime("%Y_%m_%d_%H_%M")
     
     for index, row in grid_pipe_sklearn_cv_results.iterrows():
         cv_num = index + 1
