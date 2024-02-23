@@ -58,12 +58,15 @@ snowflake-ml-python==1.2.2
 ## Training models with Snowpark ML
 ### Create the train plugin recipe and outputs
 Click once on the input dataset (with known, labeled target values), then find the Visual SnowparkML plugin: 
+
 ![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/0a6b44f0-28eb-430a-a5cf-95a301cc67c3)
 
 Click the train recipe:
+
 ![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/6a58dc0c-b0ee-4c85-a742-a2cd45c58abc)
 
 Create two output Snowflake tables to hold the generated output train/test sets, and one managed folder to hold saved models (connection doesn’t matter):
+
 ![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/1bf50274-8308-4d5f-8bb1-82bdbadb46b8)
 
 ### Design your ML training process and run the recipe
@@ -77,7 +80,8 @@ Below is an example for a two-class classification problem:
 - Train ratio: train set / test set ratio. 0.8 is a good start
 - Random seed: Set this (to any integer) to maintain consistent train/test sets over multiple training runs
 - Enable time ordering: order the train and test sets by a datetime column (test set will be more recent timestamps than train set)
-- Metrics: metric to optimize model performance 
+- Metrics: metric to optimize model performance
+
 ![Screenshot 2024-02-23 at 8 58 32 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/b0f627d0-b6c4-4974-ac6e-7312ad9be2e0)
 
 **Features selection**
@@ -87,6 +91,7 @@ When you include a feature, don't leave the "Encoding / Rescaling" and "Impute M
 - Encoding / Rescaling: choose how to encode categorical features, and rescale numeric features.
 - Impute Missing Values With: choose how to deal with missing values
 - Constant Value (Impute): if “Constant” chosen for missingness imputation, the value to impute
+
 ![Screenshot 2024-02-23 at 9 00 12 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/b28204ce-acd4-4b43-8855-0a052a54c63f)
 
 **Algorithms**
@@ -94,20 +99,26 @@ When you include a feature, don't leave the "Encoding / Rescaling" and "Impute M
 - For each algorithm, enter min and max values for each hyperparameter 
 - Enter a search space limit (randomly choose N hyperparameter combinations for each algorithm within the min/max values chosen) 
 - A Snowpark ML Randomized Search with 3-fold cross-validation will kick off in Snowflake to find the best hyperparameter combination for each algorithm
+
 ![Screenshot 2024-02-23 at 9 00 51 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/f35bfe27-7ff6-47ba-838f-f5186275adb0)
+
 ![Screenshot 2024-02-23 at 9 01 36 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/aaaef879-3b30-4b29-9073-19e1621ebe20)
 
 **Snowflake Resources and Deployment**
 - Snowflake Warehouse: the warehouse to use for ML training. Strongly recommended to use a Snowpark-optimized Snowflake warehouse. A multi-cluster warehouse will allow for parallelized hyperparameter tuning.
 - Deploy to Snowflake ML Model Registry: deploy the best trained model to a Snowflake ML Model Registry (in the MODEL_REGISTRY database. See Snowflake access requirements [here](https://docs.snowflake.com/LIMITEDACCESS/snowflake-ml-model-registry#required-privileges)). This is required in order to run a subsequent Visual Snowpark ML Score recipe, to run batch inference in Snowpark using the deployed model.
+
 ![Screenshot 2024-02-23 at 9 01 46 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/3c29084d-3a6e-455b-95c7-9c963d92b90e)
 
 ### Outputs
 After running the train recipe successfully, you can find all model training and hyperparameter tuning information, including model performance metrics in Dataiku’s Experiment Tracking tab
+
 ![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/c48db527-d004-48dc-aab9-11d3570f3a21)
+
 ![Screenshot 2024-02-23 at 9 11 07 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/7e4d139e-a8e8-45a3-9bf6-10c9062478c8)
 
 The best model will be deployed to the flow. If you selected “Deploy to Snowflake ML Model Registry”, the model will also be deployed to Snowflake’s Model Registry. 
+
 ![Screenshot 2024-02-23 at 9 12 34 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/4b21f000-bb76-4061-85c5-f4b07fdd6923)
 
 ## Scoring New Records with your Trained Model and Snowpark ML
@@ -117,19 +128,25 @@ In order to run batch inference in Snowpark, use this plugin's Visual Snowpark M
 
 ### Create the score plugin recipe and outputs
 Click once on the trained model and input dataset you’d like to make predictions for: 
+
 ![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/23a3a321-4832-414f-8347-50f45b2285e7)
 
 Click the score recipe:
+
 ![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/a744b6eb-ecdf-4ef5-9e44-bbe364bea2f1)
 
 Make sure you’ve selected the trained model and Snowflake table for scoring as inputs. Then create one output Snowflake table to hold the scored dataset. Then click “Create”:
+
 ![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/f9625a12-0bd2-471c-9151-dfb8675df4fa)
 
 Optionally type the name of a Snowpark-optimized Snowflake warehouse to use for scoring. Leave empty to use the Snowflake connection’s default warehouse. Note: it’s less needed to use a Snowpark-optimized warehouse for inference compared to training. Click “Run”.
+
 ![Screenshot 2024-02-23 at 9 30 05 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/c223ff1b-e054-4c35-981d-bd2066aa0515)
 
-Your flow should look like this, and the output scored dataset should have prediction column(s).
+Your flow should look like this, and the output scored dataset should have prediction column(s):
+
 ![Screenshot 2024-02-23 at 9 31 18 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/7c2a503d-775a-428c-83bf-130d8a1f5ae0)
+
 ![Screenshot 2024-02-23 at 9 31 46 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/a5bf996b-cacd-463e-a807-1a0ee074e5c3)
 
 
