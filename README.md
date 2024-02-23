@@ -157,7 +157,16 @@ This macro checks for any models in the Snowflake Model Registry that have the D
 
 You can list the models the macro would delete by un-checking the “Perform deletion” box.
 
-The macro will show the model name and version deleted (or simulated) in the resulting list
+The macro will show the model name and version deleted (or simulated) in the resulting list.
+
+<img width="1166" alt="image" src="https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/0e5594ec-8bd2-41a2-8aa8-aba3386240d0">
+
+<img width="631" alt="image" src="https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/7b857a57-fc0d-4408-8ed0-70598ac36e66">
+
+<img width="313" alt="Screenshot 2024-02-23 at 12 51 50 PM" src="https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/7e2cd3bd-0561-424a-a68d-50608f3ed770">
+
+<img width="893" alt="Screenshot 2024-02-23 at 12 52 30 PM" src="https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/d27a4ec8-9a52-430b-9c06-936ede71f33c">
+
 
 # Release Notes
 
