@@ -612,8 +612,11 @@ best_model_run_id = best_model['mlflow_best_run_id']
 # If two-class classification, set the Dataiku MLflow imported model run inference info 
 if params.prediction_type == "two-class classification":
     model_classes = best_model['sklearn_obj'].classes_
+    # Deal with nasty numpy data types that are not json serializable
     if 'int' in str(type(model_classes[0])):
         model_classes = [int(model_class) for model_class in model_classes]
+    if 'float' in str(type(model_classes[0])):
+        model_classes = [np.float64(model_class) for model_class in model_classes]    
     mlflow_extension.set_run_inference_info(run_id = best_model_run_id, 
                                             prediction_type = 'BINARY_CLASSIFICATION',
                                             classes = list(model_classes),
