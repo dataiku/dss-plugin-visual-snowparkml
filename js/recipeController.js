@@ -50,6 +50,14 @@ app.controller('retrainRecipeController', function ($scope, utils) {
             $scope.config.lgbm_regression = false;
             $scope.config.gb_regression = false;
             $scope.config.decision_tree_regression = false;
+        } else if ($scope.config.prediction_type === 'multi-class classification') {
+            $scope.metrics = ['ROC AUC', 'F1 Score', 'Accuracy', 'Precision', 'Recall'];
+            $scope.config.lasso_regression = false;
+            $scope.config.random_forest_regression = false;
+            $scope.config.xgb_regression = false;
+            $scope.config.lgbm_regression = false;
+            $scope.config.gb_regression = false;
+            $scope.config.decision_tree_regression = false;
         } else if ($scope.config.prediction_type === 'regression') {
             $scope.metrics = ['R2', 'MAE', 'MSE', 'D2 (GLM Only)'];
             $scope.config.logistic_regression = false;

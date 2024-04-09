@@ -34,11 +34,12 @@
             <div class="controls">
                 <select dku-bs-select name="prediction_type" id="alpha" ng-model="config.prediction_type" ng-change="updateMetrics()">
                     <option value="two-class classification">Two-class classification</option>
+                    <option value="multi-class classification">Multi-class classification</option>
                     <option value="regression">Regression</option>
                 </select>
             </div>
         </div>   
-        <div class="control-group" ng-show="config.prediction_type === 'two-class classification'">
+        <div class="control-group" ng-show="config.prediction_type === 'two-class classification' || config.prediction_type === 'multi-class classification'">
             <label class="control-label">Disable Class Weights</label>
             <div class="controls">
                 <input name="disable_class_weights" type="checkbox" ng-model="config.disable_class_weights"/>
@@ -154,7 +155,7 @@
             <h2 class="settings-section-title" >Algorithms</h2>
             <span class="help-inline">Hover over algorithm or hyperparameter names for more info</span>
         </div>
-        <div ng-show="config.prediction_type === 'two-class classification'">
+        <div ng-show="config.prediction_type === 'two-class classification' || config.prediction_type === 'multi-class classification'">
           <div class="form-group">
             <div class="algo-group">
             <div class="control-group">
