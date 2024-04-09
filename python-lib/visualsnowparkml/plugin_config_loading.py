@@ -223,7 +223,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     # Prediction Type
     prediction_type = recipe_config.get('prediction_type', None)
     if not prediction_type:
-        raise PluginParamValidationError("No prediction type chosen. Choose Two-class classification or Regression")
+        raise PluginParamValidationError("No prediction type chosen. Choose Two-class classification, Multi-class classification, or Regression")
     else:
         params.prediction_type = prediction_type
 
@@ -554,9 +554,9 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
         raise CodeEnvSetupError(f"You must create a python 3.8 code env named 'py_38_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
 
     # Check that if user selected two-class classification and XGBoost algorithm, that they converted the target column to numeric (0,1) - an XGBoost requirement
-    if prediction_type == "two-class classification" and params.xgb_classification:
+    if (prediction_type == "two-class classification" or prediction_type == "multi-class classification") and params.xgb_classification:
         if input_dataset_column_types[col_label] not in ['int', 'bigint', 'smallint', 'tinyint', 'float', 'double']:
-            raise InputTrainDatasetSetupError(f"Target column: {col_label} is of type: {input_dataset_column_types[col_label]}. When choosing two-class classification and the XGBoost algorithm, you must first convert the target column to one of type: int, bigint, smallint, tinyint, float, or double (e.g. (0, 1) or (0.0, 1.0))")
+            raise InputTrainDatasetSetupError(f"Target column: {col_label} is of type: {input_dataset_column_types[col_label]}. When choosing two-class or multi-class classification and the XGBoost algorithm, you must first convert the target column to one of type: int, bigint, smallint, tinyint, float, or double (e.g. (0, 1) or (0.0, 1.0))")
 
     return params, session, input_snowpark_df
 
