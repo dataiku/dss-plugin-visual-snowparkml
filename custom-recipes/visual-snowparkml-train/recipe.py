@@ -132,7 +132,7 @@ if params.time_ordering_variable:
     time_ordering_variable_sf = sf_col_name(params.time_ordering_variable)
 
 # Get a list of Target column values if two-class classification
-if params.prediction_type == "two-class classification":
+if params.prediction_type == "two-class classification" or params.prediction_type == "multi-class classification":
     col_label_values = list(input_snowpark_df.select(sf_col_name(params.col_label)).distinct().to_pandas()[params.col_label])
 else:
     col_label_values = None
@@ -196,7 +196,7 @@ def add_sample_weights_col_to_snowpark_df(snowpark_df, col):
     return snowpark_df
 
 # Add sample weights column if two-class classification
-if params.prediction_type == "two-class classification" and not params.disable_class_weights:
+if (params.prediction_type == "two-class classification" or params.prediction_type == "multi-class classification") and not params.disable_class_weights:
     input_snowpark_df = add_sample_weights_col_to_snowpark_df(input_snowpark_df, params.col_label)
 
 # If chosen by the user, split train/test sets based on the time ordering column
@@ -308,7 +308,7 @@ preprocessor = ColumnTransformer(transformers = col_transformer_list)
 ### SECTION 9 - Initialize algorithms selected and hyperparameter spaces for the RandomSearch
 algorithms = []
 
-if params.prediction_type == "two-class classification":
+if params.prediction_type == "two-class classification" or params.prediction_type == "multi-class classification":
     if params.logistic_regression:
         algorithms.append({'algorithm': 'logistic_regression',
                            'sklearn_obj': LogisticRegression(),
@@ -428,7 +428,7 @@ def train_model(algo, prepr, score_met, col_lab, samp_weight_col, feat_names, tr
                         ('clf', algo['sklearn_obj'])
                     ])
 
-    if params.prediction_type == "two-class classification":
+    if params.prediction_type == "two-class classification" or params.prediction_type == "multi-class classification":
         rs_clf = RandomizedSearchCV(estimator = pipe,
                          param_distributions = algo['gs_params'],
                          n_iter = num_iter,
@@ -610,7 +610,7 @@ for model in trained_models:
     dump(grid_pipe_sklearn, open(artifacts.get("grid_pipe_sklearn"), 'wb'))
     dump(features_quotes_lookup, open(artifacts.get("features_quotes_lookup"), 'wb'))
     
-    if params.prediction_type == "two-class classification":
+    if params.prediction_type == "two-class classification" or params.prediction_type == "multi-class classification":
         logged_model = mlflow.pyfunc.log_model(artifact_path = "model", 
                                                python_model = SnowparkMLClassifierWrapper(),
                                                artifacts = artifacts)
@@ -650,6 +650,18 @@ if params.prediction_type == "two-class classification":
                                             prediction_type = 'BINARY_CLASSIFICATION',
                                             classes = list(model_classes),
                                             code_env_name = MLFLOW_CODE_ENV_NAME) 
+    
+elif params.prediction_type == "multi-class classification":
+    model_classes = best_model['sklearn_obj'].classes_
+    # Deal with nasty numpy data types that are not json serializable
+    if 'int' in str(type(model_classes[0])):
+        model_classes = [int(model_class) for model_class in model_classes]
+    if 'float' in str(type(model_classes[0])):
+        model_classes = [np.float64(model_class) for model_class in model_classes]    
+    mlflow_extension.set_run_inference_info(run_id = best_model_run_id, 
+                                            prediction_type = 'MULTICLASS',
+                                            classes = list(model_classes),
+                                            code_env_name = MLFLOW_CODE_ENV_NAME) 
 
 # Get the managed folder subpath for the best trained model
 model_artifact_first_directory = re.search(r'.*/(.+$)', mlflow_experiment.artifact_location).group(1)
@@ -673,6 +685,9 @@ else:
     if params.prediction_type == "two-class classification":
         sm = project.create_mlflow_pyfunc_model(name = params.model_name,
                                                 prediction_type = DSSPredictionMLTaskSettings.PredictionTypes.BINARY)
+    elif params.prediction_type == "multi-class classification":
+        sm = project.create_mlflow_pyfunc_model(name = params.model_name,
+                                                prediction_type = DSSPredictionMLTaskSettings.PredictionTypes.MULTICLASS)
     else:
         sm = project.create_mlflow_pyfunc_model(name = params.model_name,
                                                 prediction_type = DSSPredictionMLTaskSettings.PredictionTypes.REGRESSION)
