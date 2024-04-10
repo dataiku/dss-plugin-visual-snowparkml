@@ -94,8 +94,8 @@ if prediction_type == 'BINARY_CLASSIFICATION':
     print("PATPAT")
     print(predictions.columns)
     predictions.show(5)
-    target_col_value_cols = [col for col in predictions.columns if "predict_proba" in col]
-    target_col_values = [col.replace('"','').replace('predict_proba_','') for col in target_col_value_cols]
+    target_col_value_cols = [col for col in predictions.columns if "PREDICT_PROBA" in col]
+    target_col_values = [col.replace('"','').replace('PREDICT_PROBA_','') for col in target_col_value_cols]
     
     print(target_col_value_cols)
     print(target_col_values)
