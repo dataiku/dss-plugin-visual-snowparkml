@@ -563,7 +563,7 @@ for model in trained_models:
         print(target_col_value_cols)
         test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', average = "macro")
         mlflow.log_metric("test_f1_score", test_f1)
-        test_roc_auc = roc_auc_score(df = test_prediction_probas_df, y_true_col_names = col_label_sf, y_score_col_names = target_col_value_cols, average = "macro", multi_class = "ovo")
+        test_roc_auc = roc_auc_score(df = test_prediction_probas_df, y_true_col_names = col_label_sf, y_score_col_names = target_col_value_cols, labels = model_classes, average = "macro", multi_class = "ovo")
         mlflow.log_metric("test_roc_auc", test_roc_auc)
         test_accuracy = accuracy_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"')
         mlflow.log_metric("test_accuracy", test_accuracy)
