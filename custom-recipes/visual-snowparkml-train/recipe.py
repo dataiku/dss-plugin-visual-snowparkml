@@ -53,7 +53,7 @@ from snowflake.ml.modeling.preprocessing import StandardScaler, OneHotEncoder, M
 from snowflake.ml.modeling.impute import SimpleImputer
 from snowflake.ml.modeling.metrics import accuracy_score, recall_score, roc_auc_score, f1_score, precision_score, r2_score, mean_absolute_error, mean_squared_error
 import snowflake.snowpark.functions as F
-from snowflake.ml.registry import Registry
+from snowflake.ml.registry import model_registry
 
 ### SECTION 2 - Load User-Inputted Config, Inputs, and Outputs
 params, session, input_snowpark_df = load_train_config_snowpark_session_and_input_train_snowpark_df()
@@ -67,6 +67,7 @@ for attr in attrs:
         print(str(attr) + ': ' + str(getattr(params, attr)))
 print("-----------------------------")
 
+SNOWFLAKE_MODEL_REGISTRY = 'MODEL_REGISTRY'
 DEFAULT_CROSS_VAL_FOLDS = 3
 
 # Map metric name from dropdown to sklearn-compatible name
@@ -742,18 +743,31 @@ mlflow_version.evaluate(output_test_dataset_name, container_exec_config_name='NO
 # If selected, deploy the best trained model to a Snowpark ML Model Registry in the current working database and schema
 if params.deploy_to_snowflake_model_registry:
     try:
-        registry = Registry(session = session)
+        #registry = Registry(session = session)
+        model_registry_result = model_registry.create_model_registry(session = session, database_name = SNOWFLAKE_MODEL_REGISTRY)
+        registry = model_registry.ModelRegistry(session = session, database_name = SNOWFLAKE_MODEL_REGISTRY)
         snowflake_registry_model_description = f"Dataiku Project: {project.project_key}, Model: {params.model_name}"
         snowflake_model_name = f"{project.project_key}_{params.model_name}"
         
+        """
         model_ver = registry.log_model(model = best_model["snowml_obj"],
                                        model_name = snowflake_model_name,
                                        version_name = best_model["run_name"],
                                        comment = snowflake_registry_model_description)
+        """
+        model_id = registry.log_model(model = best_model["snowml_obj"],
+                                      model_name = snowflake_model_name,
+                                      model_version = best_model["run_name"],
+                                      description = snowflake_registry_model_description,
+                                      tags = {"application": "Dataiku",
+                                              "dataiku_project_key": project.project_key,
+                                              "dataiku_saved_model_id": sm_id})
         
         for test_metric in best_model["test_metrics"]:
-            model_ver.set_metric(metric_name = test_metric, value = best_model["test_metrics"][test_metric])
+            #model_ver.set_metric(metric_name = test_metric, value = best_model["test_metrics"][test_metric])
+            model_id.set_metric(metric_name = test_metric, metric_value = best_model["test_metrics"][test_metric])
         
+        """
         # Need to set tags at the parent model level
         parent_model = registry.get_model(snowflake_model_name)
         
@@ -765,6 +779,7 @@ if params.deploy_to_snowflake_model_registry:
         parent_model.set_tag("application", "Dataiku")
         parent_model.set_tag("dataiku_project_key", project.project_key)
         parent_model.set_tag("dataiku_saved_model_id", sm_id)
+        """
         
         print(f"Successfully deployed model to Snowflake ML Model Registry: {SNOWFLAKE_MODEL_REGISTRY}")
     except:
