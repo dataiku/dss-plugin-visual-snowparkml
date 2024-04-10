@@ -718,8 +718,10 @@ active_version_details.save_user_meta()
 output_test_dataset_name = params.output_test_dataset.name.split('.')[1]
 
 # Set the Saved Model metadata (target name, classes,...)
-if params.prediction_type == "two-class classification" or params.prediction_type == "multi-class classification":
+if params.prediction_type == "two-class classification":
     mlflow_version.set_core_metadata(target_column_name = params.col_label, class_labels = list(model_classes), get_features_from_dataset = output_test_dataset_name)
+elif params.prediction_type == "multi-class classification":
+    mlflow_version.set_core_metadata(target_column_name = params.col_label, class_labels = list(model_classes), get_features_from_dataset = output_test_dataset_name, average = "macro")
 else:
     mlflow_version.set_core_metadata(target_column_name = params.col_label, get_features_from_dataset = output_test_dataset_name)
 
