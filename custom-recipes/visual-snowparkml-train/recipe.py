@@ -557,7 +557,8 @@ for model in trained_models:
         model_classes = grid_pipe_sklearn.classes_
 
         test_prediction_probas_df = rs_clf.predict_proba(test_snowpark_df)
-
+        print("HIHI")
+        print(test_prediction_probas_df.columns)
         target_col_value_cols = [col for col in test_prediction_probas_df.columns if "PREDICT_PROBA" in col]
         test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', average = "macro")
         mlflow.log_metric("test_f1_score", test_f1)
