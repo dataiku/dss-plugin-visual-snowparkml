@@ -93,6 +93,9 @@ if prediction_type == 'BINARY_CLASSIFICATION':
     predictions = model.run(input_dataset_snow_df, function_name = "predict_proba")
     target_col_value_cols = [col for col in predictions.columns if "predict_proba" in col]
     target_col_values = [col.replace('"','').replace('predict_proba_','') for col in target_col_value_cols]
+    print("PATPAT")
+    print(target_col_value_cols)
+    print(target_col_values)
     predictions = predictions.withColumn('PREDICTION', F.when(F.col(target_col_value_cols[-1]) > model_threshold, target_col_values[-1]).otherwise(target_col_values[0]))
     predictions = predictions.drop('SAMPLE_WEIGHTS')
 
