@@ -655,7 +655,7 @@ if params.prediction_type == "two-class classification":
                                             classes = list(model_classes),
                                             code_env_name = MLFLOW_CODE_ENV_NAME) 
     
-elif params.prediction_type == "multi-class classification":
+if params.prediction_type == "multi-class classification":
     model_classes = best_model['sklearn_obj'].classes_
     # Deal with nasty numpy data types that are not json serializable
     if 'int' in str(type(model_classes[0])):
