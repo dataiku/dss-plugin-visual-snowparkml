@@ -666,6 +666,7 @@ if params.prediction_type == "multi-class classification":
                                             prediction_type = 'MULTICLASS',
                                             classes = list(model_classes),
                                             code_env_name = MLFLOW_CODE_ENV_NAME) 
+    print("CHECK 1")
 
 # Get the managed folder subpath for the best trained model
 model_artifact_first_directory = re.search(r'.*/(.+$)', mlflow_experiment.artifact_location).group(1)
@@ -692,6 +693,7 @@ else:
     elif params.prediction_type == "multi-class classification":
         sm = project.create_mlflow_pyfunc_model(name = params.model_name,
                                                 prediction_type = DSSPredictionMLTaskSettings.PredictionTypes.MULTICLASS)
+        print("CHECK 2")
     else:
         sm = project.create_mlflow_pyfunc_model(name = params.model_name,
                                                 prediction_type = DSSPredictionMLTaskSettings.PredictionTypes.REGRESSION)
