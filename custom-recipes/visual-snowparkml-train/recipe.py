@@ -556,11 +556,9 @@ for model in trained_models:
         model_classes = grid_pipe_sklearn.classes_
 
         test_prediction_probas_df = rs_clf.predict_proba(test_snowpark_df)
-        print("HIHI")
-        print(test_prediction_probas_df.columns)
+        
         target_col_value_cols = [col for col in test_prediction_probas_df.columns if "PREDICT_PROBA" in col]
-        print("HIHIHI")
-        print(target_col_value_cols)
+        
         test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', average = "macro")
         mlflow.log_metric("test_f1_score", test_f1)
         test_roc_auc = roc_auc_score(df = test_prediction_probas_df, y_true_col_names = col_label_sf, y_score_col_names = target_col_value_cols, labels = model_classes, average = "macro", multi_class = "ovo")
@@ -666,7 +664,6 @@ if params.prediction_type == "multi-class classification":
                                             prediction_type = 'MULTICLASS',
                                             classes = list(model_classes),
                                             code_env_name = MLFLOW_CODE_ENV_NAME) 
-    print("CHECK 1")
 
 # Get the managed folder subpath for the best trained model
 model_artifact_first_directory = re.search(r'.*/(.+$)', mlflow_experiment.artifact_location).group(1)
@@ -693,7 +690,6 @@ else:
     elif params.prediction_type == "multi-class classification":
         sm = project.create_mlflow_pyfunc_model(name = params.model_name,
                                                 prediction_type = DSSPredictionMLTaskSettings.PredictionTypes.MULTICLASS)
-        print("CHECK 2")
     else:
         sm = project.create_mlflow_pyfunc_model(name = params.model_name,
                                                 prediction_type = DSSPredictionMLTaskSettings.PredictionTypes.REGRESSION)
@@ -726,9 +722,6 @@ elif params.prediction_type == "multi-class classification":
     mlflow_version.set_core_metadata(target_column_name = params.col_label, class_labels = list(model_classes), get_features_from_dataset = output_test_dataset_name)
 else:
     mlflow_version.set_core_metadata(target_column_name = params.col_label, get_features_from_dataset = output_test_dataset_name)
-
-print("PATPAT")
-print(mlflow_version.get_settings().data)
 
 # Evaluate the performance of this new version, to populate the performance screens of the Saved Model version in Dataiku
 mlflow_version.evaluate(output_test_dataset_name, container_exec_config_name='NONE')
