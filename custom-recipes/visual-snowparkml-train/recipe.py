@@ -721,9 +721,12 @@ output_test_dataset_name = params.output_test_dataset.name.split('.')[1]
 if params.prediction_type == "two-class classification":
     mlflow_version.set_core_metadata(target_column_name = params.col_label, class_labels = list(model_classes), get_features_from_dataset = output_test_dataset_name)
 elif params.prediction_type == "multi-class classification":
-    mlflow_version.set_core_metadata(target_column_name = params.col_label, class_labels = list(model_classes), get_features_from_dataset = output_test_dataset_name, average = "macro")
+    mlflow_version.set_core_metadata(target_column_name = params.col_label, class_labels = list(model_classes), get_features_from_dataset = output_test_dataset_name)
 else:
     mlflow_version.set_core_metadata(target_column_name = params.col_label, get_features_from_dataset = output_test_dataset_name)
+
+print("PATPAT")
+print(mlflow_version.get_settings())
 
 # Evaluate the performance of this new version, to populate the performance screens of the Saved Model version in Dataiku
 mlflow_version.evaluate(output_test_dataset_name, container_exec_config_name='NONE')
