@@ -726,7 +726,7 @@ else:
     mlflow_version.set_core_metadata(target_column_name = params.col_label, get_features_from_dataset = output_test_dataset_name)
 
 print("PATPAT")
-print(mlflow_version.get_settings())
+print(mlflow_version.get_settings().data)
 
 # Evaluate the performance of this new version, to populate the performance screens of the Saved Model version in Dataiku
 mlflow_version.evaluate(output_test_dataset_name, container_exec_config_name='NONE')
