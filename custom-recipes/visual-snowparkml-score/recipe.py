@@ -97,8 +97,7 @@ if prediction_type == 'BINARY_CLASSIFICATION':
     predictions = loaded_model.predict_proba(input_dataset_snow_df)
     target_col_value_cols = [col for col in predictions.columns if "PREDICT_PROBA" in col]
     target_col_values = [col.replace('"','').replace('PREDICT_PROBA_','') for col in target_col_value_cols]
-    for target_col_value_col in target_col_value_cols:
-        predictions = predictions.withColumnRenamed(target_col_value_col, target_col_value_col.replace('"',''))
+    
     print("PATPAT")
     print(predictions.columns)
     predictions.show(5)
@@ -114,6 +113,8 @@ if prediction_type == 'BINARY_CLASSIFICATION':
     print(target_col_values)
     """
     predictions = predictions.withColumn('PREDICTION', F.when(F.col(target_col_value_cols[-1]) > model_threshold, target_col_values[-1]).otherwise(target_col_values[0]))
+    for target_col_value_col in target_col_value_cols:
+        predictions = predictions.withColumnRenamed(target_col_value_col, target_col_value_col.replace('"',''))
     predictions = predictions.drop('SAMPLE_WEIGHTS')
 
 # Make predictions for regression models
