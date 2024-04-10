@@ -97,6 +97,9 @@ if prediction_type == 'BINARY_CLASSIFICATION':
     predictions = loaded_model.predict_proba(input_dataset_snow_df)
     target_col_value_cols = [col for col in predictions.columns if "predict_proba" in col]
     target_col_values = [col.replace('"','').replace('predict_proba_','') for col in target_col_value_cols]
+    print("PATPAT")
+    print(predictions.columns)
+    predictions.show(5)
     """
     predictions = model.run(input_dataset_snow_df, function_name = "predict_proba")
     print("PATPAT")
