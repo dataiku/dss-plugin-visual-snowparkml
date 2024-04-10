@@ -514,8 +514,11 @@ for model in trained_models:
             mlflow.log_param(param_name, model_best_params[param])
     mlflow.log_param("algorithm", model_algo)
 
+    print("HELLOOOO")
+    test_snowpark_df.show(5)
     test_predictions_df = rs_clf.predict(test_snowpark_df)
     test_predictions_df_2 = rs_clf.predict_proba(test_snowpark_df)
+    print("BLAH")
     test_predictions_df_2.show(5)
     # Sometimes, the PREDICTION column will be a string. Need to change it to be consistent with the target column
     col_label_dtype = convert_snowpark_df_col_dtype(test_predictions_df, col_label_sf)
