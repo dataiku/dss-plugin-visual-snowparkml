@@ -559,7 +559,7 @@ for model in trained_models:
         test_prediction_probas_df = rs_clf.predict_proba(test_snowpark_df)
 
         target_col_value_cols = [col for col in test_prediction_probas_df.columns if "PREDICT_PROBA" in col]
-        test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', labels = [col_label_values[0]], average = "macro")
+        test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', average = "macro")
         mlflow.log_metric("test_f1_score", test_f1)
         test_roc_auc = roc_auc_score(df = test_prediction_probas_df, y_true_col_names = col_label_sf, y_score_col_names = test_prediction_probas_df.columns[-1], labels = [col_label_values], average = "macro", multi_class = "ovo")
         mlflow.log_metric("test_roc_auc", test_roc_auc)
