@@ -38,7 +38,10 @@
                     <option value="regression">Regression</option>
                 </select>
             </div>
-        </div>   
+        </div>
+        <div class="control-group" ng-show="config.prediction_type === 'two-class classification' || config.prediction_type === 'multi-class classification'">
+            <label class="control-label">Note: you must convert your target column to numeric, e.g. (0,1) or (0.0,1.0) or (0,1,2,3,4) for Classification tasks</label>
+        </div>
         <div class="control-group" ng-show="config.prediction_type === 'two-class classification' || config.prediction_type === 'multi-class classification'">
             <label class="control-label">Disable Class Weights</label>
             <div class="controls">
