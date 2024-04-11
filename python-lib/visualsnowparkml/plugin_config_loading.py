@@ -303,7 +303,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.selectedConstantImpute = recipe_config.get('selectedConstantImpute', None)
     print("PATPAT")
     print(params.selectedInputColumns)
-    for input_col, selected in params.selectedInputColumns.items():
+    for input_col, selected in list(params.selectedInputColumns.items()):
         if not selected:
             del params.selectedInputColumns[input_col]
             print(input_col)
