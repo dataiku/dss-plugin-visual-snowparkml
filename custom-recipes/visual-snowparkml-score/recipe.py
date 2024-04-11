@@ -100,6 +100,20 @@ if prediction_type == 'BINARY_CLASSIFICATION':
         predictions = predictions.withColumnRenamed(target_col_value_col, target_col_value_col.replace('"',''))
     predictions = predictions.drop('SAMPLE_WEIGHTS')
 
+elif prediction_type == 'MULTICLASS':
+    # If no 'SAMPLE_WEIGHTS' column in input dataset, create this column and populate with nulls
+    if 'SAMPLE_WEIGHTS' not in input_dataset_snow_df.columns:
+        input_dataset_snow_df = input_dataset_snow_df.withColumn('SAMPLE_WEIGHTS', F.lit(None).cast(T.StringType()))
+    
+    # Make predictions - custom implementation of 'PREDICTION' based on optimal threshold
+    predictions = loaded_model.predict_proba(input_dataset_snow_df)
+    predictions = loaded_model.predict(predictions)
+    target_col_value_cols = [col for col in predictions.columns if "PREDICT_PROBA" in col]
+    target_col_values = [col.replace('"','').replace('PREDICT_PROBA_','') for col in target_col_value_cols]
+    for target_col_value_col in target_col_value_cols:
+        predictions = predictions.withColumnRenamed(target_col_value_col, target_col_value_col.replace('"',''))
+    predictions = predictions.drop('SAMPLE_WEIGHTS')
+    
 # Make predictions for regression models
 else:
     #predictions = model.run(input_dataset_snow_df, function_name = "predict")
