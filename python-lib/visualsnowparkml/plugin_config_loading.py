@@ -301,18 +301,16 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.selectedOption1 = recipe_config.get('selectedOption1', None)
     params.selectedOption2 = recipe_config.get('selectedOption2', None)
     params.selectedConstantImpute = recipe_config.get('selectedConstantImpute', None)
-    print("PATPAT")
-    print(params.selectedInputColumns)
-    for input_col, selected in list(params.selectedInputColumns.items()):
-        if not selected:
-            del params.selectedInputColumns[input_col]
-            print(input_col)
-    print(params.selectedInputColumns)
+    
     if not params.selectedInputColumns:
         raise PluginParamValidationError("No input features selected. Choose some features to include in the model")    
     else:
-        # If the recipe runs with some features selected, then they are unchecked, selectedInputColumns will exist, but the column values will be False
-        if not any(params.selectedInputColumns.values()):
+        # Need to remove columns that were checked and then unchecked at run time - the dict values will be False
+        for input_col, selected in list(params.selectedInputColumns.items()):
+            if not selected:
+                del params.selectedInputColumns[input_col]
+        # Check if any features selected post check/uncheck pruning
+        if len(params.selectedInputColumns) == 0:
             raise PluginParamValidationError("No input features selected. Choose some features to include in the model")    
 
         # Iterate through all selected input columns and check that an encoding/rescaling and missingness imputation method is chosen
