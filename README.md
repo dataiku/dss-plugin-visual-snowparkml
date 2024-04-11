@@ -16,7 +16,7 @@ With this plugin, you can train machine learning models and then use them to sco
 
 # Limitations
 
-- If doing two-class classification + XGBoost, convert your target column to numeric (0,1) before using this plugin (this is an XGBoost requirement)
+- If doing two-class or multi-class classification, convert your target column to numeric (0,1) or (0, 1, 2, 3, 4) before using this plugin (this is a SnowparkML requirement)
 - No int type columns can have missing values. If you have an int column with missing values, convert the type to double before this recipe (this is an MLflow requirement)
 - If you want to treat a numeric column as categorical, change its storage type to string in a prior recipe
 
@@ -43,14 +43,14 @@ xgboost==1.7.3
 lightgbm==3.3.5
 matplotlib==3.7.1
 scipy==1.10.1
-snowflake-snowpark-python==1.12.0
-snowflake-snowpark-python[pandas]==1.12.0
+snowflake-snowpark-python==1.14.0
+snowflake-snowpark-python[pandas]==1.14.0
 snowflake-connector-python[pandas]==3.7.0
 MarkupSafe==2.0.1
 cloudpickle==2.0.0
 flask==1.0.4
 Jinja2==2.11.3
-snowflake-ml-python==1.2.2
+snowflake-ml-python==1.4.0
 ```
 
 # Usage
