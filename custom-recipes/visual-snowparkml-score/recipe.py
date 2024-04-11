@@ -68,11 +68,9 @@ dku_snowpark = DkuSnowpark()
 
 # Get the Snowflake Model Registry
 registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
-#registry = Registry(session = session)
 
 # Get the Snowflake Model Registry model that matches the input Dataiku Saved Model active version
 try:
-    #model = registry.get_model(snowflake_model_name).version(active_model_version_id)
     model = model_registry.ModelReference(registry = registry, 
                                           model_name = snowflake_model_name, 
                                           model_version = active_model_version_id)
@@ -97,21 +95,6 @@ if prediction_type == 'BINARY_CLASSIFICATION':
     predictions = loaded_model.predict_proba(input_dataset_snow_df)
     target_col_value_cols = [col for col in predictions.columns if "PREDICT_PROBA" in col]
     target_col_values = [col.replace('"','').replace('PREDICT_PROBA_','') for col in target_col_value_cols]
-    
-    print("PATPAT")
-    print(predictions.columns)
-    predictions.show(5)
-    """
-    predictions = model.run(input_dataset_snow_df, function_name = "predict_proba")
-    print("PATPAT")
-    print(predictions.columns)
-    predictions.show(5)
-    target_col_value_cols = [col for col in predictions.columns if "PREDICT_PROBA" in col]
-    target_col_values = [col.replace('"','').replace('PREDICT_PROBA_','') for col in target_col_value_cols]
-    
-    print(target_col_value_cols)
-    print(target_col_values)
-    """
     predictions = predictions.withColumn('PREDICTION', F.when(F.col(target_col_value_cols[-1]) > model_threshold, target_col_values[-1]).otherwise(target_col_values[0]))
     for target_col_value_col in target_col_value_cols:
         predictions = predictions.withColumnRenamed(target_col_value_col, target_col_value_col.replace('"',''))

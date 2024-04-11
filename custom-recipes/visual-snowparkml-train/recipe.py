@@ -514,12 +514,7 @@ for model in trained_models:
             mlflow.log_param(param_name, model_best_params[param])
     mlflow.log_param("algorithm", model_algo)
 
-    print("HELLOOOO")
-    test_snowpark_df.show(5)
     test_predictions_df = rs_clf.predict(test_snowpark_df)
-    test_predictions_df_2 = rs_clf.predict_proba(test_snowpark_df)
-    print("BLAH")
-    test_predictions_df_2.show(5)
     # Sometimes, the PREDICTION column will be a string. Need to change it to be consistent with the target column
     col_label_dtype = convert_snowpark_df_col_dtype(test_predictions_df, col_label_sf)
     test_predictions_df = test_predictions_df.withColumn('"PREDICTION"', test_predictions_df['"PREDICTION"'].cast(col_label_dtype))
@@ -533,12 +528,7 @@ for model in trained_models:
 
         target_col_value_cols = [col for col in test_prediction_probas_df.columns if "PREDICT_PROBA" in col]
 
-        test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label = col_label_values[0])
-        print("HIHIPAT")
-        test_predictions_df.show(5)
-        print(col_label_sf)
-        print(col_label_values[0])
-        
+        test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', pos_label = col_label_values[0])        
         mlflow.log_metric("test_f1_score", test_f1)
         test_roc_auc = roc_auc_score(df = test_prediction_probas_df, y_true_col_names = col_label_sf, y_score_col_names = test_prediction_probas_df.columns[-1])
         mlflow.log_metric("test_roc_auc", test_roc_auc)
@@ -568,12 +558,7 @@ for model in trained_models:
         
         target_col_value_cols = [col for col in test_prediction_probas_df.columns if "PREDICT_PROBA" in col]
         
-        print("HIHIPAT")
-        test_predictions_df.show(5)
-        print(col_label_sf)
-        
         test_f1 = f1_score(df = test_predictions_df, y_true_col_names = col_label_sf, y_pred_col_names = '"PREDICTION"', average = "macro")
-        
         mlflow.log_metric("test_f1_score", test_f1)
         test_roc_auc = roc_auc_score(df = test_prediction_probas_df, y_true_col_names = col_label_sf, y_score_col_names = target_col_value_cols, labels = model_classes, average = "macro", multi_class = "ovo")
         mlflow.log_metric("test_roc_auc", test_roc_auc)
@@ -749,12 +734,6 @@ if params.deploy_to_snowflake_model_registry:
         snowflake_registry_model_description = f"Dataiku Project: {project.project_key}, Model: {params.model_name}"
         snowflake_model_name = f"{project.project_key}_{params.model_name}"
         
-        """
-        model_ver = registry.log_model(model = best_model["snowml_obj"],
-                                       model_name = snowflake_model_name,
-                                       version_name = best_model["run_name"],
-                                       comment = snowflake_registry_model_description)
-        """
         model_id = registry.log_model(model = best_model["snowml_obj"],
                                       model_name = snowflake_model_name,
                                       model_version = best_model["run_name"],
@@ -764,22 +743,7 @@ if params.deploy_to_snowflake_model_registry:
                                               "dataiku_saved_model_id": sm_id})
         
         for test_metric in best_model["test_metrics"]:
-            #model_ver.set_metric(metric_name = test_metric, value = best_model["test_metrics"][test_metric])
             model_id.set_metric(metric_name = test_metric, metric_value = best_model["test_metrics"][test_metric])
-        
-        """
-        # Need to set tags at the parent model level
-        parent_model = registry.get_model(snowflake_model_name)
-        
-        # Need to create the tag object in Snowflake if it doesn't exist
-        session.sql("CREATE TAG IF NOT EXISTS APPLICATION;").show()
-        session.sql("CREATE TAG IF NOT EXISTS DATAIKU_PROJECT_KEY;").show()
-        session.sql("CREATE TAG IF NOT EXISTS DATAIKU_SAVED_MODEL_ID;").show()
-        
-        parent_model.set_tag("application", "Dataiku")
-        parent_model.set_tag("dataiku_project_key", project.project_key)
-        parent_model.set_tag("dataiku_saved_model_id", sm_id)
-        """
         
         print(f"Successfully deployed model to Snowflake ML Model Registry: {SNOWFLAKE_MODEL_REGISTRY}")
     except:
