@@ -59,7 +59,7 @@ app.controller('retrainRecipeController', function ($scope, utils) {
             $scope.config.gb_regression = false;
             $scope.config.decision_tree_regression = false;
         } else if ($scope.config.prediction_type === 'regression') {
-            $scope.metrics = ['R2', 'MAE', 'MSE', 'D2 (GLM Only)'];
+            $scope.metrics = ['R2', 'MAE', 'MSE'];
             $scope.config.logistic_regression = false;
             $scope.config.random_forest_classification = false;
             $scope.config.xgb_classification = false;
