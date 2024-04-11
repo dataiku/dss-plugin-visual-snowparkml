@@ -301,7 +301,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.selectedOption1 = recipe_config.get('selectedOption1', None)
     params.selectedOption2 = recipe_config.get('selectedOption2', None)
     params.selectedConstantImpute = recipe_config.get('selectedConstantImpute', None)
-
+    print(params.selectedInputColumns)
     if not params.selectedInputColumns:
         raise PluginParamValidationError("No input features selected. Choose some features to include in the model")    
     else:
