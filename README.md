@@ -7,7 +7,7 @@ With this plugin, you can train machine learning models and then use them to sco
 # Capabilities
 
 - No-code ML model training on Snowpark using Snowflake’s [snowflake-ml-python](https://pypi.org/project/snowflake-ml-python/) package
-    - Two-class classification and regression tasks on tabular data stored in a Snowflake table
+    - Two-class classification, multi-class classification, and regression tasks on tabular data stored in a Snowflake table
     - Hyperparameter tuning using Random Search on certain algorithm parameters
     - Track hyperparameter tuning and model performance through Dataiku’s Experiment Tracking MLflow integration
     - Output the best trained model to a Dataiku Saved Model in the flow, and deploy the model to a Snowflake Model Registry
