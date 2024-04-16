@@ -91,6 +91,8 @@ MLFLOW_EXPERIMENT_NAME = f"{params.model_name}_exp"
 
 # Get a Dataiku API client and the current project
 client = dataiku.api_client()
+client._session.verify = False
+
 project = client.get_default_project()
 
 # Set up the Dataiku MLflow extension and setup an experiment pointing to the output models folder
