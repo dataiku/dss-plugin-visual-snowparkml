@@ -2,7 +2,8 @@
     "meta": {
         "label": "Train ML Models on Snowpark",
         "description": "See README for requirements",
-        "icon": "icon-snowflake"
+        "icon": "icon-snowflake",
+        "iconColor": "blue"
     },
 
     "kind": "PYTHON",
