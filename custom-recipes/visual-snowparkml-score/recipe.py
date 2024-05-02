@@ -64,7 +64,7 @@ snowflake_model_name = project.project_key + "_" + saved_model_name
 dku_snowpark = DkuSnowpark()
 
 # Get the Snowflake Model Registry
-registry = model_registry.Registry(session = session)
+registry = Registry(session = session)
 
 # Get the Snowflake Model Registry model that matches the input Dataiku Saved Model active version
 try:
