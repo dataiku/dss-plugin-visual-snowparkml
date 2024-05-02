@@ -28,7 +28,7 @@ from snowflake.snowpark.functions import sproc, udf, when, col
 
 # Snowpark-ML Imports
 import snowflake.snowpark.functions as F
-from snowflake.ml.registry import model_registry
+from snowflake.ml.registry import Registry
 
 
 ### SECTION 2 - Load User-Inputted Config, Inputs, and Outputs
@@ -42,9 +42,6 @@ for attr in attrs:
     if not attr.startswith('__'):
         print(str(attr) + ': ' + str(getattr(params, attr)))
 print("-----------------------------")
-
-# Models trained using the plugin will be deployed to the Snowflake MODEL_REGISTRY database
-snowflake_model_registry = "MODEL_REGISTRY"
 
 client = dataiku.api_client()
 project = client.get_default_project()
@@ -67,19 +64,15 @@ snowflake_model_name = project.project_key + "_" + saved_model_name
 dku_snowpark = DkuSnowpark()
 
 # Get the Snowflake Model Registry
-registry = model_registry.ModelRegistry(session = session, database_name = snowflake_model_registry)
+registry = model_registry.Registry(session = session)
 
 # Get the Snowflake Model Registry model that matches the input Dataiku Saved Model active version
 try:
-    model = model_registry.ModelReference(registry = registry, 
-                                          model_name = snowflake_model_name, 
-                                          model_version = active_model_version_id)
+    model = registry.get_model(snowflake_model_name).version(active_model_version_id)
 
 except KeyError as err:
     raise KeyError(format_tb(err.__traceback__)[0] + err.args[0] + "\nMake sure that your input model was trained using the Visual Snowpark ML train plugin recipe, and that the model was successfully deployed the model to the Snowpark ML registry.") from None
     
-loaded_model = model.load_model()
-
 # Get the input Snowpark dataframe to score
 input_dataset_snow_df = dku_snowpark.get_dataframe(input_dataset, session = session)
 
@@ -92,7 +85,7 @@ if prediction_type == 'BINARY_CLASSIFICATION':
         input_dataset_snow_df = input_dataset_snow_df.withColumn('SAMPLE_WEIGHTS', F.lit(None).cast(T.StringType()))
     
     # Make predictions - custom implementation of 'PREDICTION' based on optimal threshold
-    predictions = loaded_model.predict_proba(input_dataset_snow_df)
+    predictions = model.run(input_dataset_snow_df, function_name = "predict_proba")
     target_col_value_cols = [col for col in predictions.columns if "PREDICT_PROBA" in col]
     target_col_values = [col.replace('"','').replace('PREDICT_PROBA_','') for col in target_col_value_cols]
     predictions = predictions.withColumn('PREDICTION', F.when(F.col(target_col_value_cols[-1]) > model_threshold, target_col_values[-1]).otherwise(target_col_values[0]))
@@ -106,8 +99,8 @@ elif prediction_type == 'MULTICLASS':
         input_dataset_snow_df = input_dataset_snow_df.withColumn('SAMPLE_WEIGHTS', F.lit(None).cast(T.StringType()))
     
     # Make predictions - custom implementation of 'PREDICTION' based on optimal threshold
-    predictions = loaded_model.predict_proba(input_dataset_snow_df)
-    predictions = loaded_model.predict(predictions)
+    predictions = model.run(input_dataset_snow_df, function_name = "predict_proba")
+    predictions = model.run(predictions, function_name = "predict")
     target_col_value_cols = [col for col in predictions.columns if "PREDICT_PROBA" in col]
     target_col_values = [col.replace('"','').replace('PREDICT_PROBA_','') for col in target_col_value_cols]
     for target_col_value_col in target_col_value_cols:
@@ -116,8 +109,7 @@ elif prediction_type == 'MULTICLASS':
     
 # Make predictions for regression models
 else:
-    #predictions = model.run(input_dataset_snow_df, function_name = "predict")
-    predictions = loaded_model.predict(input_dataset_snow_df)
+    predictions = model.run(input_dataset_snow_df, function_name = "predict")
 
 # Write the predictions to output Snowflake dataset
 dku_snowpark.write_with_schema(output_score_dataset, predictions)
