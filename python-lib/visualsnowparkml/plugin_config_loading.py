@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 """Module with utility functions for loading, resolving and validating plugin parameters"""
-
-import logging
-import os
 from typing import Tuple
 import re
 
@@ -11,27 +8,30 @@ import dataiku
 from dataiku.customrecipe import (
     get_recipe_config,
     get_input_names_for_role,
-    get_output_names_for_role,
-    get_recipe_resource,
+    get_output_names_for_role
 )
 from dataiku.snowpark import DkuSnowpark
 from snowflake.snowpark.session import Session
 from snowflake.snowpark.table import Table
+
 
 class PluginParamValidationError(ValueError):
     """Custom exception raised when the plugin parameters chosen by the user are invalid"""
 
     pass
 
+
 class CodeEnvSetupError(ValueError):
     """Custom exception raised when the the user has not set up the supplemental code env correctly"""
 
     pass
 
+
 class InputTrainDatasetSetupError(ValueError):
     """Custom exception raised when the the user has not set up the input training dataset correctly"""
 
     pass
+
 
 class TrainPluginParams:
     """Class to store train recipe parameters"""
@@ -147,6 +147,7 @@ class TrainPluginParams:
         "n_iter"
     ]
 
+
 class ScorePluginParams:
     """Class to store train recipe parameters"""
 
@@ -156,6 +157,7 @@ class ScorePluginParams:
     __slots__ = [
         "warehouse"
     ]
+
 
 def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[TrainPluginParams, Session, Table]:
     """Utility function to:
@@ -173,7 +175,6 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     if len(input_dataset_names) != 1:
         raise PluginParamValidationError("Please specify one input dataset")
     input_dataset = dataiku.Dataset(input_dataset_names[0])
-    input_dataset_columns = [p for p in input_dataset.read_schema()]
     input_dataset_column_types = {}
     for col in input_dataset.read_schema():
         input_dataset_column_types[col["name"]] = col["type"]
@@ -239,14 +240,14 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
         if not params.time_ordering_variable:
             raise PluginParamValidationError("Selected time ordering but no time ordering column chosen. Choose a time ordering column")
         if input_dataset_column_types[params.time_ordering_variable] != "date":
-            raise PluginParamValidationError(f"Time ordering column: {time_ordering_variable} is not a parsed date. Choose a parsed date")
-        
+            raise PluginParamValidationError(f"Time ordering column: {params.time_ordering_variable} is not a parsed date. Choose a parsed date")
+
         params.time_ordering_variable = params.time_ordering_variable
-        
+
     # Train Ratio
     train_ratio = recipe_config.get('train_ratio', None)
     if not train_ratio:
-        raise PluginParamValidationError("No prediction train ratio chosen. Choose a train ratio between 0 and 1 (e.g. 0.8)")        
+        raise PluginParamValidationError("No prediction train ratio chosen. Choose a train ratio between 0 and 1 (e.g. 0.8)")
     elif 0 < train_ratio < 1:
         params.train_ratio = train_ratio
     else:
@@ -255,7 +256,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     # Random Seed
     random_seed = recipe_config.get('random_seed', None)
     if not random_seed:
-        raise PluginParamValidationError("No random seed chosen. Choose a random seed that is an integer (e.g. 42)")        
+        raise PluginParamValidationError("No random seed chosen. Choose a random seed that is an integer (e.g. 42)")
     elif isinstance(random_seed, int):
         params.random_seed = random_seed
     else:
@@ -264,7 +265,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     # Model Metric
     model_metric = recipe_config.get('model_metric', None)
     if not model_metric:
-        raise PluginParamValidationError("No model metric chosen. Choose a model metric")        
+        raise PluginParamValidationError("No model metric chosen. Choose a model metric")
     else:
         params.model_metric = model_metric
 
@@ -284,13 +285,13 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
 
     # If the input dataset Snowflake connection doesn't have a default schema, pull the schema name from the input dataset settings
     connection_schema = session.get_current_schema()
-    if not connection_schema:    
+    if not connection_schema:
         input_dataset_info = input_dataset.get_location_info()
         input_dataset_schema = input_dataset_info['info']['schema']
         session.use_schema(input_dataset_schema)
 
     # Convert the input dataset into a Snowpark dataframe (we will return this df in the function outputs)
-    input_snowpark_df = dku_snowpark.get_dataframe(input_dataset, session = session)
+    input_snowpark_df = dku_snowpark.get_dataframe(input_dataset, session=session)
 
     # Snowflake Model Registry
     params.deploy_to_snowflake_model_registry = recipe_config.get('deploy_to_snowflake_model_registry', False)
@@ -301,9 +302,9 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.selectedOption1 = recipe_config.get('selectedOption1', None)
     params.selectedOption2 = recipe_config.get('selectedOption2', None)
     params.selectedConstantImpute = recipe_config.get('selectedConstantImpute', None)
-    
+
     if not params.selectedInputColumns:
-        raise PluginParamValidationError("No input features selected. Choose some features to include in the model")    
+        raise PluginParamValidationError("No input features selected. Choose some features to include in the model")
     else:
         # Need to remove columns that were checked and then unchecked at run time - the dict values will be False
         for input_col, selected in list(params.selectedInputColumns.items()):
@@ -311,7 +312,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
                 del params.selectedInputColumns[input_col]
         # Check if any features selected post check/uncheck pruning
         if len(params.selectedInputColumns) == 0:
-            raise PluginParamValidationError("No input features selected. Choose some features to include in the model")    
+            raise PluginParamValidationError("No input features selected. Choose some features to include in the model")
 
         # Iterate through all selected input columns and check that an encoding/rescaling and missingness imputation method is chosen
         for selected_input_col in params.selectedInputColumns.keys():
@@ -321,9 +322,9 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
                 raise PluginParamValidationError(f"No 'Impute Missing Values With' option selected for input feature: {selected_input_col}. Choose an 'Impute Missing Values With' method")
             # If constant imputation selected, make sure a constant value was given
             if params.selectedOption2[selected_input_col] == 'Constant' and not params.selectedConstantImpute:
-                raise PluginParamValidationError(f"Constant imputation selected for input feature: {selected_input_col}, but no value chosen. Choose a value")                
+                raise PluginParamValidationError(f"Constant imputation selected for input feature: {selected_input_col}, but no value chosen. Choose a value")
             elif params.selectedOption2[selected_input_col] == 'Constant' and selected_input_col not in params.selectedConstantImpute.keys():
-                raise PluginParamValidationError(f"Constant imputation selected for input feature: {selected_input_col}, but no value chosen. Choose a value")                
+                raise PluginParamValidationError(f"Constant imputation selected for input feature: {selected_input_col}, but no value chosen. Choose a value")
 
     # Check that all algorithms have hyperparameter ranges chosen
     params.logistic_regression = recipe_config.get('logistic_regression', None)
@@ -343,7 +344,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.random_forest_classification_max_depth_max = recipe_config.get('random_forest_classification_max_depth_max', None)
     params.random_forest_classification_min_samples_leaf_min = recipe_config.get('random_forest_classification_min_samples_leaf_min', None)
     params.random_forest_classification_min_samples_leaf_max = recipe_config.get('random_forest_classification_min_samples_leaf_max', None)
-    
+
     if params.random_forest_classification:
         if not params.random_forest_classification_n_estimators_min or not params.random_forest_classification_n_estimators_max or not params.random_forest_classification_max_depth_min or not params.random_forest_classification_max_depth_max or not params.random_forest_classification_min_samples_leaf_min or not params.random_forest_classification_min_samples_leaf_max:
             raise PluginParamValidationError("For the Random Forest algorithm, please choose a min and max value for all hyperparameters")
@@ -353,7 +354,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
             raise PluginParamValidationError(f"The Random Forest Max Depth min you selected: {params.random_forest_classification_max_depth_min} is greater than Max Depth max: {params.random_forest_classification_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
         if params.random_forest_classification_min_samples_leaf_min > params.random_forest_classification_min_samples_leaf_max:
             raise PluginParamValidationError(f"The Random Forest Min Samples per Leaf min you selected: {params.random_forest_classification_min_samples_leaf_min} is greater than Min Samples per Leaf max: {params.random_forest_classification_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
-        
+
     params.xgb_classification = recipe_config.get('xgb_classification', None)
     params.xgb_classification_n_estimators_min = recipe_config.get('xgb_classification_n_estimators_min', None)
     params.xgb_classification_n_estimators_max = recipe_config.get('xgb_classification_n_estimators_max', None)
@@ -451,7 +452,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.random_forest_regression_max_depth_max = recipe_config.get('random_forest_regression_max_depth_max', None)
     params.random_forest_regression_min_samples_leaf_min = recipe_config.get('random_forest_regression_min_samples_leaf_min', None)
     params.random_forest_regression_min_samples_leaf_max = recipe_config.get('random_forest_regression_min_samples_leaf_max', None)
-    
+
     if params.random_forest_regression:
         if not params.random_forest_regression_n_estimators_min or not params.random_forest_regression_n_estimators_max or not params.random_forest_regression_max_depth_min or not params.random_forest_regression_max_depth_max or not params.random_forest_regression_min_samples_leaf_min or not params.random_forest_regression_min_samples_leaf_max:
             raise PluginParamValidationError("For the Random Forest algorithm, please choose a min and max value for all hyperparameters")
@@ -461,7 +462,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
             raise PluginParamValidationError(f"The Random Forest Max Depth min you selected: {params.random_forest_regression_max_depth_min} is greater than Max Depth max: {params.random_forest_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
         if params.random_forest_regression_min_samples_leaf_min > params.random_forest_regression_min_samples_leaf_max:
             raise PluginParamValidationError(f"The Random Forest Min Samples per Leaf min you selected: {params.random_forest_regression_min_samples_leaf_min} is greater than Min Samples per Leaf max: {params.random_forest_regression_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
-        
+
     params.xgb_regression = recipe_config.get('xgb_regression', None)
     params.xgb_regression_n_estimators_min = recipe_config.get('xgb_regression_n_estimators_min', None)
     params.xgb_regression_n_estimators_max = recipe_config.get('xgb_regression_n_estimators_max', None)
@@ -541,11 +542,11 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
             raise PluginParamValidationError(f"The Decision Tree Max Depth min you selected: {params.decision_tree_regression_max_depth_min} is greater than Max Depth max: {params.decision_tree_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
         if params.decision_tree_regression_min_samples_leaf_min > params.decision_tree_regression_min_samples_leaf_max:
             raise PluginParamValidationError(f"The Decision Tree Min Samples per Leaf min you selected: {params.decision_tree_regression_min_samples_leaf_min} is greater than Min Samples per Leaf max: {params.decision_tree_regression_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
-        
+
     # Search Space Limit
     n_iter = recipe_config.get('n_iter', None)
     if not n_iter:
-        raise PluginParamValidationError("No search space limit chosen. Choose a search space limit that is an integer (e.g. 4)")        
+        raise PluginParamValidationError("No search space limit chosen. Choose a search space limit that is an integer (e.g. 4)")
     elif isinstance(random_seed, int):
         params.n_iter = n_iter
     else:
@@ -555,7 +556,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     client = dataiku.api_client()
     code_envs = [env["envName"] for env in client.list_code_envs()]
     if "py_38_snowpark" not in code_envs:
-        raise CodeEnvSetupError(f"You must create a python 3.8 code env named 'py_38_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
+        raise CodeEnvSetupError("You must create a python 3.8 code env named 'py_38_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
 
     # Check that if user selected two-class or multi-class classification, that they converted the target column to numeric (0,1) - a current SnowML requirement
     if (prediction_type == "two-class classification" or prediction_type == "multi-class classification"):
@@ -563,6 +564,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
             raise InputTrainDatasetSetupError(f"Target column: {col_label} is of type: {input_dataset_column_types[col_label]}. When choosing two-class or multi-class classification, you must first convert the target column to one of type: int, bigint, smallint, tinyint, float, or double (e.g. (0, 1), (0.0, 1.0), (1, 2, 3, 4, 5))")
 
     return params, session, input_snowpark_df
+
 
 def load_score_config_snowpark_session() -> Tuple[ScorePluginParams, Session]:
     """Utility function to:
@@ -613,7 +615,7 @@ def load_score_config_snowpark_session() -> Tuple[ScorePluginParams, Session]:
 
     # If the input dataset Snowflake connection doesn't have a default schema, pull the schema name from the input dataset settings
     connection_schema = session.get_current_schema()
-    if not connection_schema:    
+    if not connection_schema:
         input_dataset_info = input_dataset.get_location_info()
         input_dataset_schema = input_dataset_info['info']['schema']
         session.use_schema(input_dataset_schema)
@@ -622,7 +624,6 @@ def load_score_config_snowpark_session() -> Tuple[ScorePluginParams, Session]:
     client = dataiku.api_client()
     code_envs = [env["envName"] for env in client.list_code_envs()]
     if "py_38_snowpark" not in code_envs:
-        raise CodeEnvSetupError(f"You must create a python 3.8 code env named 'py_38_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
-    
-    return params, session, input_dataset, saved_model_id, output_score_dataset
+        raise CodeEnvSetupError("You must create a python 3.8 code env named 'py_38_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
 
+    return params, session, input_dataset, saved_model_id, output_score_dataset
