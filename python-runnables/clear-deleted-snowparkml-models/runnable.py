@@ -35,8 +35,8 @@ class MyRunnable(Runnable):
         # Get a Snowpark session
         dku_snowpark = DkuSnowpark()
         session = dku_snowpark.get_session(self.snowflake_connection_name)
-        current_database = session.get_current_database().replace('"','')
-        current_schema = session.get_current_schema().replace('"','')
+        current_database = session.get_current_database().replace('"', '')
+        current_schema = session.get_current_schema().replace('"', '')
 
         # Get the Snowflake Model Registry
         registry = Registry(session=session)
