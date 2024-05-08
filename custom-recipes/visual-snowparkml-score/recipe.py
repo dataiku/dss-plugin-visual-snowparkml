@@ -53,9 +53,12 @@ dku_snowpark = DkuSnowpark()
 # Get the Snowflake Model Registry
 registry = Registry(session=session)
 
-# Get the Snowflake Model Registry model that matches the input Dataiku Saved Model active version
+# Get the Snowflake Model Registry model that matches the input Dataiku Saved Model active version. 
+# Also change the default model version in Snowflake if it doesn't match the active version in Dataiku
 try:
-    model = registry.get_model(snowflake_model_name).version(active_model_version_id)
+    parent_model = registry.get_model(snowflake_model_name)
+    parent_model.default = active_model_version_id
+    model_version = parent_model.version(active_model_version_id)
 
 except KeyError as err:
     raise KeyError(format_tb(err.__traceback__)[0] + err.args[0] + "\nMake sure that your input model was trained using the Visual Snowpark ML train plugin recipe, and that the model was successfully deployed the model to the Snowpark ML registry.") from None
@@ -72,7 +75,7 @@ if prediction_type == 'BINARY_CLASSIFICATION':
         input_dataset_snow_df = input_dataset_snow_df.withColumn('SAMPLE_WEIGHTS', F.lit(None).cast(T.StringType()))
 
     # Make predictions - custom implementation of 'PREDICTION' based on optimal threshold
-    predictions = model.run(input_dataset_snow_df, function_name="predict_proba")
+    predictions = model_version.run(input_dataset_snow_df, function_name="predict_proba")
     target_col_value_cols = [col for col in predictions.columns if "PREDICT_PROBA" in col]
     target_col_values = [col.replace('"', '').replace('PREDICT_PROBA_', '') for col in target_col_value_cols]
     predictions = predictions.withColumn('PREDICTION', F.when(F.col(target_col_value_cols[-1]) > model_threshold, target_col_values[-1]).otherwise(target_col_values[0]))
@@ -86,8 +89,8 @@ elif prediction_type == 'MULTICLASS':
         input_dataset_snow_df = input_dataset_snow_df.withColumn('SAMPLE_WEIGHTS', F.lit(None).cast(T.StringType()))
 
     # Make predictions - custom implementation of 'PREDICTION' based on optimal threshold
-    predictions = model.run(input_dataset_snow_df, function_name="predict_proba")
-    predictions = model.run(predictions, function_name="predict")
+    predictions = model_version.run(input_dataset_snow_df, function_name="predict_proba")
+    predictions = model_version.run(predictions, function_name="predict")
     target_col_value_cols = [col for col in predictions.columns if "PREDICT_PROBA" in col]
     target_col_values = [col.replace('"', '').replace('PREDICT_PROBA_', '') for col in target_col_value_cols]
     for target_col_value_col in target_col_value_cols:
@@ -96,7 +99,7 @@ elif prediction_type == 'MULTICLASS':
 
 # Make predictions for regression models
 else:
-    predictions = model.run(input_dataset_snow_df, function_name="predict")
+    predictions = model_version.run(input_dataset_snow_df, function_name="predict")
 
 # Write the predictions to output Snowflake dataset
 dku_snowpark.write_with_schema(output_score_dataset, predictions)
