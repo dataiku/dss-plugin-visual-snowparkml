@@ -739,6 +739,8 @@ if params.deploy_to_snowflake_model_registry:
 
         # Need to set tags at the parent model level
         parent_model = registry.get_model(snowflake_model_name)
+        # Update the defuault model version to the new version
+        parent_model.default = best_model["run_name"]
         # Need to create the tag object in Snowflake if it doesn't exist
         session.sql("CREATE TAG IF NOT EXISTS APPLICATION;").show()
         session.sql("CREATE TAG IF NOT EXISTS DATAIKU_PROJECT_KEY;").show()
