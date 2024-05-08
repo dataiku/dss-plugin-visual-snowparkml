@@ -278,11 +278,11 @@ for feature in included_features_handling_list:
         feature_transformers.append(('imputer', SimpleImputer(strategy='median')))
     if feature["missingness_impute"] == "Constant":
         if "constant_impute" in feature:
-            feature_transformers.append(('imputer', SimpleImputer(strategy='constant', fill_value=feature["constant_impute"])))
+            feature_transformers.append(('imputer', SimpleImputer(strategy='constant', fill_value=feature["constant_impute"], missing_values=pd.NA)))
         else:
-            feature_transformers.append(('imputer', SimpleImputer(strategy='constant')))
+            feature_transformers.append(('imputer', SimpleImputer(strategy='constant', missing_values=pd.NA)))
     if feature["missingness_impute"] == "Most frequent value":
-        feature_transformers.append(('imputer', SimpleImputer(strategy='most_frequent')))
+        feature_transformers.append(('imputer', SimpleImputer(strategy='most_frequent', missing_values=pd.NA)))
     if feature["encoding_rescaling"] == "Standard rescaling":
         feature_transformers.append(('enc', StandardScaler()))
     if feature["encoding_rescaling"] == "Min-max rescaling":
