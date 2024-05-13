@@ -612,11 +612,19 @@ for model in trained_models:
     if params.prediction_type == "two-class classification" or params.prediction_type == "multi-class classification":
         logged_model = mlflow.pyfunc.log_model(artifact_path="model",
                                                python_model=SnowparkMLClassifierWrapper(),
-                                               artifacts=artifacts)
+                                               artifacts=artifacts,
+                                               pip_requirements=["mlflow==2.9.2", "cloudpickle==2.0.0", "importlib-metadata==5.2.0",
+                                                                 "numpy==1.23.5", "pandas==1.3.5", "scikit-learn==1.3.2",
+                                                                 "scipy==1.10.1", "xgboost==1.7.3", "statsmodels==0.12.2",
+                                                                 "lightgbm==3.3.5"])
     else:
         logged_model = mlflow.pyfunc.log_model(artifact_path="model",
                                                python_model=SnowparkMLRegressorWrapper(),
-                                               artifacts=artifacts)
+                                               artifacts=artifacts,
+                                               pip_requirements=["mlflow==2.9.2", "cloudpickle==2.0.0", "importlib-metadata==5.2.0",
+                                                                 "numpy==1.23.5", "pandas==1.3.5", "scikit-learn==1.3.2",
+                                                                 "scipy==1.10.1", "xgboost==1.7.3", "statsmodels==0.12.2",
+                                                                 "lightgbm==3.3.5"])
 
     mlflow.end_run()
     best_run_id = run.info.run_id

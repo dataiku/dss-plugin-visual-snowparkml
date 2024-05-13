@@ -287,8 +287,11 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     connection_schema = session.get_current_schema()
     if not connection_schema:
         input_dataset_info = input_dataset.get_location_info()
-        input_dataset_schema = input_dataset_info['info']['schema']
-        session.use_schema(input_dataset_schema)
+        try:
+            input_dataset_schema = input_dataset_info['info']['schema']
+            session.use_schema(input_dataset_schema)
+        except:
+            raise PluginParamValidationError(f"Input dataset: {input_dataset_names[0]} has no schema. Please make sure it exists.")
 
     # Convert the input dataset into a Snowpark dataframe (we will return this df in the function outputs)
     input_snowpark_df = dku_snowpark.get_dataframe(input_dataset, session=session)
@@ -337,6 +340,10 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
         if params.logistic_regression_c_min > params.logistic_regression_c_max:
             raise PluginParamValidationError(f"The Logistic Regression C min you selected: {params.logistic_regression_c_min} is greater than C max: {params.logistic_regression_c_max}. Choose a C min that is lesser than C max")
 
+    # Count number of algorithms selected
+    class_algos_selected = 0
+    reg_algos_selected = 0
+
     params.random_forest_classification = recipe_config.get('random_forest_classification', None)
     params.random_forest_classification_n_estimators_min = recipe_config.get('random_forest_classification_n_estimators_min', None)
     params.random_forest_classification_n_estimators_max = recipe_config.get('random_forest_classification_n_estimators_max', None)
@@ -346,6 +353,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.random_forest_classification_min_samples_leaf_max = recipe_config.get('random_forest_classification_min_samples_leaf_max', None)
 
     if params.random_forest_classification:
+        class_algos_selected += 1
         if not params.random_forest_classification_n_estimators_min or not params.random_forest_classification_n_estimators_max or not params.random_forest_classification_max_depth_min or not params.random_forest_classification_max_depth_max or not params.random_forest_classification_min_samples_leaf_min or not params.random_forest_classification_min_samples_leaf_max:
             raise PluginParamValidationError("For the Random Forest algorithm, please choose a min and max value for all hyperparameters")
         if params.random_forest_classification_n_estimators_min > params.random_forest_classification_n_estimators_max:
@@ -366,6 +374,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.xgb_classification_learning_rate_max = recipe_config.get('xgb_classification_learning_rate_max', None)
 
     if params.xgb_classification:
+        class_algos_selected += 1
         if not params.xgb_classification_n_estimators_min or not params.xgb_classification_n_estimators_max or not params.xgb_classification_max_depth_min or not params.xgb_classification_max_depth_max or not params.xgb_classification_min_child_weight_min or not params.xgb_classification_min_child_weight_max or not params.xgb_classification_learning_rate_min or not params.xgb_classification_learning_rate_max:
             raise PluginParamValidationError("For the XGBoost algorithm, please choose a min and max value for all hyperparameters")
         if params.xgb_classification_n_estimators_min > params.xgb_classification_n_estimators_max:
@@ -388,6 +397,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.lgbm_classification_learning_rate_max = recipe_config.get('lgbm_classification_learning_rate_max', None)
 
     if params.lgbm_classification:
+        class_algos_selected += 1
         if not params.lgbm_classification_n_estimators_min or not params.lgbm_classification_n_estimators_max or not params.lgbm_classification_max_depth_min or not params.lgbm_classification_max_depth_max or not params.lgbm_classification_min_child_weight_min or not params.lgbm_classification_min_child_weight_max or not params.lgbm_classification_learning_rate_min or not params.lgbm_classification_learning_rate_max:
             raise PluginParamValidationError("For the LightGBM algorithm, please choose a min and max value for all hyperparameters")
         if params.lgbm_classification_n_estimators_min > params.lgbm_classification_n_estimators_max:
@@ -410,6 +420,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.gb_classification_learning_rate_max = recipe_config.get('gb_classification_learning_rate_max', None)
 
     if params.gb_classification:
+        class_algos_selected += 1
         if not params.gb_classification_n_estimators_min or not params.gb_classification_n_estimators_max or not params.gb_classification_max_depth_min or not params.gb_classification_max_depth_max or not params.gb_classification_min_samples_leaf_min or not params.gb_classification_min_samples_leaf_max or not params.gb_classification_learning_rate_min or not params.gb_classification_learning_rate_max:
             raise PluginParamValidationError("For the Gradient Tree Boosting algorithm, please choose a min and max value for all hyperparameters")
         if params.gb_classification_n_estimators_min > params.gb_classification_n_estimators_max:
@@ -428,6 +439,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.decision_tree_classification_min_samples_leaf_max = recipe_config.get('decision_tree_classification_min_samples_leaf_max', None)
 
     if params.decision_tree_classification:
+        class_algos_selected += 1
         if not params.decision_tree_classification_max_depth_min or not params.decision_tree_classification_max_depth_max or not params.decision_tree_classification_min_samples_leaf_min or not params.decision_tree_classification_min_samples_leaf_max:
             raise PluginParamValidationError("For the Decision Tree algorithm, please choose a min and max value for all hyperparameters")
         if params.decision_tree_classification_max_depth_min > params.decision_tree_classification_max_depth_max:
@@ -440,6 +452,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.lasso_regression_alpha_max = recipe_config.get('lasso_regression_alpha_max', None)
 
     if params.lasso_regression:
+        reg_algos_selected += 1
         if not params.lasso_regression_alpha_min or not params.lasso_regression_alpha_max:
             raise PluginParamValidationError("For the Lasso Regression algorithm, please choose a min and max value for alpha")
         if params.lasso_regression_alpha_min > params.lasso_regression_alpha_max:
@@ -454,6 +467,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.random_forest_regression_min_samples_leaf_max = recipe_config.get('random_forest_regression_min_samples_leaf_max', None)
 
     if params.random_forest_regression:
+        reg_algos_selected += 1
         if not params.random_forest_regression_n_estimators_min or not params.random_forest_regression_n_estimators_max or not params.random_forest_regression_max_depth_min or not params.random_forest_regression_max_depth_max or not params.random_forest_regression_min_samples_leaf_min or not params.random_forest_regression_min_samples_leaf_max:
             raise PluginParamValidationError("For the Random Forest algorithm, please choose a min and max value for all hyperparameters")
         if params.random_forest_regression_n_estimators_min > params.random_forest_regression_n_estimators_max:
@@ -474,6 +488,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.xgb_regression_learning_rate_max = recipe_config.get('xgb_regression_learning_rate_max', None)
 
     if params.xgb_regression:
+        reg_algos_selected += 1
         if not params.xgb_regression_n_estimators_min or not params.xgb_regression_n_estimators_max or not params.xgb_regression_max_depth_min or not params.xgb_regression_max_depth_max or not params.xgb_regression_min_child_weight_min or not params.xgb_regression_min_child_weight_max or not params.xgb_regression_learning_rate_min or not params.xgb_regression_learning_rate_max:
             raise PluginParamValidationError("For the XGBoost algorithm, please choose a min and max value for all hyperparameters")
         if params.xgb_regression_n_estimators_min > params.xgb_regression_n_estimators_max:
@@ -496,6 +511,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.lgbm_regression_learning_rate_max = recipe_config.get('lgbm_regression_learning_rate_max', None)
 
     if params.lgbm_regression:
+        reg_algos_selected += 1
         if not params.lgbm_regression_n_estimators_min or not params.lgbm_regression_n_estimators_max or not params.lgbm_regression_max_depth_min or not params.lgbm_regression_max_depth_max or not params.lgbm_regression_min_child_weight_min or not params.lgbm_regression_min_child_weight_max or not params.lgbm_regression_learning_rate_min or not params.lgbm_regression_learning_rate_max:
             raise PluginParamValidationError("For the LightGBM algorithm, please choose a min and max value for all hyperparameters")
         if params.lgbm_regression_n_estimators_min > params.lgbm_regression_n_estimators_max:
@@ -518,6 +534,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.gb_regression_learning_rate_max = recipe_config.get('gb_regression_learning_rate_max', None)
 
     if params.gb_regression:
+        reg_algos_selected += 1
         if not params.gb_regression_n_estimators_min or not params.gb_regression_n_estimators_max or not params.gb_regression_max_depth_min or not params.gb_regression_max_depth_max or not params.gb_regression_min_samples_leaf_min or not params.gb_regression_min_samples_leaf_max or not params.gb_regression_learning_rate_min or not params.gb_regression_learning_rate_max:
             raise PluginParamValidationError("For the Gradient Tree Boosting algorithm, please choose a min and max value for all hyperparameters")
         if params.gb_regression_n_estimators_min > params.gb_regression_n_estimators_max:
@@ -536,12 +553,19 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     params.decision_tree_regression_min_samples_leaf_max = recipe_config.get('decision_tree_regression_min_samples_leaf_max', None)
 
     if params.decision_tree_regression:
+        reg_algos_selected += 1
         if not params.decision_tree_regression_max_depth_min or not params.decision_tree_regression_max_depth_max or not params.decision_tree_regression_min_samples_leaf_min or not params.decision_tree_regression_min_samples_leaf_max:
             raise PluginParamValidationError("For the Decision Tree algorithm, please choose a min and max value for all hyperparameters")
         if params.decision_tree_regression_max_depth_min > params.decision_tree_regression_max_depth_max:
             raise PluginParamValidationError(f"The Decision Tree Max Depth min you selected: {params.decision_tree_regression_max_depth_min} is greater than Max Depth max: {params.decision_tree_regression_max_depth_max}. Choose a Max Depth min that is lesser than Max Depth max")
         if params.decision_tree_regression_min_samples_leaf_min > params.decision_tree_regression_min_samples_leaf_max:
             raise PluginParamValidationError(f"The Decision Tree Min Samples per Leaf min you selected: {params.decision_tree_regression_min_samples_leaf_min} is greater than Min Samples per Leaf max: {params.decision_tree_regression_min_samples_leaf_max}. Choose a Min Samples per Leaf min that is lesser than Min Samples per Leaf max")
+
+    # If no algorithms selected, raise an error
+    if (params.prediction_type == "two-class classification" or params.prediction_type == "multi-class classification") and class_algos_selected == 0:
+        raise PluginParamValidationError("You didn't select any algorithms. Please select at least one algorithm.")
+    elif params.prediction_type == "regression" and reg_algos_selected == 0:
+        raise PluginParamValidationError("You didn't select any algorithms. Please select at least one algorithm.")
 
     # Search Space Limit
     n_iter = recipe_config.get('n_iter', None)
@@ -596,6 +620,14 @@ def load_score_config_snowpark_session() -> Tuple[ScorePluginParams, Session]:
     else:
         saved_model_id = saved_model_names[0].split(".")[1]
 
+    # Check that there's an active version of the input model
+    client = dataiku.api_client()
+    project = client.get_default_project()
+    saved_model = project.get_saved_model(saved_model_id)
+    active_model_version = saved_model.get_active_version()
+    if not active_model_version:
+        raise PluginParamValidationError("There's something wrong with the input model. Please check that there is an active version that was trained with the Visual Snowpark ML train plugin recipe")
+
     # Recipe parameters
     recipe_config = get_recipe_config()
 
@@ -621,7 +653,6 @@ def load_score_config_snowpark_session() -> Tuple[ScorePluginParams, Session]:
         session.use_schema(input_dataset_schema)
 
     # Check that a code env named "py_38_snowpark" exists
-    client = dataiku.api_client()
     code_envs = [env["envName"] for env in client.list_code_envs()]
     if "py_38_snowpark" not in code_envs:
         raise CodeEnvSetupError("You must create a python 3.8 code env named 'py_38_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")

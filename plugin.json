@@ -8,7 +8,7 @@
         "icon": "dku-icon-snowpark-32",
         "tags": ["Machine Learning", "Snowflake"], 
         "supportLevel": "UNSUPPORTED",
-        "url": "https://www.dataiku.com/community/plugins/info/visual-snowparkml.html",
+        "url": "https://www.dataiku.com/product/plugins/visual-snowparkml/",
         "licenseInfo": "Apache Software License"
     }
 }
