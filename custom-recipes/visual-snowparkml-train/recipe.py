@@ -67,7 +67,7 @@ scoring_metric = metric_to_sklearn_mapping[params.model_metric]
 
 # SECTION 3 - Set up MLflow Experiment Tracking
 # MLFLOW Variables
-MLFLOW_CODE_ENV_NAME = "py_38_snowpark"
+MLFLOW_CODE_ENV_NAME = "py_39_snowpark"
 MLFLOW_EXPERIMENT_NAME = f"{params.model_name}_exp"
 
 # Get a Dataiku API client and the current project
