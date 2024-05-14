@@ -576,11 +576,11 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     else:
         raise PluginParamValidationError(f"Search space limit: {n_iter} is not an integer. Choose a search space limit that is an integer (e.g. 4)")
 
-    # Check that a code env named "py_38_snowpark" exists
+    # Check that a code env named "py_39_snowpark" exists
     client = dataiku.api_client()
     code_envs = [env["envName"] for env in client.list_code_envs()]
-    if "py_38_snowpark" not in code_envs:
-        raise CodeEnvSetupError("You must create a python 3.8 code env named 'py_38_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
+    if "py_39_snowpark" not in code_envs:
+        raise CodeEnvSetupError("You must create a python 3.9 code env named 'py_39_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
 
     # Check that if user selected two-class or multi-class classification, that they converted the target column to numeric (0,1) - a current SnowML requirement
     if (prediction_type == "two-class classification" or prediction_type == "multi-class classification"):
@@ -652,9 +652,9 @@ def load_score_config_snowpark_session() -> Tuple[ScorePluginParams, Session]:
         input_dataset_schema = input_dataset_info['info']['schema']
         session.use_schema(input_dataset_schema)
 
-    # Check that a code env named "py_38_snowpark" exists
+    # Check that a code env named "py_39_snowpark" exists
     code_envs = [env["envName"] for env in client.list_code_envs()]
-    if "py_38_snowpark" not in code_envs:
-        raise CodeEnvSetupError("You must create a python 3.8 code env named 'py_38_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
+    if "py_39_snowpark" not in code_envs:
+        raise CodeEnvSetupError("You must create a python 3.9 code env named 'py_39_snowpark' with the packages listed here: https://github.com/dataiku/dss-plugin-visual-snowparkml")
 
     return params, session, input_dataset, saved_model_id, output_score_dataset
