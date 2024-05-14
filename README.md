@@ -23,15 +23,15 @@ With this plugin, you can train machine learning models and then use them to sco
 # Other Requirements
 
 - Must have a Snowflake connection. Plugin recipe Input + Output tables should be in the same Snowflake connection
-- Python 3.8 available on the instance
+- Python 3.9 available on the instance
 - (Strongly recommended) Snowpark-optimized Snowflake warehouse available for model training. Multi-cluster warehouse will allow for parallelized hyperparameter tuning
 
 # Setup
 ## Build the plugin code environment
 Right after installing the plugin, you will need to build its code environment. Note that this plugin requires Python version 3.8 and that conda is not supported.
 
-## Build ANOTHER python 3.8 code environment
-Name it “py_38_snowpark”
+## Build ANOTHER python 3.9 code environment
+Name it “py_39_snowpark”
 Under “Core packages versions”, choose Pandas 1.3
 Add these packages, then update the environment:
 ```
