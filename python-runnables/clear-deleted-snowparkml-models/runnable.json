@@ -3,7 +3,7 @@
         "label": "Clear SnowparkML Registry models",
         "description": "Delete models from SnowparkML Model Registry if the Dataiku Saved Model (or a version underneath) was deleted",
         "category" : "DSS maintenance",
-        "icon" : "dku-icon-snowpark-32"
+        "icon" : "dku-icon-snowpark-20"
     },
 
     "impersonate": false,
