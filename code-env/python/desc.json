@@ -1,6 +1,6 @@
 {
   "acceptedPythonInterpreters": [
-    "PYTHON38"
+    "PYTHON39"
   ],
   "corePackagesSet": "PANDAS13",
   "forceConda": false,
