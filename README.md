@@ -23,6 +23,7 @@ With this plugin, you can train machine learning models and then use them to sco
 # Other Requirements
 
 - Must have a Snowflake connection. Plugin recipe Input + Output tables should be in the same Snowflake connection
+- The Snowflake role used must either own the schema where the Input + Output tables live, or have the CREATE MODEL privilege on it
 - Python 3.9 available on the instance
 - (Strongly recommended) Snowpark-optimized Snowflake warehouse available for model training. Multi-cluster warehouse will allow for parallelized hyperparameter tuning
 
