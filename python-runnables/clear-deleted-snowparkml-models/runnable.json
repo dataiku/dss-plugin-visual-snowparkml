@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "label": "Clear SnowparkML Registry models",
+        "description": "Delete models from SnowparkML Model Registry if the Dataiku Saved Model (or a version underneath) was deleted",
+        "category" : "DSS maintenance",
+        "icon" : "dku-icon-snowpark-20"
+    },
+
+    "impersonate": false,
+    "permissions" : ["WRITE_CONF"],
+    "resultType" : "HTML",
+    "resultLabel" : "Deleted SnowparkML Model Versions",
+    "macroRoles": [     
+         {
+             "type": "PROJECT_MACROS"
+         }
+     ],
+
+    "params": [
+        {
+            "name": "perform_deletion",
+            "label" : "Perform deletion",
+            "type": "BOOLEAN",
+            "description":"If not checked, only lists what will be deleted",
+            "mandatory" : true,
+            "defaultValue" : false
+        },
+        {
+            "name": "snowflake_connection",
+            "label" : "Snowflake Connection",
+            "type": "CONNECTION",
+            "description":"Snowflake connection where models are stored (in the MODEL_REGISTRY database)",
+            "mandatory" : true
+        }    
+    ]
+}

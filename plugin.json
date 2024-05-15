@@ -1,14 +1,14 @@
 {
     "id": "visual-snowparkml",
-    "version": "1.0.0",
+    "version": "1.1.4",
     "meta": {
         "label": "Visual SnowparkML",
         "description": "Train Machine Learning Models Using Snowpark ML",
         "author": "Dataiku (Pat Masi-Phelps)",
-        "icon": "icon-snowflake",
+        "icon": "dku-icon-snowpark-32",
         "tags": ["Machine Learning", "Snowflake"], 
-        "supportLevel": "UNSUPPORTED",
-        "url": "https://www.dataiku.com/community/plugins/info/visual-snowparkml.html",
+        "supportLevel": "NOT_SUPPORTED",
+        "url": "https://www.dataiku.com/product/plugins/visual-snowparkml/",
         "licenseInfo": "Apache Software License"
     }
 }

@@ -1,0 +1,54 @@
+{
+    "meta": {
+        "label": "Score New Records using Snowpark",
+        "description": "Must use a model trained by the Visual SnowparkML plugin and successfully deployed to Snowflake Model Registry",
+        "icon": "icon-snowflake",
+        "iconColor": "blue"
+    },
+
+    "kind": "PYTHON",
+
+    "inputRoles": [
+        {
+            "name": "input_dataset_name",
+            "label": "Dataset to Score",
+            "description": "Must have all features used to train the model",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        },
+        {
+            "name": "saved_model_name",
+            "label": "Saved Model",
+            "description": "Model to make predictions - Must have been trained using Snowpark ML Train recipe",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": false,
+            "acceptsSavedModel": true
+        }
+    ],
+
+    "outputRoles": [
+        {
+            "name": "output_score_dataset_name",
+            "label": "Scored Dataset Output",
+            "description": "Dataset to Score with Model Predictions",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+    "params": [
+        {
+            "name": "warehouse",
+            "label": "Snowflake Warehouse",
+            "type": "STRING",
+            "description": "If empty, use Snowflake connection default warehouse"
+        }
+    ],    
+    "selectableFromDataset": "input_dataset_name",
+    "selectableFromSavedModel": "saved_model_name",
+
+    "resourceKeys": []
+
+}
