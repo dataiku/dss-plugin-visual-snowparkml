@@ -63,7 +63,7 @@ Click once on the input dataset (with known, labeled target values), then find t
 
 Click the train recipe:
 
-![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/6a58dc0c-b0ee-4c85-a742-a2cd45c58abc)
+<img width="816" alt="image" src="https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/315ddd8c-ce08-4fdc-9dc3-b1223e4d3f09">
 
 Create two output Snowflake tables to hold the generated output train/test sets, and one managed folder to hold saved models (connection doesn’t matter):
 
@@ -119,7 +119,7 @@ After running the train recipe successfully, you can find all model training and
 
 The best model will be deployed to the flow. If you selected “Deploy to Snowflake ML Model Registry”, the model will also be deployed to Snowflake’s Model Registry. 
 
-![Screenshot 2024-02-23 at 9 12 34 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/4b21f000-bb76-4061-85c5-f4b07fdd6923)
+<img width="443" alt="Screenshot 2024-05-15 at 8 09 47 AM" src="https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/5e7837da-60db-4814-afc6-6389fef71100">
 
 ## Scoring New Records with your Trained Model and Snowpark ML
 **Note:** you can use a regular Dataiku Score recipe with the Snowpark ML trained model, however, the inference will happen in a local python kernel, and not in Snowflake. Note that for classification models where you did NOT disable class weights, you'll need to add a SAMPLE_WEIGHTS column in your input dataset before a regular Dataiku Score recipe (this column can have all empty values).
