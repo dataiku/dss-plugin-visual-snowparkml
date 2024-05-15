@@ -29,7 +29,7 @@ With this plugin, you can train machine learning models and then use them to sco
 
 # Setup
 ## Build the plugin code environment
-Right after installing the plugin, you will need to build its code environment. Note that this plugin requires Python version 3.8 and that conda is not supported.
+Right after installing the plugin, you will need to build its code environment. Note that this plugin requires Python version 3.9 and that conda is not supported.
 
 ## Build ANOTHER python 3.9 code environment
 Name it “py_39_snowpark”
