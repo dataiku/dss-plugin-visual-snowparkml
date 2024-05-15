@@ -29,7 +29,7 @@
             "name": "snowflake_connection",
             "label" : "Snowflake Connection",
             "type": "CONNECTION",
-            "description":"Snowflake connection where models are stored (in the MODEL_REGISTRY database)",
+            "description":"Snowflake connection where models are stored (the macro will check the connection's default database ans schema)",
             "mandatory" : true
         }    
     ]
