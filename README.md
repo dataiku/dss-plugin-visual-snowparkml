@@ -106,7 +106,7 @@ When you include a feature, don't leave the "Encoding / Rescaling" and "Impute M
 
 **Snowflake Resources and Deployment**
 - Snowflake Warehouse: the warehouse to use for ML training. Strongly recommended to use a Snowpark-optimized Snowflake warehouse. A multi-cluster warehouse will allow for parallelized hyperparameter tuning.
-- Deploy to Snowflake ML Model Registry: deploy the best trained model to a Snowflake ML Model Registry (in the MODEL_REGISTRY database. See Snowflake access requirements [here](https://docs.snowflake.com/LIMITEDACCESS/snowflake-ml-model-registry#required-privileges)). This is required in order to run a subsequent Visual Snowpark ML Score recipe, to run batch inference in Snowpark using the deployed model.
+- Deploy to Snowflake ML Model Registry: deploy the best trained model to a Snowflake ML Model Registry (in the same database and schema as the input and output datasets. See Snowflake access requirements [here](https://docs.snowflake.com/en/developer-guide/snowpark-ml/snowpark-ml-mlops-model-registry#required-privileges). This is required in order to run a subsequent Visual Snowpark ML Score recipe, to run batch inference in Snowpark using the deployed model.
 
 ![Screenshot 2024-02-23 at 9 01 46 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/3c29084d-3a6e-455b-95c7-9c963d92b90e)
 
@@ -133,7 +133,7 @@ Click once on the trained model and input dataset you’d like to make predictio
 
 Click the score recipe:
 
-![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/a744b6eb-ecdf-4ef5-9e44-bbe364bea2f1)
+<img width="659" alt="image" src="https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/85ff1459-8dc3-485c-981f-20c84bc51de7">
 
 Make sure you’ve selected the trained model and Snowflake table for scoring as inputs. Then create one output Snowflake table to hold the scored dataset. Then click “Create”:
 
@@ -145,7 +145,7 @@ Optionally type the name of a Snowpark-optimized Snowflake warehouse to use for 
 
 Your flow should look like this, and the output scored dataset should have prediction column(s):
 
-![Screenshot 2024-02-23 at 9 31 18 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/7c2a503d-775a-428c-83bf-130d8a1f5ae0)
+<img width="698" alt="Screenshot 2024-05-14 at 4 21 17 PM" src="https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/a93839ac-490d-4bc8-bc6d-03ca841c80a8">
 
 ![Screenshot 2024-02-23 at 9 31 46 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/a5bf996b-cacd-463e-a807-1a0ee074e5c3)
 
