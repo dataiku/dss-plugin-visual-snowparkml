@@ -1,6 +1,10 @@
 # Changelog
 
-## [Version 1.1.4] - Initial Release - 2024-02
+## [Version 1.1.5] - Bugfix Release - 2024-05
+
+* Updated creation of Snowpark session objects to account for variables in Snowflake connection-level database and schema fields
+
+## [Version 1.1.4] - Initial Release - 2024-05
 
 * Train recipe for visual ML on Snowpark
 * Score recipe on Snowpark (using models trained with the Train recipe, and succesfully deployed to Snowflake Model Registry)
