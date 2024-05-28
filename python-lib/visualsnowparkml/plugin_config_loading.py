@@ -270,9 +270,13 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
         params.model_metric = model_metric
 
     # Snowflake Warehouse
+    client = dataiku.api_client()
+    project = client.get_default_project()
+    project_key = project.project_key
+    
     dku_snowpark = DkuSnowpark()
     snowflake_connection_name = input_dataset.get_config()['params']['connection']
-    session = dku_snowpark.get_session(snowflake_connection_name)
+    session = dku_snowpark.create_session(snowflake_connection_name, project_key=project_key)
 
     params.warehouse = recipe_config.get('warehouse', None)
     if params.warehouse:
@@ -623,6 +627,7 @@ def load_score_config_snowpark_session() -> Tuple[ScorePluginParams, Session]:
     # Check that there's an active version of the input model
     client = dataiku.api_client()
     project = client.get_default_project()
+    project_key = project.project_key
     saved_model = project.get_saved_model(saved_model_id)
     active_model_version = saved_model.get_active_version()
     if not active_model_version:
@@ -634,7 +639,7 @@ def load_score_config_snowpark_session() -> Tuple[ScorePluginParams, Session]:
     # Snowflake Warehouse
     dku_snowpark = DkuSnowpark()
     snowflake_connection_name = input_dataset.get_config()['params']['connection']
-    session = dku_snowpark.get_session(snowflake_connection_name)
+    session = dku_snowpark.create_session(snowflake_connection_name, project_key=project_key)
 
     params.warehouse = recipe_config.get('warehouse', None)
     if params.warehouse:
