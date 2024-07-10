@@ -1,5 +1,10 @@
 # Changelog
 
+## [Version 1.1.6] - Bugfix Release - 2024-07
+
+* Updated Snowpark ML version to 1.5.3
+* Fixed Model Registry deletion macro
+
 ## [Version 1.1.5] - Bugfix Release - 2024-05
 
 * Updated creation of Snowpark session objects to account for variables in Snowflake connection-level database and schema fields
