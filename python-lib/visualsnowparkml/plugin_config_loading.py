@@ -212,7 +212,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     elif re.match(r'^[A-Za-z0-9_]+$', model_name):
         params.model_name = model_name
     else:
-        raise PluginParamValidationError(f"Invalid model name: {model_name}. Alphanumeric and underscores only. No spaces, special characters (, . / \ : ! @ # $ %, etc.)")
+        raise PluginParamValidationError(f"Invalid model name: {model_name}. Alphanumeric and underscores only. No spaces, special characters (, . / \\ : ! @ # $ %, etc.)")
 
     # Target Column Label
     col_label = recipe_config.get('col_label', None)

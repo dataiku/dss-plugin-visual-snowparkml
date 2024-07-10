@@ -5,7 +5,7 @@ from dataiku.snowpark import DkuSnowpark
 import pandas as pd
 import json
 
-from snowflake.ml.registry import model_registry
+from snowflake.ml.registry import Registry
 
 
 class MyRunnable(Runnable):
