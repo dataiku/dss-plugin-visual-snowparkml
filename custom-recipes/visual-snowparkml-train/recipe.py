@@ -732,7 +732,8 @@ if params.deploy_to_snowflake_model_registry:
         model_ver = registry.log_model(model=best_model["snowml_obj"],
                                        model_name=snowflake_model_name,
                                        version_name=best_model["run_name"],
-                                       comment=snowflake_registry_model_description)
+                                       comment=snowflake_registry_model_description,
+                                       options={"relax_version": False})
 
         for test_metric in best_model["test_metrics"]:
             model_ver.set_metric(metric_name=test_metric, value=best_model["test_metrics"][test_metric])
