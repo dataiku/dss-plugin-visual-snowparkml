@@ -333,20 +333,21 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
             elif params.selectedOption2[selected_input_col] == 'Constant' and selected_input_col not in params.selectedConstantImpute.keys():
                 raise PluginParamValidationError(f"Constant imputation selected for input feature: {selected_input_col}, but no value chosen. Choose a value")
 
+    # Count number of algorithms selected
+    class_algos_selected = 0
+    reg_algos_selected = 0
+
     # Check that all algorithms have hyperparameter ranges chosen
     params.logistic_regression = recipe_config.get('logistic_regression', None)
     params.logistic_regression_c_min = recipe_config.get('logistic_regression_c_min', None)
     params.logistic_regression_c_max = recipe_config.get('logistic_regression_c_max', None)
 
     if params.logistic_regression:
+        class_algos_selected += 1
         if not params.logistic_regression_c_min or not params.logistic_regression_c_max:
             raise PluginParamValidationError("For the Logistic Regression algorithm, please choose a min and max value for C")
         if params.logistic_regression_c_min > params.logistic_regression_c_max:
             raise PluginParamValidationError(f"The Logistic Regression C min you selected: {params.logistic_regression_c_min} is greater than C max: {params.logistic_regression_c_max}. Choose a C min that is lesser than C max")
-
-    # Count number of algorithms selected
-    class_algos_selected = 0
-    reg_algos_selected = 0
 
     params.random_forest_classification = recipe_config.get('random_forest_classification', None)
     params.random_forest_classification_n_estimators_min = recipe_config.get('random_forest_classification_n_estimators_min', None)

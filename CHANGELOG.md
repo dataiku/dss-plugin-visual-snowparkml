@@ -1,5 +1,10 @@
 # Changelog
 
+## [Version 1.1.7] - Bugfix Release - 2024-07
+
+* Fixed error message saying no algorithms selected when only logistic regression selected
+* Fixed deployment of models to Snowflake ML Model Registry to control for sklearn backwards incompatibility on the Snowflake side
+
 ## [Version 1.1.6] - Bugfix Release - 2024-07
 
 * Updated Snowpark ML version to 1.5.3
