@@ -36,7 +36,7 @@ Name it “py_39_snowpark”
 Under “Core packages versions”, choose Pandas 1.3
 Add these packages, then update the environment:
 ```
-scikit-learn==1.3.2
+scikit-learn==1.3.0
 mlflow==2.9.2
 statsmodels==0.12.2
 protobuf==3.16.0
@@ -44,14 +44,14 @@ xgboost==1.7.3
 lightgbm==3.3.5
 matplotlib==3.7.1
 scipy==1.10.1
-snowflake-snowpark-python==1.15.0
-snowflake-snowpark-python[pandas]==1.15.0
-snowflake-connector-python[pandas]==3.7.0
+snowflake-snowpark-python==1.19.0
+snowflake-snowpark-python[pandas]==1.19.0
+snowflake-connector-python[pandas]==3.11.0
 MarkupSafe==2.0.1
 cloudpickle==2.0.0
 flask==1.0.4
 Jinja2==2.11.3
-snowflake-ml-python==1.5.3
+snowflake-ml-python==1.5.4
 ```
 
 # Usage
