@@ -36,6 +36,7 @@ Name it “py_39_snowpark”
 Under “Core packages versions”, choose Pandas 1.5
 Add these packages, then update the environment:
 ```
+numpy==1.23.5
 scikit-learn==1.5.1
 mlflow==2.17.2
 statsmodels==0.13.5
