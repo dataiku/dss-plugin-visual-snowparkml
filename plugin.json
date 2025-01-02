@@ -1,6 +1,6 @@
 {
     "id": "visual-snowparkml",
-    "version": "1.1.8",
+    "version": "1.1.9",
     "meta": {
         "label": "Visual SnowparkML",
         "description": "Train Machine Learning Models Using Snowpark ML",
