@@ -37,8 +37,8 @@ Under “Core packages versions”, choose Pandas 1.5
 Add these packages, then update the environment:
 ```
 scikit-learn==1.5.1
-mlflow==2.9.2
-statsmodels==0.12.2
+mlflow==2.17.2
+statsmodels==0.13.5
 protobuf==3.20.3
 xgboost==1.7.6
 lightgbm==4.1.0
