@@ -25,7 +25,7 @@ With this plugin, you can train machine learning models and then use them to sco
 - Must have a Snowflake connection. Plugin recipe Input + Output tables should be in the same Snowflake connection
 - The Snowflake role used must either own the schema where the Input + Output tables live, or have the CREATE MODEL privilege on it
 - Python 3.9 available on the instance
-- (Strongly recommended) Snowpark-optimized Snowflake warehouse available for model training. Multi-cluster warehouse will allow for parallelized hyperparameter tuning
+- Snowpark-optimized Snowflake warehouse available for model training. Multi-cluster warehouse will allow for parallelized hyperparameter tuning
 
 # Setup
 ## Build the plugin code environment
@@ -105,7 +105,7 @@ When you include a feature, don't leave the "Encoding / Rescaling" and "Impute M
 ![Screenshot 2024-02-23 at 9 01 36 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/aaaef879-3b30-4b29-9073-19e1621ebe20)
 
 **Snowflake Resources and Deployment**
-- Snowflake Warehouse: the warehouse to use for ML training. Strongly recommended to use a Snowpark-optimized Snowflake warehouse. A multi-cluster warehouse will allow for parallelized hyperparameter tuning.
+- Snowflake Warehouse: the warehouse to use for ML training. You must use a Snowpark-optimized Snowflake warehouse. A multi-cluster warehouse will allow for parallelized hyperparameter tuning.
 - Deploy to Snowflake ML Model Registry: deploy the best trained model to a Snowflake ML Model Registry (in the same database and schema as the input and output datasets. See Snowflake access requirements [here](https://docs.snowflake.com/en/developer-guide/snowpark-ml/snowpark-ml-mlops-model-registry#required-privileges). This is required in order to run a subsequent Visual Snowpark ML Score recipe, to run batch inference in Snowpark using the deployed model.
 
 ![Screenshot 2024-02-23 at 9 01 46 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/3c29084d-3a6e-455b-95c7-9c963d92b90e)
@@ -139,7 +139,7 @@ Make sure you’ve selected the trained model and Snowflake table for scoring as
 
 ![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/f9625a12-0bd2-471c-9151-dfb8675df4fa)
 
-Optionally type the name of a Snowpark-optimized Snowflake warehouse to use for scoring. Leave empty to use the Snowflake connection’s default warehouse. Note: it’s less needed to use a Snowpark-optimized warehouse for inference compared to training. Click “Run”.
+Optionally type the name of a Snowpark-optimized Snowflake warehouse to use for scoring. Leave empty to use the Snowflake connection’s default warehouse. Click “Run”.
 
 ![Screenshot 2024-02-23 at 9 30 05 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/c223ff1b-e054-4c35-981d-bd2066aa0515)
 
