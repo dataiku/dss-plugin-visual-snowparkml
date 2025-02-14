@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 1.1.10] - Bugfix Release - 2025-02
+* Added notes throughout the plugin and documentation that a Snowpark-optimized warehouse is required for train.
+
 ## [Version 1.1.9] - Bugfix Release - 2025-01
 * Fixed package versions for the managed plugin code environment and "py_39_snowpark" code environment, fixing the error that prevented the deployment of models to Snowflake ML Model Registry due to Snowflake removing certain package versions from their internal repository. Upgrading the plugin will prompt rebuilding the managed plugin code environment. You will need to update the "py_39_snowpark" code environment manually accoring to the updated README.
 
