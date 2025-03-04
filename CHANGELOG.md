@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 1.1.11] - Bugfix Release - 2025-03
+* Changed scikit-learn version to 1.4.2
+
 ## [Version 1.1.10] - Bugfix Release - 2025-02
 * Added notes throughout the plugin and documentation that a Snowpark-optimized warehouse is required for train.
 
