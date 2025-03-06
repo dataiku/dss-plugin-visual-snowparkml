@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 1.1.12] - Bugfix Release - 2025-03
+* Fixed LogisticRegression handling of multi-class (due to sklearn rollback).
+
 ## [Version 1.1.11] - Bugfix Release - 2025-03
 * Changed scikit-learn version to 1.4.2
 
