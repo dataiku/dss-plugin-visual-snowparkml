@@ -305,7 +305,8 @@ if params.prediction_type == "two-class classification" or params.prediction_typ
     if params.logistic_regression:
         algorithms.append({'algorithm': 'logistic_regression',
                            'sklearn_obj': LogisticRegression(),
-                           'gs_params': {'clf__C': loguniform(params.logistic_regression_c_min, params.logistic_regression_c_max)}})
+                           'gs_params': {'clf__C': loguniform(params.logistic_regression_c_min, params.logistic_regression_c_max),
+                                         'clf__multi_class': ['auto']}})
 
     if params.random_forest_classification:
         algorithms.append({'algorithm': 'random_forest_classification',
