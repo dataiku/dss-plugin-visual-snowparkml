@@ -45,7 +45,7 @@ xgboost==1.7.6
 lightgbm==4.1.0
 matplotlib==3.7.1
 scipy==1.10.1
-snowflake-connector-python[pandas]==3.10.0
+snowflake-connector-python[pandas]==3.15.0
 snowflake-snowpark-python==1.17.0
 MarkupSafe==2.0.1
 cloudpickle==2.2.1

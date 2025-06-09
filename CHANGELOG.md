@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 1.1.13] - Bugfix Release - 2025-06
+* Fixed snowflake-connector-python version issue.
+
 ## [Version 1.1.12] - Bugfix Release - 2025-03
 * Fixed LogisticRegression handling of multi-class (due to sklearn rollback).
 

@@ -2,7 +2,7 @@
   "acceptedPythonInterpreters": [
     "PYTHON39"
   ],
-  "corePackagesSet": "PANDAS15",
+  "corePackagesSet": "PANDAS22",
   "forceConda": false,
   "installCorePackages": true,
   "installJupyterSupport": false
