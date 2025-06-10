@@ -732,7 +732,6 @@ if params.deploy_to_snowflake_model_registry:
         registry = Registry(session=session)
         snowflake_registry_model_description = f"Dataiku Project: {project.project_key}, Model: {params.model_name}"
         snowflake_model_name = f"{project.project_key}_{params.model_name}"
-        print("PATPAT")
         model_ver = registry.log_model(model=best_model["snowml_obj"],
                                        model_name=snowflake_model_name,
                                        version_name=best_model["run_name"],
