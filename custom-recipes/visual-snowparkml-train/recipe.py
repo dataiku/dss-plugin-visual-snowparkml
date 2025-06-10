@@ -187,6 +187,8 @@ def add_sample_weights_col_to_snowpark_df(snowpark_df, col):
 
     return snowpark_df
 
+# Get an example of the input dataset to use as an input example for the model
+input_example = input_snowpark_df.limit(10)
 
 # Add sample weights column if two-class classification
 if (params.prediction_type == "two-class classification" or params.prediction_type == "multi-class classification") and not params.disable_class_weights:
@@ -733,6 +735,7 @@ if params.deploy_to_snowflake_model_registry:
         model_ver = registry.log_model(model=best_model["snowml_obj"],
                                        model_name=snowflake_model_name,
                                        version_name=best_model["run_name"],
+                                       sample_input_data=input_example,
                                        comment=snowflake_registry_model_description,
                                        options={"relax_version": False})
 
