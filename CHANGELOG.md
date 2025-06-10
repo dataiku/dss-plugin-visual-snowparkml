@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 1.1.14] - Bugfix Release - 2025-06
+* Fixed issue with Snowflake model registry input data types.
+
 ## [Version 1.1.13] - Bugfix Release - 2025-06
 * Fixed snowflake-connector-python version issue.
 

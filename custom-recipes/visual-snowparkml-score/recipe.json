@@ -2,7 +2,7 @@
     "meta": {
         "label": "Score New Records using Snowpark",
         "description": "Must use a model trained by the Visual SnowparkML plugin and successfully deployed to Snowflake Model Registry",
-        "icon": "icon-snowflake",
+        "icon": "dku-icon-snowpark",
         "iconColor": "blue"
     },
 
