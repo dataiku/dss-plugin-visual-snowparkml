@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 1.1.15] - Bugfix Release - 2025-06
+* Fixed broken plugin icon
+  
 ## [Version 1.1.14] - Bugfix Release - 2025-06
 * Fixed issue with Snowflake model registry input data types.
 
