@@ -33,7 +33,7 @@ Right after installing the plugin, you will need to build its code environment. 
 
 ## Build ANOTHER python 3.9 code environment
 Name it “py_39_snowpark”
-Under “Core packages versions”, choose Pandas 1.5
+Under “Core packages versions”, choose Pandas 2.2
 Add these packages, then update the environment:
 ```
 numpy==1.23.5
@@ -41,10 +41,10 @@ scikit-learn==1.4.2
 mlflow==2.17.2
 statsmodels==0.13.5
 protobuf==3.20.3
-xgboost==1.7.6
-lightgbm==4.1.0
+xgboost==2.1.4
+lightgbm==4.6.0
 matplotlib==3.7.1
-scipy==1.10.1
+scipy==1.13.1
 MarkupSafe==2.0.1
 cloudpickle==2.2.1
 flask==2.1.3
