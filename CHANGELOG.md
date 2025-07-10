@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 1.1.16] - Bugfix Release - 2025-07
+* Fixed feature handling with features with <= 2 characters
+
 ## [Version 1.1.15] - Bugfix Release - 2025-06
 * Fix code env package version conflicts
 
