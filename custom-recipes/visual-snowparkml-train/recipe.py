@@ -270,7 +270,10 @@ col_transformer_list = []
 
 for feature in included_features_handling_list:
     feature_name = feature["name"]
-    transformer_name = f"{feature_name[1:-1]}_tform"
+    if feature_name.startswith('"') and feature_name.endswith('"'):
+        transformer_name = f"{feature_name[1:-1]}_tform"
+    else:
+        transformer_name = f"{feature_name}_tform"
 
     feature_transformers = []
 
