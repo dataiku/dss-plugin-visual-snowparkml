@@ -292,6 +292,8 @@ for feature in included_features_handling_list:
         feature_transformers.append(('enc', StandardScaler()))
     if feature["encoding_rescaling"] == "Min-max rescaling":
         feature_transformers.append(('enc', MinMaxScaler()))
+    if feature["encoding_rescaling"] == "No rescaling":
+        print(f"No rescaling for {feature_name}")
     if feature["encoding_rescaling"] == "Dummy encoding":
         feature_transformers.append(('enc', OneHotEncoder(handle_unknown='infrequent_if_exist',
                                                           max_categories=10)))
