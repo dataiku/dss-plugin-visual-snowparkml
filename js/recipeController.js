@@ -17,7 +17,7 @@ app.controller('retrainRecipeController', function ($scope, utils) {
         $scope.inputDatasetColNames = data.input_dataset_columns.map(col => col.name);
                 
         $scope.categoricalOptions = ["Dummy encoding", "Ordinal encoding"];
-        $scope.numericOptions = ["Standard rescaling","Min-max rescaling"];
+        $scope.numericOptions = ["Standard rescaling","Min-max rescaling","No rescaling"];
         $scope.categoricalOptions2 = ["Most frequent value", "Constant"];
         $scope.numericOptions2 = ["Average", "Median", "Constant"];
         

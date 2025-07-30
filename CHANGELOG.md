@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 1.2.0] - Feature Release - 2025-07
+* Added "No rescaling" as an Encoding / Rescaling option for numeric features
+
 ## [Version 1.1.16] - Bugfix Release - 2025-07
 * Fixed feature handling with features with <= 2 characters
 
