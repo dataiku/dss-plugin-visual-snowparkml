@@ -265,6 +265,10 @@ for feature_column in params.inputDatasetColumns:
 # List of just the input feature names
 included_feature_names = [feature['name'] for feature in included_features_handling_list]
 
+# Select just the input features and the target column for the input example
+included_feature_names_plus_target = included_feature_names + [col_label_sf]
+input_example = input_example.select(included_feature_names_plus_target)
+
 # Create a list of Pipelines for each feature, the encoding/rescaling method, and missingness imputation method
 col_transformer_list = []
 
