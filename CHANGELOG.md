@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 1.2.1] - Bugfix Release - 2025-08
+* Removed excluded features from the Snowflake model registry input schema
+
 ## [Version 1.2.0] - Feature Release - 2025-07
 * Added "No rescaling" as an Encoding / Rescaling option for numeric features
 
