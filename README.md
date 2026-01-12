@@ -1,4 +1,4 @@
-# Visual Snowpark ML Plugin
+# Visual Snowflake ML Plugin
 
 ![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/4227975a-08aa-44af-8b3f-671dd29e4e5d)
 
@@ -6,12 +6,12 @@ With this plugin, you can train machine learning models and then use them to sco
 
 # Capabilities
 
-- No-code ML model training on Snowpark using Snowflake’s [snowflake-ml-python](https://pypi.org/project/snowflake-ml-python/) package
+- No-code ML model training using Snowflake compute, either using a Snowpark optimized warehouse with Snowflake’s [snowflake-ml-python](https://pypi.org/project/snowflake-ml-python/) package, or using a Snowpark Container Services compute pool with [Snowflake ML Jobs](https://docs.snowflake.com/en/developer-guide/snowflake-ml/ml-jobs/overview#)
     - Two-class classification, multi-class classification, and regression tasks on tabular data stored in a Snowflake table
     - Hyperparameter tuning using Random Search on certain algorithm parameters
     - Track hyperparameter tuning and model performance through Dataiku’s Experiment Tracking MLflow integration
     - Output the best trained model to a Dataiku Saved Model in the flow, and deploy the model to a Snowflake Model Registry
-- No-code ML batch scoring in Snowpark using a trained model (from the training recipe of this plugin)
+- No-code ML batch scoring in Snowflake using a trained model (from the training recipe of this plugin)
 - Macro to clean up models from the Snowflake Model Registry that have been deleted from the Dataiku project
 
 # Limitations
@@ -23,34 +23,31 @@ With this plugin, you can train machine learning models and then use them to sco
 # Other Requirements
 
 - Must have a Snowflake connection. Plugin recipe Input + Output tables should be in the same Snowflake connection
-- The Snowflake role used must either own the schema where the Input + Output tables live, or have the CREATE MODEL privilege on it
-- Python 3.9 available on the instance
-- Snowpark-optimized Snowflake warehouse available for model training. Multi-cluster warehouse will allow for parallelized hyperparameter tuning
+- Snowpark-optimized Snowflake warehouse or Snowpark Container Services Compute Pool available for model training. Multi-cluster warehouse will allow for parallelized hyperparameter tuning
+    - The Snowflake role used for the Input + Output tables must also have USAGE permission on the Snowflake warehouse or Snowpark Container Services Compute Pool chosen. If using a Snowflake Container Runtime backend, you will also need USAGE permission on the Snowflake stage used.
+    - The Snowflake role used must have the CREATE MODEL privilege on it.
+- Python 3.10 available on the instance
+
 
 # Setup
 ## Build the plugin code environment
-Right after installing the plugin, you will need to build its code environment. Note that this plugin requires Python version 3.9 and that conda is not supported.
+Right after installing the plugin, you will need to build its code environment. Note that this plugin requires Python version 3.10 and that conda is not supported.
 
-## Build ANOTHER python 3.9 code environment
-Name it “py_39_snowpark”
-Under “Core packages versions”, choose Pandas 2.2
+## Build ANOTHER python 3.10 code environment
+Name it “py_310_snowpark”
+Under “Core packages versions”, choose Pandas 2.3
 Add these packages, then update the environment:
 ```
-numpy==1.23.5
-scikit-learn==1.4.2
-mlflow==2.17.2
-statsmodels==0.13.5
-protobuf==3.20.3
-xgboost==2.1.4
+snowflake-ml-python==1.20.0
+numpy==1.26.4
+mlflow==2.18.0
+scikit-learn==1.7.2
+xgboost==3.1.2
 lightgbm==4.6.0
-matplotlib==3.7.1
-scipy==1.13.1
-MarkupSafe==2.0.1
-cloudpickle==2.2.1
-flask==2.1.3
-snowflake-ml-python==1.8.5
-Jinja2==3.1.5
+statsmodels==0.14.6
 ```
+
+## 
 
 # Usage
 ## Training models with Snowpark ML
@@ -103,6 +100,9 @@ When you include a feature, don't leave the "Encoding / Rescaling" and "Impute M
 ![Screenshot 2024-02-23 at 9 01 36 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/aaaef879-3b30-4b29-9073-19e1621ebe20)
 
 **Snowflake Resources and Deployment**
+- Compute Backend: whether to use Snowflake Container Runtime (Snowpark Container Services) or a Snowflake warehouse for this ML training job
+- (If Container Runtime) Compute Pool: the Snowpark Container Services compute pool to use for ML training. 
+- (If Container Runtime) Snowflake Stage: the Snowflake Stage where model training functions will be uploaded prior to execution on the compute pool. 
 - Snowflake Warehouse: the warehouse to use for ML training. You must use a Snowpark-optimized Snowflake warehouse. A multi-cluster warehouse will allow for parallelized hyperparameter tuning.
 - Deploy to Snowflake ML Model Registry: deploy the best trained model to a Snowflake ML Model Registry (in the same database and schema as the input and output datasets. See Snowflake access requirements [here](https://docs.snowflake.com/en/developer-guide/snowpark-ml/snowpark-ml-mlops-model-registry#required-privileges). This is required in order to run a subsequent Visual Snowpark ML Score recipe, to run batch inference in Snowpark using the deployed model.
 

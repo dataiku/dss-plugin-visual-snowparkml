@@ -1,6 +1,6 @@
 {
     "meta": {
-        "label": "Train ML Models on Snowpark",
+        "label": "Train ML Models on Snowflake",
         "description": "See README for requirements",
         "icon": "dku-icon-snowpark",
         "iconColor": "blue"
