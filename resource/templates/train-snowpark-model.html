@@ -757,6 +757,30 @@ These rules form a tree, with the leaves of the tree carrying the predicted valu
         </div>
         <hr>
         <div class="control-group">
+          <label class="control-label">Compute Backend</label>
+          <div class="controls">
+              <select dku-bs-select name="compute_backend" id="alpha" ng-model="config.compute_backend">
+                  <option value="container-runtime">Container Runtime</option>
+                  <option value="warehouse">Warehouse</option>
+              </select>
+              <span class="help-inline" ng-show="config.compute_backend === 'container-runtime' || config.compute_backend === 'warehouse'">Run the ML training job in a Container Runtime or a Snowpark-optimized warehouse </span>
+          </div>
+        </div>
+        <div class="control-group" ng-show="config.compute_backend === 'container-runtime'">
+            <label class="control-label">Compute Pool</label>
+            <div class="controls">
+              <input type="text" ng-model="config.compute_pool" />
+              <span class="help-inline">Must be a Snowpark Container Services Compute Pool that already exists. </span>
+            </div>
+        </div> 
+        <div class="control-group" ng-show="config.compute_backend === 'container-runtime'">
+          <label class="control-label">Snowflake Stage</label>
+          <div class="controls">
+            <input type="text" ng-model="config.stage_name" />
+            <span class="help-inline">To store ML Job payloads. Must be a Snowflake Stage that already exists. </span>
+          </div>
+        </div> 
+        <div class="control-group" ng-show="config.compute_backend === 'warehouse'">
             <label class="control-label">Snowflake Warehouse</label>
             <div class="controls">
                 <input type="text" ng-model="config.warehouse" />

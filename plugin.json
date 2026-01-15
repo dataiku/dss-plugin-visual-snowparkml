@@ -1,12 +1,13 @@
 {
     "id": "visual-snowparkml",
-    "version": "1.2.1",
+    "version": "2.0.0",
     "meta": {
-        "label": "Visual SnowparkML",
-        "description": "Train Machine Learning Models Using Snowpark ML",
+        "label": "Visual Snowflake ML",
+        "description": "Train Machine Learning Models in Snowflake",
         "author": "Dataiku",
         "icon": "dku-icon-snowpark",
         "tags": ["Machine Learning", "Snowflake"], 
+        "category": "Machine Learning",
         "supportLevel": "NOT_SUPPORTED",
         "url": "https://www.dataiku.com/product/plugins/visual-snowparkml/",
         "licenseInfo": "Apache Software License"

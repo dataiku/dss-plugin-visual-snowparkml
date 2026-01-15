@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 2.0.0] - Feature Release - 2026-01
+* Added the option to run ML training using a Snowpark Container Services Container Runtime / Compute Pool instead of a Warehouse 
+
 ## [Version 1.2.1] - Bugfix Release - 2025-08
 * Removed excluded features from the Snowflake model registry input schema
 

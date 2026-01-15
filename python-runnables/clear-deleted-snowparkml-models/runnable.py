@@ -21,20 +21,22 @@ class MyRunnable(Runnable):
         self.config = config
         self.client = dataiku.api_client()
         self.perform_deletion = self.config.get("perform_deletion", False)
-        self.snowflake_connection_name = self.config.get("snowflake_connection", None)
+        self.snowflake_connection_name = self.config.get(
+            "snowflake_connection", None)
         self.project = dataiku.api_client().get_project(project_key)
 
     def get_progress_target(self):
         return 100, 'NONE'
 
-    def run(self, progress_callback):        
+    def run(self, progress_callback):
         # If user chooses a non-Snowflake connection, return an error message
         if self.client.get_connection(self.snowflake_connection_name).get_info()['type'] != 'Snowflake':
             return 'Please select a Snowflake connection'
 
         # Get a Snowpark session
         dku_snowpark = DkuSnowpark()
-        session = dku_snowpark.create_session(self.snowflake_connection_name, project_key=self.project.project_key)
+        session = dku_snowpark.create_session(
+            self.snowflake_connection_name, project_key=self.project.project_key)
         current_database = session.get_current_database().replace('"', '')
         current_schema = session.get_current_schema().replace('"', '')
 
@@ -45,18 +47,20 @@ class MyRunnable(Runnable):
         registry_models = registry.models()
 
         # List Dataiku Saved Models in the current project
-        dataiku_saved_model_ids = [model['id'] for model in self.project.list_saved_models()]
+        dataiku_saved_model_ids = [model['id']
+                                   for model in self.project.list_saved_models()]
 
         # Create dictionary with key: Dataiku Saved Model IDs and values: Saved Model Versions
         dataiku_saved_model_ids_and_versions = {}
 
         for saved_model_id in dataiku_saved_model_ids:
             saved_model = self.project.get_saved_model(saved_model_id)
-            saved_model_versions = [version['id'] for version in saved_model.list_versions()]
+            saved_model_versions = [version['id']
+                                    for version in saved_model.list_versions()]
             dataiku_saved_model_ids_and_versions[saved_model_id] = saved_model_versions
 
         dataiku_saved_model_ids_and_versions_upper = {}
-        
+
         for k, v in dataiku_saved_model_ids_and_versions.items():
             model_version_list_upper = [model_ver.upper() for model_ver in v]
             dataiku_saved_model_ids_and_versions_upper[k] = model_version_list_upper
@@ -64,14 +68,16 @@ class MyRunnable(Runnable):
         models_to_delete = []
 
         # Loop through all models in Snowflake Model Registry. If the model has the current Dataiku project key as a tag, and
-        # if the model doesn't exist as a Dataiku Saved Model or version (meaning it was delete from Dataiku side), then 
+        # if the model doesn't exist as a Dataiku Saved Model or version (meaning it was delete from Dataiku side), then
         # simulate its deletion or actually delete it, depending on what the user selected
         for registry_model in registry_models:
             try:
                 registry_model_tags = registry_model.show_tags()
-                dataiku_project_key_tag = current_database + "." + current_schema + "." + "DATAIKU_PROJECT_KEY"
-                dataiku_saved_model_id_tag = current_database + "." + current_schema + "." + "DATAIKU_SAVED_MODEL_ID"
-                
+                dataiku_project_key_tag = current_database + "." + \
+                    current_schema + "." + "DATAIKU_PROJECT_KEY"
+                dataiku_saved_model_id_tag = current_database + "." + \
+                    current_schema + "." + "DATAIKU_SAVED_MODEL_ID"
+
                 if dataiku_project_key_tag in registry_model_tags and dataiku_saved_model_id_tag in registry_model_tags:
                     if registry_model_tags[dataiku_project_key_tag] == self.project.project_key:
                         registry_dataiku_saved_model_id = registry_model_tags[dataiku_saved_model_id_tag]
@@ -97,7 +103,8 @@ class MyRunnable(Runnable):
                                 })
 
                                 if self.perform_deletion:
-                                    registry_model.delete_version(model_version.version_name)
+                                    registry_model.delete_version(
+                                        model_version.version_name)
 
                     else:
                         continue
