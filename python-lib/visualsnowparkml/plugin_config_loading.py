@@ -3,6 +3,7 @@
 from typing import Tuple
 import re
 import logging
+
 import dataiku
 from dataiku.customrecipe import (
     get_recipe_config,
@@ -15,7 +16,15 @@ from snowflake.snowpark.table import Table
 from snowflake.ml.jobs import remote
 
 
+logger = logging.getLogger("visualsnowflakemlplugin")
+logging.basicConfig(
+    level=logging.INFO,
+    format='Visual Snowflake ML plugin %(levelname)s - %(message)s'
+)
+
 # Custom Exceptions
+
+
 class PluginParamValidationError(ValueError):
     """Plugin parameters chosen by the user are invalid."""
 
@@ -393,13 +402,12 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
             def test_compute_pool():
                 return "Success"
 
-            logger = logging.getLogger("snowflake.ml.jobs.job")
             logger.addHandler(ComputePoolBusyHandler())
             ml_job_test = test_compute_pool()
             ml_job_test.get_logs()
             ml_job_test_result = ml_job_test.result()
             if ml_job_test_result == 'Success':
-                print(
+                logger.info(
                     f"Successfully ran test job on compute pool {compute_pool}")
             else:
                 raise SnowflakeResourcesError(

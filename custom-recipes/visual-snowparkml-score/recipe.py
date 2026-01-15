@@ -7,15 +7,21 @@ import snowflake.snowpark.types as T
 import snowflake.snowpark.functions as F
 from snowflake.ml.registry import Registry
 
+import logging
 
-def print_params(params):
-    """Print all non-dunder attributes of the params object."""
-    print("-----------------------------")
-    print("Recipe Input Params")
+logger = logging.getLogger("visualsnowflakemlplugin")
+logging.basicConfig(
+    level=logging.INFO,
+    format='Visual Snowflake ML plugin %(levelname)s - %(message)s'
+)
+
+
+def log_params(params):
+    """Log all non-dunder attributes of the params object."""
+    logger.info("Recipe Input Params")
     for attr in dir(params):
         if not attr.startswith('__'):
-            print(f"{attr}: {getattr(params, attr)}")
-    print("-----------------------------")
+            logger.info(f"{attr}: {getattr(params, attr)}")
 
 
 def add_sample_weights_column_if_missing(snowpark_df):
@@ -45,7 +51,7 @@ def get_proba_columns_and_values(snowpark_df):
 
 # Load Configuration
 params, session, input_dataset, saved_model_id, output_score_dataset = load_score_config_snowpark_session()
-print_params(params)
+log_params(params)
 
 client = dataiku.api_client()
 project = client.get_default_project()
@@ -61,7 +67,7 @@ prediction_type = saved_model_version_details.details['coreParams']['prediction_
 # If the Saved Model is two-class classification, get the model threshold from the Dataiku MLflow model object
 if prediction_type == 'BINARY_CLASSIFICATION':
     model_threshold = saved_model_version_details.details['userMeta']['activeClassifierThreshold']
-    print(f"Model threshold: {model_threshold}")
+    logger.info(f"Model threshold: {model_threshold}")
 
 # Get the Snowflake model name (standard name per the SnowparkML train plugin)
 snowflake_model_name = project.project_key + "_" + saved_model_name
@@ -88,7 +94,7 @@ input_dataset_snow_df = dku_snowpark.get_dataframe(
     input_dataset, session=session)
 
 # Generate predictions based on prediction type
-print(model_version.show_functions())
+logger.info(f"Model version functions: {model_version.show_functions()}")
 
 if prediction_type == 'BINARY_CLASSIFICATION':
     input_dataset_snow_df = add_sample_weights_column_if_missing(

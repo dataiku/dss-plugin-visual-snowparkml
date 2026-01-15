@@ -15,6 +15,7 @@ from datetime import datetime
 from cloudpickle import load, dump
 import re
 from importlib import metadata
+import logging
 
 # Package Imports - Snowpark
 import snowflake.snowpark.types as T
@@ -50,18 +51,21 @@ from snowflake.ml.jobs import remote
 from snowflake.ml.registry import Registry
 from snowflake.ml.model import model_signature
 
+logger = logging.getLogger("visualsnowflakemlplugin")
+logging.basicConfig(
+    level=logging.INFO,
+    format='Visual Snowflake ML plugin %(levelname)s - %(message)s'
+)
 
 # Configuration and Constants
 params, session, input_snowpark_df = load_train_config_snowpark_session_and_input_train_snowpark_df()
 is_snowpark_backend = (params.compute_backend == 'warehouse')
 
-# Print recipe parameters to logs
-print("-----------------------------")
-print("Recipe Input Params")
+# Log recipe parameters
+logger.info("Recipe Input Params")
 for attr in dir(params):
     if not attr.startswith('__'):
-        print(f"{attr}: {getattr(params, attr)}")
-print("-----------------------------")
+        logger.info(f"{attr}: {getattr(params, attr)}")
 
 METRIC_TO_SKLEARN = {
     'ROC AUC': 'roc_auc',
@@ -247,8 +251,8 @@ if params.time_ordering:
     train_snowpark_df = train_snowpark_df.drop(time_ordering_variable_unix)
     test_snowpark_df = test_snowpark_df.drop(time_ordering_variable_unix)
 
-    print(f"train set nrecords: {train_snowpark_df.count()}")
-    print(f"test set nrecords: {test_snowpark_df.count()}")
+    logger.info(f"train set nrecords: {train_snowpark_df.count()}")
+    logger.info(f"test set nrecords: {test_snowpark_df.count()}")
 else:
     # Random split
     train_snowpark_df, test_snowpark_df = input_snowpark_df.random_split(
@@ -365,7 +369,7 @@ def build_encoder(encoding_type, feature_name):
     elif encoding_type == "Min-max rescaling":
         return get_transformer(snowpark_prep.MinMaxScaler, sk_prep.MinMaxScaler)
     elif encoding_type == "No rescaling":
-        print(f"No rescaling for {feature_name}")
+        logger.info(f"No rescaling for {feature_name}")
         return None
     elif encoding_type == "Dummy encoding":
         return get_transformer(
@@ -563,7 +567,7 @@ class SklearnRegressorWrapper(BaseModelWrapper):
 
 def train_snowpark_impl(algo, prepr, score_met, col_lab, weight_col, feat_names, train_df, num_iter):
     """Train a model using Snowpark ML (warehouse backend)."""
-    print(f"Training Snowpark ML model: {algo['algorithm']}")
+    logger.info(f"Training Snowpark ML model: {algo['algorithm']}")
 
     pipe = snowpark_pipeline.Pipeline(
         steps=[('preprocessor', prepr), ('clf', algo['estimator'])])
@@ -585,7 +589,7 @@ def train_snowpark_impl(algo, prepr, score_met, col_lab, weight_col, feat_names,
 
 def train_sklearn_impl(algo, prepr, score_met, col_lab, weight_col, feat_names, train_df_pandas, num_iter):
     """Train a model using sklearn (compute pool backend)."""
-    print(f"Training sklearn model: {algo['algorithm']}")
+    logger.info(f"Training sklearn model: {algo['algorithm']}")
 
     X = train_df_pandas[feat_names]
     y = train_df_pandas[col_lab]
@@ -639,7 +643,7 @@ else:
     )(remote_wrapper)
     train_models_job = remote_job(session, full_table_name, algorithms, preprocessor,
                                   scoring_metric, params.col_label, sample_weight_col, included_feature_names_non_sf, params.n_iter)
-    print("Starting Snowflake ML Training Job...")
+    logger.info("Starting Snowflake ML Training Job...")
     train_models_job.get_logs()
     trained_models = train_models_job.result()
 
@@ -650,7 +654,7 @@ final_models = []
 # Convert test set to pandas once for compute pool mode
 test_df_pandas = None
 if params.compute_backend != 'warehouse':
-    print("Converting test set to pandas for evaluation...")
+    logger.info("Converting test set to pandas for evaluation...")
     test_df_pandas = test_snowpark_df.to_pandas()
 
 for model_info in trained_models:
@@ -814,11 +818,11 @@ for model_info in trained_models:
             metric_vals = {"test_r2": test_r2, "test_mae": test_mae,
                            "test_mse": test_mse, "test_rmse": test_rmse}
 
-    # 4. Log Metrics to MLflow & Print
+    # 4. Log Metrics to MLflow & Log to logger
     for metric_name, metric_value in metric_vals.items():
         mlflow.log_metric(f"{metric_name}_score", metric_value)
         test_metrics[metric_name] = metric_value  # store for final list
-        print(f"{metric_name}: {metric_value}")
+        logger.info(f"{metric_name}: {metric_value}")
 
     best_score = grid_pipe_sklearn.best_score_
 
@@ -930,7 +934,7 @@ for sm in project.list_saved_models():
         continue
     else:
         sm_id = sm["id"]
-        print(f"Found Saved Model {sm['name']} with id {sm['id']}")
+        logger.info(f"Found Saved Model {sm['name']} with id {sm['id']}")
         break
 
 if sm_id:
@@ -948,7 +952,7 @@ else:
         sm = project.create_mlflow_pyfunc_model(name=params.model_name,
                                                 prediction_type=DSSPredictionMLTaskSettings.PredictionTypes.REGRESSION)
     sm_id = sm.id
-    print(f"Saved Model not found, created new one with id {sm_id}")
+    logger.info(f"Saved Model not found, created new one with id {sm_id}")
 
 # Import the final trained model into the Dataiku Saved Model (Green Diamond)
 mlflow_version = sm.import_mlflow_version_from_managed_folder(version_id=best_model["run_name"],
@@ -1063,7 +1067,7 @@ if params.deploy_to_snowflake_model_registry:
                                                             }
                                                         }
                                                         })
-        print(
+        logger.info(
             f"Successfully deployed model name: {snowflake_model_name}, model version: {best_model['run_name']} to Snowflake ML Model Registry")
 
         for test_metric in best_model["test_metrics"]:
@@ -1075,7 +1079,7 @@ if params.deploy_to_snowflake_model_registry:
 
         # Update the defuault model version to the new version
         parent_model.default = best_model["run_name"]
-        print(
+        logger.info(
             f"Successfully updated the default model version to the new version: {best_model['run_name']}")
 
         # Need to create the tag object in Snowflake if it doesn't exist
@@ -1087,9 +1091,9 @@ if params.deploy_to_snowflake_model_registry:
         parent_model.set_tag("dataiku_project_key", project.project_key)
         parent_model.set_tag("dataiku_saved_model_id", sm_id)
 
-        print("Successfully set model tags")
+        logger.info("Successfully set model tags")
     except Exception as e:
-        print(
+        logger.error(
             f"Failed to deploy model to Snowflake ML Model Registry, exception: {e}")
 
 # Get the current plugin recipe instance name
