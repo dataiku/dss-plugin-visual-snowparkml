@@ -106,6 +106,8 @@ When you include a feature, don't leave the "Encoding / Rescaling" and "Impute M
 - Snowflake Warehouse: the warehouse to use for ML training. You must use a Snowpark-optimized Snowflake warehouse. A multi-cluster warehouse will allow for parallelized hyperparameter tuning.
 - Deploy to Snowflake ML Model Registry: deploy the best trained model to a Snowflake ML Model Registry (in the same database and schema as the input and output datasets. See Snowflake access requirements [here](https://docs.snowflake.com/en/developer-guide/snowpark-ml/snowpark-ml-mlops-model-registry#required-privileges). This is required in order to run a subsequent Visual Snowpark ML Score recipe, to run batch inference in Snowpark using the deployed model.
 
+<img width="772" height="221" alt="Screenshot 2026-01-16 at 1 48 03 PM" src="https://github.com/user-attachments/assets/336130dd-605a-4ca5-b0af-dc713e04e22b" />
+
 ![Screenshot 2024-02-23 at 9 01 46 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/3c29084d-3a6e-455b-95c7-9c963d92b90e)
 
 ### Outputs
