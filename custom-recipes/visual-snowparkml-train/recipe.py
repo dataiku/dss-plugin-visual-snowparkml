@@ -1042,20 +1042,16 @@ if params.deploy_to_snowflake_model_registry:
                                            model_name=snowflake_model_name,
                                            version_name=best_model["run_name"],
                                            comment=snowflake_registry_model_description,
-                                           artifact_repository_map={
-                "pip": "snowflake.snowpark.pypi_shared_repository"
-            },
-                pip_requirements=snowpark_packages_versions,
-                options={"relax_version": False,
-                         "method_options": {
-                             "predict": {
-                                 "case_sensitive": True
-                             },
-                             "predict_proba": {
-                                 "case_sensitive": True
-                             }
-                         }
-                         })
+                                           options={"relax_version": False,
+                                                    "method_options": {
+                                                        "predict": {
+                                                            "case_sensitive": True
+                                                        },
+                                                        "predict_proba": {
+                                                            "case_sensitive": True
+                                                        }
+                                                    }
+                                                    })
         else:
             input_example_pd = input_example.to_pandas()
             input_features_sample = input_example_pd[included_feature_names_non_sf]
@@ -1090,20 +1086,16 @@ if params.deploy_to_snowflake_model_registry:
                                                comment=snowflake_registry_model_description,
                                                signatures={"predict": predict_sig,
                                                            "predict_proba": predict_proba_sig},
-                                               artifact_repository_map={
-                    "pip": "snowflake.snowpark.pypi_shared_repository"
-                },
-                    pip_requirements=snowpark_packages_versions,
-                    options={"relax_version": False,
-                             "method_options": {
-                                 "predict": {
-                                     "case_sensitive": True
-                                 },
-                                 "predict_proba": {
-                                     "case_sensitive": True
-                                 }
-                             }
-                             })
+                                               options={"relax_version": False,
+                                                        "method_options": {
+                                                            "predict": {
+                                                                "case_sensitive": True
+                                                            },
+                                                            "predict_proba": {
+                                                                "case_sensitive": True
+                                                            }
+                                                        }
+                                                        })
             else:
                 model_ver = registry.log_model(model=best_model["snowml_obj"],
                                                model_name=snowflake_model_name,
@@ -1111,17 +1103,13 @@ if params.deploy_to_snowflake_model_registry:
                                                comment=snowflake_registry_model_description,
                                                signatures={
                                                    "predict": predict_sig},
-                                               artifact_repository_map={
-                    "pip": "snowflake.snowpark.pypi_shared_repository"
-                },
-                    pip_requirements=snowpark_packages_versions,
-                    options={"relax_version": False,
-                             "method_options": {
-                                 "predict": {
-                                     "case_sensitive": True
-                                 }
-                             }
-                             })
+                                               options={"relax_version": False,
+                                                        "method_options": {
+                                                            "predict": {
+                                                                "case_sensitive": True
+                                                            }
+                                                        }
+                                                        })
         logger.info(
             f"Successfully deployed model name: {snowflake_model_name}, model version: {best_model['run_name']} to Snowflake ML Model Registry")
 
