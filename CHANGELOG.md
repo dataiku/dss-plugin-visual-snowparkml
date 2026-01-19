@@ -1,5 +1,9 @@
 # Changelog
 
+## [Version 2.0.1] - Bugfix Release - 2026-01
+* Added trained model metric logging to Snowflake Experiment Tracking
+* Fixed deployment of LightGBM models to Snowflake Model Registry
+
 ## [Version 2.0.0] - Feature Release - 2026-01
 * Added the option to run ML training using a Snowpark Container Services Container Runtime / Compute Pool instead of a Warehouse 
 

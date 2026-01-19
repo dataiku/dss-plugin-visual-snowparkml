@@ -50,6 +50,7 @@ import snowflake.ml.modeling.metrics as snowpark_metrics
 from snowflake.ml.jobs import remote
 from snowflake.ml.registry import Registry
 from snowflake.ml.model import model_signature
+from snowflake.ml.experiment import ExperimentTracking
 
 logger = logging.getLogger("visualsnowflakemlplugin")
 logging.basicConfig(
@@ -104,6 +105,11 @@ mlflow_handle = project.setup_mlflow(
     managed_folder=params.model_experiment_tracking_folder)
 mlflow.set_experiment(experiment_name=MLFLOW_EXPERIMENT_NAME)
 mlflow_experiment = mlflow.get_experiment_by_name(MLFLOW_EXPERIMENT_NAME)
+
+# Set up Snowflake experiment tracking
+snowflake_experiment = ExperimentTracking(session=session)
+snowflake_experiment.set_experiment(MLFLOW_EXPERIMENT_NAME)
+logger.info(f"Initialized Snowflake Experiment: {MLFLOW_EXPERIMENT_NAME}")
 
 # Initialize Snowpark
 dku_snowpark = DkuSnowpark()
@@ -325,16 +331,9 @@ included_feature_names_plus_target_sf = included_feature_names_sf + \
 # Filter input example to only include selected features and target
 input_example = input_example.select(included_feature_names_plus_target_sf)
 
-# Get column types for included features plus target
-train_dataset_columns = params.output_train_dataset.get_config()[
-    "schema"]["columns"]
-train_dataset_types_included_features_plus_target = [
-    col_info for col_info in train_dataset_columns
-    if col_info['name'] in included_feature_names_plus_target_non_sf
-]
-
-
 # Helper function to select transformer class based on backend
+
+
 def get_transformer(snowpark_class, sklearn_class, **kwargs):
     """Return appropriate transformer class instance based on compute backend."""
     return snowpark_class(**kwargs) if is_snowpark_backend else sklearn_class(**kwargs)
@@ -670,7 +669,8 @@ for model_info in trained_models:
     # Log cross-validation results
     cv_results = pd.DataFrame(grid_pipe_sklearn.cv_results_)
     cv_results['algorithm'] = model_algo
-    now = datetime.now().strftime("%Y_%m_%d_%H_%M")
+    now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    cv_results.reset_index(drop=True, inplace=True)
 
     for idx, row in cv_results.iterrows():
         run_name = f"{params.model_name}_{now}_cv_{idx + 1}"
@@ -685,6 +685,27 @@ for model_info in trained_models:
                 if "param_" in column:
                     mlflow.log_param(column.replace(
                         "param_clf__", ""), row[column])
+
+        # Log CV results to Snowflake Experiment
+        try:
+            snowflake_run_name = run_name + "_sf"
+            with snowflake_experiment.start_run(run_name=snowflake_run_name):
+
+                snowflake_experiment.log_param("algorithm", row['algorithm'])
+                snowflake_experiment.log_metric(
+                    "mean_fit_time", row["mean_fit_time"])
+                snowflake_experiment.log_metric(
+                    f"mean_test_{scoring_metric}", row["mean_test_score"])
+                snowflake_experiment.log_metric(
+                    "rank_test_score", int(row["rank_test_score"]))
+
+                for column in row.index:
+                    if "param_" in column:
+                        snowflake_experiment.log_param(column.replace(
+                            "param_clf__", ""), row[column])
+        except Exception as e:
+            logger.info(
+                f"Failed to log metrics with Snowflake Experiment Tracking, exception: {e}")
 
     # Log final model and evaluate on test set
     run_name = f"{params.model_name}_{now}_final_model"
@@ -869,6 +890,27 @@ for model_info in trained_models:
 
     mlflow.end_run()
 
+    # Log final model to Snowflake Experiment
+    try:
+        snowflake_run_name = run_name + "_sf"
+        with snowflake_experiment.start_run(run_name=snowflake_run_name):
+            # Log best hyperparameters
+            snowflake_experiment.log_metric("whole_dataset_refit_time",
+                                            grid_pipe_sklearn.refit_time_)
+            for param, value in grid_pipe_sklearn.best_params_.items():
+                if "clf" in param:
+                    snowflake_experiment.log_param(
+                        param.replace("clf__", ""), value)
+            snowflake_experiment.log_param("algorithm", model_algo)
+
+            # Log test metrics
+            for metric_name, metric_value in metric_vals.items():
+                snowflake_experiment.log_metric(
+                    f"{metric_name}_score", metric_value)
+    except Exception as e:
+        logger.info(
+            f"Failed to log metrics with Snowflake Experiment Tracking, exception: {e}")
+
     # Store result for selection of "Best of the Best"
     best_run_id = run.info.run_id
     final_models.append({
@@ -1025,6 +1067,7 @@ if params.deploy_to_snowflake_model_registry:
             if is_classification:
                 # Use model's classes_ for signature - this matches what the model actually outputs
                 # Note: XGBoost uses integers internally, so output columns will be PREDICT_PROBA_0, PREDICT_PROBA_1
+
                 best_model_classes = best_model["sklearn_obj"].classes_
                 predict_proba_output_names = [
                     f'"PREDICT_PROBA_{class_label}"' for class_label in best_model_classes]
