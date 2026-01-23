@@ -1,53 +1,1151 @@
-thead th {
-  position: sticky;
-  top: 0;
+/* ==========================================================================
+   Visual Snowpark ML Plugin - Dataiku DSS Style
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CSS Variables - Dataiku Design Tokens
+   -------------------------------------------------------------------------- */
+:root {
+    /* Primary Colors - Dataiku Green */
+    --dku-green: #4CAF50;
+    --dku-green-dark: #43A047;
+    --dku-green-light: #E8F5E9;
+
+    /* Secondary Colors */
+    --dku-blue: #2196F3;
+    --dku-blue-light: #E3F2FD;
+    --dku-orange: #FF9800;
+    --dku-red: #F44336;
+
+    /* Neutral Colors */
+    --dku-text-primary: #333333;
+    --dku-text-secondary: #666666;
+    --dku-text-muted: #999999;
+    --dku-border: #E0E0E0;
+    --dku-border-light: #EEEEEE;
+    --dku-bg-white: #FFFFFF;
+    --dku-bg-gray: #FAFAFA;
+    --dku-bg-dark: #F5F5F5;
+
+    /* Info/Warning Colors */
+    --dku-info-bg: #FFF8E1;
+    --dku-info-border: #FFE082;
+    --dku-info-text: #5D4037;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+
+    /* Typography */
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-size-xs: 11px;
+    --font-size-sm: 12px;
+    --font-size-md: 13px;
+    --font-size-lg: 14px;
+    --font-size-xl: 16px;
+    --font-size-2xl: 20px;
+    --font-size-3xl: 24px;
 }
-th {
-  background-color: #bebebe;
+
+/* --------------------------------------------------------------------------
+   Base Container
+   -------------------------------------------------------------------------- */
+.snowparkml-container {
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    color: var(--dku-text-primary);
+    line-height: 1.5;
+    background: var(--dku-bg-white);
+    display: flex;
+    min-height: 600px;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
-.settings-section-title {
-    color: #29B5E8;
-    font-size: large;
-}
-.table td, .table th {
-  padding: 8px;
-  vertical-align: middle !important;
-    
-}
-.table-responsive {
-    table-layout:fixed;
-    max-height: 400px;
-    overflow-y: auto;
-    position: relative;
-}
-td div {
-    word-break: break-all;
+
+/* Override Dataiku's default plugin container styling */
+.snowparkml-container,
+.snowparkml-container * {
     box-sizing: border-box;
-    overflow-x: auto;
+}
+
+/* Force parent containers to be full width */
+.snowparkml-form {
+    width: 100%;
+    padding-bottom: 80px;
+}
+
+/* Override the w800 container that Dataiku uses */
+.w800 {
+    width: 100% !important;
+    max-width: none !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}
+
+/* Override recipe settings sections */
+.recipe-settings-section1,
+.recipe-settings-section2,
+.dkuform-horizontal {
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* --------------------------------------------------------------------------
+   Left Sidebar Navigation
+   -------------------------------------------------------------------------- */
+.sidebar-nav {
+    flex: 0 0 180px;
+    background: var(--dku-bg-white);
+    border-right: 1px solid var(--dku-border);
+    padding: var(--spacing-md) 0;
+    overflow-y: auto;
+}
+
+.nav-category {
+    margin-bottom: var(--spacing-md);
+}
+
+.nav-category-title {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--dku-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin: 0;
+}
+
+.nav-item {
+    display: block;
+    padding: var(--spacing-sm) var(--spacing-md);
+    padding-left: var(--spacing-lg);
+    font-size: var(--font-size-md);
+    color: var(--dku-text-primary);
+    text-decoration: none;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.nav-item:hover {
+    background: var(--dku-bg-gray);
+    color: var(--dku-text-primary);
+    text-decoration: none;
+}
+
+.nav-item.active {
+    color: var(--dku-green);
+    border-left-color: var(--dku-green);
+    background: var(--dku-green-light);
+    font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   Main Content Area
+   -------------------------------------------------------------------------- */
+.main-content {
+    flex: 1;
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+    min-width: 0;
+}
+
+/* Tab panel (each section) */
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* --------------------------------------------------------------------------
+   Page Title
+   -------------------------------------------------------------------------- */
+.page-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 400;
+    color: var(--dku-text-primary);
+    margin: 0 0 var(--spacing-lg) 0;
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--dku-border);
+}
+
+/* --------------------------------------------------------------------------
+   Section Styling
+   -------------------------------------------------------------------------- */
+.settings-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.settings-section-title,
+h2.settings-section-title {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--dku-text-primary);
+    margin: 0 0 var(--spacing-lg) 0;
+    padding: 0;
+    border: none;
+}
+
+.subsection-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--dku-text-primary);
+    margin: var(--spacing-lg) 0 var(--spacing-md) 0;
+}
+
+/* --------------------------------------------------------------------------
+   Form Layout - Two Column
+   -------------------------------------------------------------------------- */
+.control-group {
+    display: block;
+    margin-bottom: var(--spacing-md);
+}
+
+.control-label {
+    display: block;
+    font-size: var(--font-size-md);
+    font-weight: 400;
+    color: var(--dku-text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.controls {
+    display: block;
+    max-width: 300px;
+}
+
+/* --------------------------------------------------------------------------
+   Form Inputs - Dataiku Style
+   -------------------------------------------------------------------------- */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    color: var(--dku-text-primary);
+    background: var(--dku-bg-white);
+    border: 1px solid var(--dku-border);
+    border-radius: 3px;
+    padding: 7px 10px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--dku-blue);
+}
+
+input[type="number"] {
+    width: 100px;
+}
+
+input[type="text"] {
+    max-width: 100%;
+}
+
+/* Small inline inputs */
+input.input-small {
+    width: 80px;
+}
+
+/* --------------------------------------------------------------------------
+   Toggle Switch - Dataiku sliding style
+   -------------------------------------------------------------------------- */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 26px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ccc;
+    border-radius: 26px;
+    transition: background-color 0.3s ease;
+}
+
+/* The circular knob */
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    left: 2px;
+    top: 2px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+/* OFF text */
+.toggle-slider::after {
+    content: 'OFF';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    font-weight: 600;
+    color: #666;
+}
+
+/* Checked state - blue background */
+.toggle-switch input:checked + .toggle-slider {
+    background: #5B9BD5;
+}
+
+/* Move the knob to the right when checked */
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(34px);
+}
+
+/* ON text when checked */
+.toggle-switch input:checked + .toggle-slider::after {
+    content: 'ON';
+    right: auto;
+    left: 10px;
+    color: white;
+}
+
+/* Legacy checkbox styling */
+input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--dku-green);
+}
+
+/* --------------------------------------------------------------------------
+   Help Text
+   -------------------------------------------------------------------------- */
+.help-inline,
+.help-text {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--dku-text-muted);
+    margin-top: var(--spacing-xs);
+    line-height: 1.4;
+}
+
+.help-text-inline {
+    display: inline;
+    font-size: var(--font-size-sm);
+    color: var(--dku-text-muted);
+    margin-left: var(--spacing-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Info Box - Yellow Dataiku Style
+   -------------------------------------------------------------------------- */
+.info-box {
+    background: var(--dku-info-bg);
+    border: 1px solid var(--dku-info-border);
+    border-radius: 4px;
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    color: var(--dku-info-text);
+    font-size: var(--font-size-md);
+    line-height: 1.5;
+}
+
+.info-box p {
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.info-box p:last-child {
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Links - Dataiku Style
+   -------------------------------------------------------------------------- */
+a, .link {
+    color: var(--dku-blue);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover, .link:hover {
+    text-decoration: underline;
+}
+
+.action-link {
+    color: var(--dku-green);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   Feature List - Dataiku Style
+   -------------------------------------------------------------------------- */
+.feature-list-container {
+    display: flex;
+    gap: var(--spacing-md);
+    border: 1px solid var(--dku-border);
+    border-radius: 4px;
+    overflow: hidden;
+    min-height: 400px;
+}
+
+.feature-list {
+    flex: 0 0 320px;
+    background: var(--dku-bg-white);
+    border-right: 1px solid var(--dku-border);
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.feature-list-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--dku-border);
+    background: var(--dku-bg-gray);
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--dku-border-light);
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.feature-item:hover {
+    background: var(--dku-bg-gray);
+}
+
+.feature-item.selected {
+    background: var(--dku-blue-light);
+}
+
+.feature-item.disabled {
+    opacity: 0.5;
+}
+
+.feature-checkbox {
+    margin-right: var(--spacing-sm);
+}
+
+.feature-type-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-right: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--dku-text-secondary);
+}
+
+.feature-type-icon.numeric {
+    color: var(--dku-blue);
+}
+
+.feature-type-icon.categorical {
+    color: var(--dku-orange);
+}
+
+.feature-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.feature-name {
+    font-size: var(--font-size-md);
+    font-weight: 500;
+    color: var(--dku-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.feature-description {
+    font-size: var(--font-size-xs);
+    color: var(--dku-text-muted);
+}
+
+.feature-toggle {
+    margin-left: auto;
+}
+
+.feature-detail-panel {
+    flex: 1;
+    padding: var(--spacing-lg);
+    background: var(--dku-bg-white);
+    overflow-y: auto;
+}
+
+.feature-detail-title {
+    font-size: var(--font-size-xl);
+    font-weight: 400;
+    color: var(--dku-text-primary);
+    margin: 0 0 var(--spacing-lg) 0;
+}
+
+/* --------------------------------------------------------------------------
+   Algorithm List - Dataiku Style
+   -------------------------------------------------------------------------- */
+.algorithm-container {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--dku-border);
+    border-radius: 4px;
+    overflow: hidden;
+    min-height: 500px;
+}
+
+.algorithm-list {
+    flex: 0 0 280px;
+    background: var(--dku-bg-white);
+    border-right: 1px solid var(--dku-border);
+    overflow-y: auto;
+}
+
+.algorithm-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--dku-border-light);
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.algorithm-item:hover {
+    background: var(--dku-bg-gray);
+}
+
+.algorithm-item.selected {
+    background: var(--dku-green-light);
+}
+
+.algorithm-name {
+    font-size: var(--font-size-md);
+    color: var(--dku-text-primary);
+}
+
+.algorithm-detail-panel {
+    flex: 1;
+    padding: var(--spacing-lg);
+    background: var(--dku-bg-gray);
+    overflow-y: auto;
+}
+
+.algorithm-detail-header {
+    margin-bottom: var(--spacing-lg);
+}
+
+.algorithm-detail-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 400;
+    color: var(--dku-green);
+    margin: 0 0 var(--spacing-sm) 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.algorithm-description {
+    font-size: var(--font-size-md);
+    color: var(--dku-green);
+    margin-bottom: var(--spacing-sm);
+}
+
+.show-more-link {
+    font-size: var(--font-size-sm);
+    color: var(--dku-blue);
+}
+
+/* Hyperparameter Row */
+.hparam-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--dku-border-light);
+}
+
+.hparam-row:last-child {
+    border-bottom: none;
+}
+
+.hparam-label {
+    flex: 0 0 200px;
+    font-size: var(--font-size-md);
+    color: var(--dku-text-primary);
+}
+
+.hparam-controls {
+    flex: 1;
+}
+
+.hparam-inputs {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+.hparam-inputs label {
+    font-size: var(--font-size-sm);
+    color: var(--dku-text-muted);
+    min-width: 30px;
+}
+
+.hparam-inputs input {
+    width: 80px;
+}
+
+.hparam-help {
+    font-size: var(--font-size-sm);
+    color: var(--dku-text-muted);
+    line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   Algorithm Master-Detail Layout
+   -------------------------------------------------------------------------- */
+.algo-master-detail {
+    display: flex;
+    border: 1px solid var(--dku-border);
+    border-radius: 4px;
+    min-height: 400px;
+    background: var(--dku-bg-white);
+}
+
+.algo-list {
+    flex: 0 0 250px;
+    border-right: 1px solid var(--dku-border);
+    overflow-y: auto;
+}
+
+.algo-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--dku-border-light);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.algo-list-item:hover {
+    background: var(--dku-bg-gray);
+}
+
+.algo-list-item.selected {
+    background: var(--dku-bg-gray);
+    border-left: 3px solid var(--dku-green);
+    padding-left: 13px;
+}
+
+.algo-name {
+    font-size: var(--font-size-md);
+    color: var(--dku-text-primary);
+}
+
+.algo-detail-panel {
+    flex: 1;
+    padding: var(--spacing-lg);
+    background: var(--dku-bg-gray);
+    overflow-y: auto;
+}
+
+.algo-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    background: var(--dku-bg-white);
+    border: 1px solid var(--dku-border);
+    border-radius: 4px;
+    margin-bottom: var(--spacing-md);
+}
+
+.algo-detail-header h3 {
+    font-size: var(--font-size-xl);
+    font-weight: 500;
+    color: var(--dku-text-primary);
+    margin: 0;
+}
+
+.algo-detail-header.enabled h3 {
+    color: var(--dku-green);
+}
+
+/* Algorithm Description Box - Blue themed */
+.algo-description-box {
+    background: #E8F4FC;
+    border: 1px solid #B8DCF0;
+    border-radius: 4px;
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.algo-description-box .algo-description-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.algo-description-box .algo-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 400;
+    color: #1E88A8;
+    margin: 0;
+}
+
+.algo-description-box .algo-desc-text {
+    font-size: var(--font-size-md);
+    color: #1E88A8;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.algo-description-box .algo-desc-text.collapsed {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.algo-description-box .algo-desc-text strong {
+    font-weight: 600;
+}
+
+.algo-description-box .show-more-link {
+    color: var(--dku-blue);
+    font-size: var(--font-size-md);
+    cursor: pointer;
+    margin-top: var(--spacing-sm);
+    display: inline-block;
+}
+
+.algo-description-box .show-more-link:hover {
+    text-decoration: underline;
+}
+
+.algo-description-box ul {
+    margin: var(--spacing-sm) 0;
+    padding-left: var(--spacing-lg);
+    color: #1E88A8;
+}
+
+.algo-description-box ul li {
+    margin-bottom: var(--spacing-xs);
+}
+
+.algo-detail-content {
+    background: var(--dku-bg-white);
+    border: 1px solid var(--dku-border);
+    border-radius: 4px;
+    padding: var(--spacing-lg);
+}
+
+.algo-detail-content .hparam-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--dku-border-light);
+}
+
+.algo-detail-content .hparam-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.algo-detail-content .hparam-row p.hparam-help {
+    flex-basis: 100% !important;
+    margin-top: var(--spacing-sm) !important;
+    margin-left: 0 !important;
+    padding-left: 200px !important;
+    box-sizing: border-box;
+}
+
+.algo-detail-content .hparam-label {
+    flex: 0 0 200px;
+    font-size: var(--font-size-md);
+    color: var(--dku-text-primary);
+}
+
+.algo-detail-content .hparam-inputs {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.algo-detail-content .hparam-inputs label {
+    font-size: var(--font-size-sm);
+    color: var(--dku-text-muted);
+    margin-right: 4px;
+}
+
+.algo-detail-content .hparam-inputs input {
+    width: 80px;
+}
+
+/* --------------------------------------------------------------------------
+   Simple Table (for features when not using split panel)
+   -------------------------------------------------------------------------- */
+.table-responsive {
+    max-height: 450px;
+    overflow-y: auto;
+    border: 1px solid var(--dku-border);
+    border-radius: 4px;
+}
+
+table.table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 0;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+thead th {
+    background: var(--dku-bg-gray);
+    border-bottom: 1px solid var(--dku-border);
+    color: var(--dku-text-secondary);
+    font-weight: 500;
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+}
+
+th {
+    background-color: var(--dku-bg-gray);
+}
+
+.table td,
+.table th {
+    padding: var(--spacing-sm) var(--spacing-md);
+    vertical-align: middle !important;
+    border-bottom: 1px solid var(--dku-border-light);
+}
+
+tbody tr:hover {
+    background-color: var(--dku-bg-gray);
+}
+
+tbody tr.selected,
+tbody tr.feature-row-selected {
+    background-color: var(--dku-blue-light);
+}
+
+/* Feature type badge in table */
+.feature-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--font-size-sm);
+    color: var(--dku-text-secondary);
+}
+
+.feature-type-badge .type-icon {
+    font-weight: 600;
+}
+
+.feature-type-badge.numeric .type-icon {
+    color: var(--dku-blue);
+}
+
+.feature-type-badge.text .type-icon {
+    color: var(--dku-orange);
+}
+
+/* Table form controls */
+.feature-select,
+select.form-control.feature-select {
+    width: 100%;
+    padding: 5px 8px;
+    font-size: var(--font-size-sm);
+}
+
+.feature-input,
+input.form-control.feature-input {
+    width: 100%;
+    padding: 5px 8px;
+    font-size: var(--font-size-sm);
+}
+
+td .text-muted {
+    color: var(--dku-text-muted);
+    font-size: var(--font-size-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Algorithm Cards (Simplified - for single column view)
+   -------------------------------------------------------------------------- */
+.form-group {
+    background: var(--dku-bg-white);
+    border: 1px solid var(--dku-border);
+    border-radius: 4px;
+    margin-bottom: var(--spacing-md);
+    overflow: hidden;
+}
+
+.form-group.algo-enabled {
+    border-color: var(--dku-green);
+}
+
+.algo-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    background: var(--dku-bg-white);
+    cursor: pointer;
+}
+
+.algo-group:hover {
+    background: var(--dku-bg-gray);
+}
+
+.algo-group .control-group {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
 }
-.feature-select {
-    word-break: break-all;
-    box-sizing: border-box;
-    width: 90%;
+
+.algo-group .control-label {
+    display: inline;
+    margin-bottom: 0;
+    font-weight: 500;
+    color: var(--dku-text-primary);
 }
-.feature-input {
-    word-break: break-all;
-    width: 85%;
+
+.algo-group .controls {
+    display: inline-block;
+    max-width: none;
 }
-.hparam-input {
-    word-break: break-all;
-    width: 85% !important;
+
+.algo-details {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--dku-bg-gray);
+    border-top: 1px solid var(--dku-border-light);
 }
-.form-group {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    margin: 8px;
-    background-color: #f9f9f9;
-    padding: 8px;
-}
+
 .algo-hparam-parent {
-    width: 20%;
-    float: left;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--dku-border-light);
+}
+
+.algo-hparam-parent:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.algo-hparam-parent h5 {
+    font-size: var(--font-size-md);
+    font-weight: 500;
+    color: var(--dku-text-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.algo-hparam,
+.algo-hparam-first {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-right: var(--spacing-lg);
+}
+
+.algo-hparam label,
+.algo-hparam-first label {
+    font-size: var(--font-size-sm);
+    color: var(--dku-text-muted);
+}
+
+.hparam-input {
+    width: 80px !important;
+    padding: 5px 8px;
+    font-size: var(--font-size-sm);
+}
+
+/* Hide old clear divs */
+div[style*="clear:both"] {
+    display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Checkbox with label wrapper
+   -------------------------------------------------------------------------- */
+.checkbox-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.checkbox-wrapper .help-inline {
+    margin-top: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Dividers
+   -------------------------------------------------------------------------- */
+hr {
+    border: none;
+    border-top: 1px solid var(--dku-border);
+    margin: var(--spacing-lg) 0;
+}
+
+/* --------------------------------------------------------------------------
+   Summary Panel (right sidebar style)
+   -------------------------------------------------------------------------- */
+.summary-panel {
+    background: var(--dku-bg-gray);
+    border: 1px solid var(--dku-border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: var(--spacing-md);
+}
+
+.summary-panel-header {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: var(--dku-bg-white);
+    border-bottom: 1px solid var(--dku-border);
+    cursor: pointer;
+}
+
+.summary-panel-header .collapse-icon {
+    margin-right: var(--spacing-sm);
+    color: var(--dku-text-muted);
+}
+
+.summary-panel-title {
+    font-size: var(--font-size-lg);
+    font-weight: 500;
+    color: var(--dku-green);
+}
+
+.summary-panel-body {
+    padding: var(--spacing-md);
+}
+
+/* --------------------------------------------------------------------------
+   Compute Section
+   -------------------------------------------------------------------------- */
+.compute-section {
+    background: var(--dku-bg-gray);
+    border: 1px solid var(--dku-border);
+    border-radius: 4px;
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+}
+
+/* --------------------------------------------------------------------------
+   Warning text
+   -------------------------------------------------------------------------- */
+.help-inline.warning,
+.warning-text {
+    color: var(--dku-orange);
+}
+
+/* --------------------------------------------------------------------------
+   Scrollbar
+   -------------------------------------------------------------------------- */
+.table-responsive::-webkit-scrollbar,
+.feature-list::-webkit-scrollbar,
+.algorithm-list::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track,
+.feature-list::-webkit-scrollbar-track,
+.algorithm-list::-webkit-scrollbar-track {
+    background: var(--dku-bg-gray);
+}
+
+.table-responsive::-webkit-scrollbar-thumb,
+.feature-list::-webkit-scrollbar-thumb,
+.algorithm-list::-webkit-scrollbar-thumb {
+    background: var(--dku-border);
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover,
+.feature-list::-webkit-scrollbar-thumb:hover,
+.algorithm-list::-webkit-scrollbar-thumb:hover {
+    background: #BDBDBD;
+}
+
+/* --------------------------------------------------------------------------
+   Striped rows (legacy support)
+   -------------------------------------------------------------------------- */
+tbody tr.dku-striped-row {
+    background-color: var(--dku-bg-gray);
+}
+
+tbody tr.dku-striped-row:hover {
+    background-color: var(--dku-border-light);
+}
+
+/* --------------------------------------------------------------------------
+   Search Space Section
+   -------------------------------------------------------------------------- */
+.search-space-section {
+    background: var(--dku-bg-white);
+    border: 1px solid var(--dku-border);
+    border-radius: 4px;
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin-top: var(--spacing-lg);
 }

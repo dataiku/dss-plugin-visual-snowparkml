@@ -57,7 +57,7 @@ class TrainPluginParams:
         "model_name",
         "col_label",
         "prediction_type",
-        "disable_class_weights",
+        "enable_class_weights",
         "time_ordering",
         "time_ordering_variable",
         "train_ratio",
@@ -304,9 +304,9 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
     else:
         params.prediction_type = prediction_type
 
-    # Disable Class Weights (just a checkbox)
-    params.disable_class_weights = recipe_config.get(
-        'disable_class_weights', None)
+    # Enable Class Weights (just a checkbox)
+    params.enable_class_weights = recipe_config.get(
+        'enable_class_weights', True)
 
     # Time Ordering (just a checkbox)
     params.time_ordering = recipe_config.get('time_ordering', False)
@@ -434,7 +434,7 @@ def load_train_config_snowpark_session_and_input_train_snowpark_df() -> Tuple[Tr
 
     # Snowflake Model Registry
     params.deploy_to_snowflake_model_registry = recipe_config.get(
-        'deploy_to_snowflake_model_registry', False)
+        'deploy_to_snowflake_model_registry', True)
 
     # Selected Input Feature Columns
     params.inputDatasetColumns = recipe_config.get('inputDatasetColumns', None)

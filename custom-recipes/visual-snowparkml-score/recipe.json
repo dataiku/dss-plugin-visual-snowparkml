@@ -1,7 +1,7 @@
 {
     "meta": {
         "label": "Score New Records using Snowpark",
-        "description": "Must use a model trained by the Visual SnowparkML plugin and successfully deployed to Snowflake Model Registry",
+        "description": "Generate predictions on new data using models trained with Visual SnowparkML and deployed to Snowflake Model Registry. See README for requirements.",
         "icon": "dku-icon-snowpark",
         "iconColor": "blue"
     },
