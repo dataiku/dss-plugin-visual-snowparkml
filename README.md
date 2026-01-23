@@ -58,14 +58,22 @@ Click once on the input dataset (with known, labeled target values), then find t
 
 Click the train recipe:
 
-<img width="816" alt="image" src="https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/315ddd8c-ce08-4fdc-9dc3-b1223e4d3f09">
+<img width="797" height="381" alt="image" src="https://github.com/user-attachments/assets/d0c18e2a-67a4-4f03-8863-58e986ec6364" />
 
 Create two output Snowflake tables to hold the generated output train/test sets, and one managed folder to hold saved models (connection doesn’t matter):
 
 ![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/1bf50274-8308-4d5f-8bb1-82bdbadb46b8)
 
+
 ### Design your ML training process and run the recipe
 Make sure you fill out all required fields
+
+**Target**
+- Prediction type: two-class classification, multi-class classification, or regression
+- Target: the name of your target column to predict
+- Class weights: choose to enable (recommended) or disable class weights. Class weights are row weights that are inversely proportional to the cardinality of its target class and help with class imbalance issues
+- Model name: the name of your model. This will be the name of the model created in your Dataiku project flow after running the train recipe. The best trained model will be registered in Snowflake model registry as DATAIKU_PROJECT_ID_MODEL_NAME.
+
 Below is an example for a two-class classification problem:
 **Parameters**
 - Final model name: the name of your model
