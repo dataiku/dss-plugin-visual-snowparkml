@@ -54,7 +54,7 @@ statsmodels==0.14.6
 ### Create the train plugin recipe and outputs
 Click once on the input dataset (with known, labeled target values), then find the Visual SnowparkML plugin: 
 
-![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/0a6b44f0-28eb-430a-a5cf-95a301cc67c3)
+<img width="965" height="427" alt="image" src="https://github.com/user-attachments/assets/49d5bb6d-d3f5-4a53-b7df-8847c8ceefd5" />
 
 Click the train recipe:
 
