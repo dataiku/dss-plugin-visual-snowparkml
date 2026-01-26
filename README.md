@@ -87,6 +87,7 @@ Make sure you fill out all required fields
 - Optimize model hyperparameters for: metric to optimize model hyperparameters for while training
 
 **Features handling**
+
 For each column in the input training dataset, choose whether to include the column as an input features for the model training process, and how to handle this feature. Note: if you want to treat a numeric column as categorical, change its storage type to string in a prior recipe.
 - Status: whether to include or exclude the feature
 - Encoding / Rescaling: choose how to encode categorical features, and rescale numeric features
@@ -98,6 +99,7 @@ For each column in the input training dataset, choose whether to include the col
 - For each algorithm, enter min and max values for each hyperparameter
 
 **Hyperparameters**
+
 This training recipe will kick off a Randomized Search process with 3-fold cross-validation in Snowflake to find the best hyperparameter combination for each algorithm selected
 - Search space limit: the number of hyperparameter combinations to try for each algorithm within the min/max values chosen
 
