@@ -105,7 +105,7 @@ This training recipe will kick off a Randomized Search process with 3-fold cross
 - Compute Backend: whether to use Snowflake Container Runtime (Snowpark Container Services) or a Snowflake warehouse for this ML training job
 - (If Container Runtime) Compute Pool: the Snowpark Container Services compute pool to use for ML training. 
 - (If Container Runtime) Snowflake Stage: the Snowflake Stage where model training functions will be uploaded prior to execution on the compute pool. 
-- Snowflake Warehouse: the warehouse to use for ML training. You must use a Snowpark-optimized Snowflake warehouse. A multi-cluster warehouse will allow for parallelized hyperparameter tuning.
+- (If Warehouse) Snowflake Warehouse: the warehouse to use for ML training. You must use a Snowpark-optimized Snowflake warehouse. A multi-cluster warehouse will allow for parallelized hyperparameter tuning.
 - Model Registry: deploy the best trained model to a Snowflake ML Model Registry (in the same database and schema as the input and output datasets. See Snowflake access requirements [here](https://docs.snowflake.com/en/developer-guide/snowpark-ml/snowpark-ml-mlops-model-registry#required-privileges). This is required in order to run a subsequent Visual Snowpark ML Score recipe, to run batch inference in Snowpark using the deployed model.
 
 ### Outputs
