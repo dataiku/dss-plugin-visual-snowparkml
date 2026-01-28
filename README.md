@@ -20,14 +20,18 @@ With this plugin, you can train machine learning models and then use them to sco
 - No int type columns can have missing values. If you have an int column with missing values, convert the type to double before this recipe (this is an MLflow requirement)
 - If you want to treat a numeric column as categorical, change its storage type to string in a prior recipe
 
+# Snowflake Resources and Permissions
+
+- Must have a Snowflake connection. Plugin recipe Input + Output tables must be in the same Snowflake connection.
+- The plugin uses the Snowflake role used for the Input + Output tables to access all other Snowflake resources
+- The plugin uses a backend runtime environment of a Snowpark Container Services compute pool or Snowpark-optimized warehouse
+    - Snowpark Container Services Compute Pool: Snowflake role must have the USAGE permission on the compute pool
+    - Snowpark-optimized Warehouse: Snowflake role must have the USAGE permission on the warehouse
+- Snowflake role must have the CREATE MODEL privilege on the schema used in the Snowflake connection for Input + Output tables
+
 # Other Requirements
 
-- Must have a Snowflake connection. Plugin recipe Input + Output tables should be in the same Snowflake connection
-- Snowpark-optimized Snowflake warehouse or Snowpark Container Services Compute Pool available for model training. Multi-cluster warehouse will allow for parallelized hyperparameter tuning
-    - The Snowflake role used for the Input + Output tables must also have USAGE permission on the Snowflake warehouse or Snowpark Container Services Compute Pool chosen. If using a Snowflake Container Runtime backend, you will also need USAGE permission on the Snowflake stage used.
-    - The Snowflake role used must have the CREATE MODEL privilege on it.
 - Python 3.10 available on the instance
-
 
 # Setup
 ## Build the plugin code environment
@@ -50,65 +54,61 @@ statsmodels==0.14.6
 ## 
 
 # Usage
-## Training models with Snowpark ML
+## Training models with Snowflake ML
 ### Create the train plugin recipe and outputs
-Click once on the input dataset (with known, labeled target values), then find the Visual SnowparkML plugin: 
+Click once on the input dataset (with known, labeled target values), then find the Visual Snowflake ML plugin: 
 
-![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/0a6b44f0-28eb-430a-a5cf-95a301cc67c3)
+<img width="965" height="427" alt="image" src="https://github.com/user-attachments/assets/49d5bb6d-d3f5-4a53-b7df-8847c8ceefd5" />
 
 Click the train recipe:
 
-<img width="816" alt="image" src="https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/315ddd8c-ce08-4fdc-9dc3-b1223e4d3f09">
+<img width="797" height="381" alt="image" src="https://github.com/user-attachments/assets/d0c18e2a-67a4-4f03-8863-58e986ec6364" />
 
 Create two output Snowflake tables to hold the generated output train/test sets, and one managed folder to hold saved models (connection doesn’t matter):
 
 ![image](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/1bf50274-8308-4d5f-8bb1-82bdbadb46b8)
 
+
 ### Design your ML training process and run the recipe
 Make sure you fill out all required fields
-Below is an example for a two-class classification problem:
-**Parameters**
-- Final model name: the name of your model
-- Target column: the name of your target column to predict
-- Prediction type: either two-class classification or regression
-- Disable class weights: choose to disable class weights (not recommended). Class weights are row weights that are inversely proportional to the cardinality of its target class and help with class imbalance issues
+
+**Target**
+- Prediction type: two-class classification, multi-class classification, or regression
+- Target: the name of your target column to predict
+- Class weights: choose to enable (recommended) or disable class weights. Class weights are row weights that are inversely proportional to the cardinality of its target class and help with class imbalance issues
+- Model name: the name of your model. This will be the name of the model created in your Dataiku project flow after running the train recipe. The best trained model will be registered in Snowflake model registry as DATAIKU_PROJECT_ID_MODEL_NAME.
+
+**Train/Test Set**
+- Time ordering: order the train and test sets by a datetime column (test set will be more recent timestamps than train set)
 - Train ratio: train set / test set ratio. 0.8 is a good start
-- Random seed: Set this (to any integer) to maintain consistent train/test sets over multiple training runs
-- Enable time ordering: order the train and test sets by a datetime column (test set will be more recent timestamps than train set)
-- Metrics: metric to optimize model performance
+- Splitting random seed: Set this (to any integer) to maintain consistent train/test sets over multiple training runs
 
-![Screenshot 2024-02-23 at 8 58 32 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/b0f627d0-b6c4-4974-ac6e-7312ad9be2e0)
+**Metrics**
+- Optimize model hyperparameters for: metric to optimize model hyperparameters for while training
 
-**Features selection**
-When you include a feature, don't leave the "Encoding / Rescaling" and "Impute Missing Values With" dropdowns empty!
-- Type: underlying storage type. Note: if you want to treat a numeric column as categorical, change its storage type to string in a prior recipe
-- Include: whether to include the column in the model
-- Encoding / Rescaling: choose how to encode categorical features, and rescale numeric features.
-- Impute Missing Values With: choose how to deal with missing values
-- Constant Value (Impute): if “Constant” chosen for missingness imputation, the value to impute
+**Features handling**
 
-![Screenshot 2024-02-23 at 9 00 12 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/b28204ce-acd4-4b43-8855-0a052a54c63f)
+For each column in the input training dataset, choose whether to include the column as an input features for the model training process, and how to handle this feature. Note: if you want to treat a numeric column as categorical, change its storage type to string in a prior recipe.
+- Status: whether to include or exclude the feature
+- Encoding / Rescaling: choose how to encode categorical features, and rescale numeric features
+- Missing values: choose how to deal with missing values
+- Constant: if “Constant” chosen for missingness imputation, the value to impute
 
 **Algorithms**
 - Select each algorithm you’d like to train
-- For each algorithm, enter min and max values for each hyperparameter 
-- Enter a search space limit (randomly choose N hyperparameter combinations for each algorithm within the min/max values chosen) 
-- A Snowpark ML Randomized Search with 3-fold cross-validation will kick off in Snowflake to find the best hyperparameter combination for each algorithm
+- For each algorithm, enter min and max values for each hyperparameter
 
-![Screenshot 2024-02-23 at 9 00 51 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/f35bfe27-7ff6-47ba-838f-f5186275adb0)
+**Hyperparameters**
 
-![Screenshot 2024-02-23 at 9 01 36 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/aaaef879-3b30-4b29-9073-19e1621ebe20)
+This training recipe will kick off a Randomized Search process with 3-fold cross-validation in Snowflake to find the best hyperparameter combination for each algorithm selected
+- Search space limit: the number of hyperparameter combinations to try for each algorithm within the min/max values chosen
 
-**Snowflake Resources and Deployment**
+**Runtime environment**
 - Compute Backend: whether to use Snowflake Container Runtime (Snowpark Container Services) or a Snowflake warehouse for this ML training job
 - (If Container Runtime) Compute Pool: the Snowpark Container Services compute pool to use for ML training. 
 - (If Container Runtime) Snowflake Stage: the Snowflake Stage where model training functions will be uploaded prior to execution on the compute pool. 
-- Snowflake Warehouse: the warehouse to use for ML training. You must use a Snowpark-optimized Snowflake warehouse. A multi-cluster warehouse will allow for parallelized hyperparameter tuning.
-- Deploy to Snowflake ML Model Registry: deploy the best trained model to a Snowflake ML Model Registry (in the same database and schema as the input and output datasets. See Snowflake access requirements [here](https://docs.snowflake.com/en/developer-guide/snowpark-ml/snowpark-ml-mlops-model-registry#required-privileges). This is required in order to run a subsequent Visual Snowpark ML Score recipe, to run batch inference in Snowpark using the deployed model.
-
-<img width="772" height="221" alt="Screenshot 2026-01-16 at 1 48 03 PM" src="https://github.com/user-attachments/assets/336130dd-605a-4ca5-b0af-dc713e04e22b" />
-
-![Screenshot 2024-02-23 at 9 01 46 AM](https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/3c29084d-3a6e-455b-95c7-9c963d92b90e)
+- (If Warehouse) Snowflake Warehouse: the warehouse to use for ML training. You must use a Snowpark-optimized Snowflake warehouse. A multi-cluster warehouse will allow for parallelized hyperparameter tuning.
+- Model Registry: deploy the best trained model to a Snowflake ML Model Registry (in the same database and schema as the input and output datasets. See Snowflake access requirements [here](https://docs.snowflake.com/en/developer-guide/snowpark-ml/snowpark-ml-mlops-model-registry#required-privileges). This is required in order to run a subsequent Visual Snowpark ML Score recipe, to run batch inference in Snowpark using the deployed model.
 
 ### Outputs
 After running the train recipe successfully, you can find all model training and hyperparameter tuning information, including model performance metrics in Dataiku’s Experiment Tracking tab
@@ -133,7 +133,7 @@ Click once on the trained model and input dataset you’d like to make predictio
 
 Click the score recipe:
 
-<img width="659" alt="image" src="https://github.com/dataiku/dss-plugin-visual-snowparkml/assets/22987725/85ff1459-8dc3-485c-981f-20c84bc51de7">
+<img width="797" height="381" alt="image" src="https://github.com/user-attachments/assets/73714334-8356-4bba-90b9-c946e49c806d" />
 
 Make sure you’ve selected the trained model and Snowflake table for scoring as inputs. Then create one output Snowflake table to hold the scored dataset. Then click “Create”:
 

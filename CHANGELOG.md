@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 2.0.2] - Feature Release - 2026-01
+* UI improvements for training recipe
+
 ## [Version 2.0.1] - Bugfix Release - 2026-01
 * Added trained model metric logging to Snowflake Experiment Tracking
 * Fixed deployment of LightGBM models to Snowflake Model Registry

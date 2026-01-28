@@ -118,7 +118,7 @@ dku_snowpark = DkuSnowpark()
 # Maps pandas column names to Snowflake column names (with quotes for case-sensitive columns)
 is_classification = params.prediction_type in [
     "two-class classification", "multi-class classification"]
-use_sample_weights = is_classification and not params.disable_class_weights
+use_sample_weights = is_classification and params.enable_class_weights
 
 if use_sample_weights:
     features_quotes_lookup = {'SAMPLE_WEIGHTS': 'SAMPLE_WEIGHTS'}

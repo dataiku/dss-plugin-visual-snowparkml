@@ -1,6 +1,6 @@
 {
     "id": "visual-snowparkml",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "meta": {
         "label": "Visual Snowflake ML",
         "description": "Train Machine Learning Models in Snowflake",

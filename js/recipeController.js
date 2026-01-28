@@ -1,10 +1,11 @@
 const app = angular.module('trainSnowparkModel.recipe', []);
 
 app.controller('retrainRecipeController', function ($scope, utils) {
-    
+
     $scope.selectedInputColumns = {};
     $scope.inputColumnTypes = {};
     $scope.showOptions = {};
+    $scope.validationMessage = '';
     
     const updateCommonScopeData = function (data) {
         $scope.styleSheetUrl = utils.getStylesheetUrl(data.pluginId);
@@ -29,8 +30,37 @@ app.controller('retrainRecipeController', function ($scope, utils) {
         };
 
         $scope.toggleFeatureSelection = function (columnName) {
-            const isFeatureSelected = $scope.selectedInputColumns[columnName];
-            if (!isFeatureSelected) {
+            const isFeatureSelected = $scope.config.selectedInputColumns[columnName];
+            if (isFeatureSelected) {
+                // Feature is being turned ON - set default values only if not already set
+                const column = $scope.config.inputDatasetColumns.find(c => c.name === columnName);
+                if (column) {
+                    const isNumeric = column.type.indexOf('int') !== -1 ||
+                                      column.type.indexOf('float') !== -1 ||
+                                      column.type.indexOf('double') !== -1;
+
+                    // Initialize objects if needed
+                    if (!$scope.config.selectedOption1) {
+                        $scope.config.selectedOption1 = {};
+                    }
+                    if (!$scope.config.selectedOption2) {
+                        $scope.config.selectedOption2 = {};
+                    }
+
+                    // Only set default if no value exists for this column
+                    if (!$scope.config.selectedOption1[columnName]) {
+                        $scope.config.selectedOption1[columnName] = isNumeric ?
+                            $scope.numericOptions[0] : $scope.categoricalOptions[0];
+                    }
+
+                    if (!$scope.config.selectedOption2[columnName]) {
+                        $scope.config.selectedOption2[columnName] = isNumeric ?
+                            $scope.numericOptions2[0] : $scope.categoricalOptions2[0];
+                    }
+                }
+                $scope.showOptions[columnName] = true;
+            } else {
+                // Feature is being turned OFF - keep the values, just hide options
                 $scope.showOptions[columnName] = false;
             }
         };
@@ -44,6 +74,10 @@ app.controller('retrainRecipeController', function ($scope, utils) {
 
         if ($scope.config.prediction_type === 'two-class classification') {
             $scope.metrics = ['ROC AUC', 'F1 Score', 'Accuracy', 'Precision', 'Recall'];
+            // Set default metric if not already set or if switching from another prediction type
+            if (!$scope.config.model_metric || !$scope.metrics.includes($scope.config.model_metric)) {
+                $scope.config.model_metric = 'ROC AUC';
+            }
             $scope.config.lasso_regression = false;
             $scope.config.random_forest_regression = false;
             $scope.config.xgb_regression = false;
@@ -52,6 +86,10 @@ app.controller('retrainRecipeController', function ($scope, utils) {
             $scope.config.decision_tree_regression = false;
         } else if ($scope.config.prediction_type === 'multi-class classification') {
             $scope.metrics = ['ROC AUC', 'F1 Score', 'Accuracy', 'Precision', 'Recall'];
+            // Set default metric if not already set or if switching from another prediction type
+            if (!$scope.config.model_metric || !$scope.metrics.includes($scope.config.model_metric)) {
+                $scope.config.model_metric = 'ROC AUC';
+            }
             $scope.config.lasso_regression = false;
             $scope.config.random_forest_regression = false;
             $scope.config.xgb_regression = false;
@@ -60,6 +98,10 @@ app.controller('retrainRecipeController', function ($scope, utils) {
             $scope.config.decision_tree_regression = false;
         } else if ($scope.config.prediction_type === 'regression') {
             $scope.metrics = ['R2', 'MAE', 'MSE'];
+            // Set default metric if not already set or if switching from another prediction type
+            if (!$scope.config.model_metric || !$scope.metrics.includes($scope.config.model_metric)) {
+                $scope.config.model_metric = 'R2';
+            }
             $scope.config.logistic_regression = false;
             $scope.config.random_forest_classification = false;
             $scope.config.xgb_classification = false;
@@ -70,12 +112,46 @@ app.controller('retrainRecipeController', function ($scope, utils) {
     };
     
     $scope.updateMetrics();
-    
-    
+
+    $scope.canNavigateAway = function() {
+        return $scope.config.prediction_type &&
+               $scope.config.col_label &&
+               $scope.config.model_name &&
+               $scope.config.model_name.trim() !== '';
+    };
+
+    $scope.changeTab = function(newTab) {
+        if (newTab === 'target') {
+            $scope.activeTab = newTab;
+            $scope.validationMessage = '';
+            return;
+        }
+
+        if (!$scope.canNavigateAway()) {
+            $scope.validationMessage = 'Please complete all required fields in the Target tab: Prediction type, Target column, and Model name.';
+            return;
+        }
+
+        $scope.activeTab = newTab;
+        $scope.validationMessage = '';
+    };
+
     const init = function () {
-        $scope.finishedLoading = false;   
+        $scope.finishedLoading = false;
         $scope.updateMetrics();
         utils.retrieveInfoBackend($scope, "get-info-retrain", updateScopeData);
+
+        // Initialize feature option objects if not present
+        if (!$scope.config.selectedOption1) {
+            $scope.config.selectedOption1 = {};
+        }
+        if (!$scope.config.selectedOption2) {
+            $scope.config.selectedOption2 = {};
+        }
+        if (!$scope.config.selectedInputColumns) {
+            $scope.config.selectedInputColumns = {};
+        }
+
         utils.initVariable($scope, 'col_label', '');
         utils.initVariable($scope, 'time_ordering_variable', '');
         utils.initVariable($scope, 'train_ratio', 0.8);
@@ -166,7 +242,9 @@ app.controller('retrainRecipeController', function ($scope, utils) {
         utils.initVariable($scope, 'decision_tree_regression_min_samples_leaf_max', 20);
         
         utils.initVariable($scope, 'n_iter', 4);
-        
+        utils.initVariable($scope, 'enable_class_weights', true);
+        utils.initVariable($scope, 'deploy_to_snowflake_model_registry', true);
+
     };
 
     init();

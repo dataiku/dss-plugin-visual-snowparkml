@@ -1,7 +1,7 @@
 {
     "meta": {
         "label": "Train ML Models on Snowflake",
-        "description": "See README for requirements",
+        "description": "No-code ML model training using Snowflake compute, either using a Snowpark optimized warehouse with Snowflake's snowflake-ml-python package, or using a Snowpark Container Services compute pool with Snowflake ML Jobs. See README for requirements.",
         "icon": "dku-icon-snowpark",
         "iconColor": "blue"
     },
