@@ -28,6 +28,14 @@ With this plugin, you can train machine learning models and then use them to sco
     - Snowpark Container Services Compute Pool: Snowflake role must have the USAGE permission on the compute pool
     - Snowpark-optimized Warehouse: Snowflake role must have the USAGE permission on the warehouse
 - Snowflake role must have the CREATE MODEL privilege on the schema used in the Snowflake connection for Input + Output tables
+- Snowflake role must have the USAGE privilege on an External Access Integration called PYPI_EAI that contains the snowflake.external_access.pypi_rule network role. See below query examples:
+```
+CREATE [OR REPLACE] EXTERNAL ACCESS INTEGRATION PYPI_EAI
+  ALLOWED_NETWORK_RULES = (snowflake.external_access.pypi_rule)
+  ENABLED = true;
+
+GRANT USAGE ON INTEGRATION PYPI_EAI TO ROLE <YOUR_ROLE>;
+```
 
 # Other Requirements
 
