@@ -1,6 +1,6 @@
 # Visual Snowflake ML Plugin
 
-<img width="658" height="291" alt="visual_snowflake_ml_diagram" src="https://github.com/user-attachments/assets/287396d5-7c6d-4b62-821a-7139c518d39b" />
+<img width="819" height="381" alt="Screenshot 2026-03-23 at 11 47 47 AM" src="https://github.com/user-attachments/assets/ac7f3321-80e4-4432-99af-d0885ae834cc" />
 
 With this plugin, you can train machine learning models and then use them to score new records, all within your Snowflake environment. This no-code UI allows data scientists and domain experts to quickly train models, track experiments, and visualize model performance.
 
