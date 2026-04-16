@@ -1,5 +1,8 @@
 # Changelog
 
+## [Version 2.0.3] - Bugfix Release - 2026-04
+* Fix Snowpark bug (due to sklearn version change) with sample weight columns
+
 ## [Version 2.0.2] - Feature Release - 2026-01
 * UI improvements for training recipe
 

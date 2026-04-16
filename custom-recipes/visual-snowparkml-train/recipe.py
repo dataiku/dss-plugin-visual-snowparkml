@@ -570,6 +570,8 @@ def train_snowpark_impl(algo, prepr, score_met, col_lab, weight_col, feat_names,
 
     pipe = snowpark_pipeline.Pipeline(
         steps=[('preprocessor', prepr), ('clf', algo['estimator'])])
+    if weight_col:
+        pipe.set_sample_weight_col(weight_col)
 
     rs_clf = snowpark_ms.RandomizedSearchCV(
         estimator=pipe,
@@ -579,8 +581,7 @@ def train_snowpark_impl(algo, prepr, score_met, col_lab, weight_col, feat_names,
         scoring=score_met,
         input_cols=feat_names,
         label_cols=col_lab,
-        output_cols="PREDICTION",
-        sample_weight_col=weight_col
+        output_cols="PREDICTION"
     )
     rs_clf.fit(train_df)
     return {'algorithm': algo['algorithm'], 'model_obj': rs_clf, 'backend': 'snowpark'}
